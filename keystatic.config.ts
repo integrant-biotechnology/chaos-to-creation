@@ -1,0 +1,185 @@
+import { config, collection, singleton, fields } from '@keystatic/core';
+
+/**
+ * Marketing edits content here (/keystatic) and Keystatic commits straight to
+ * the repo, which triggers a rebuild. Content stays version-controlled, there
+ * is no monthly cost, and no external service holds the copy.
+ *
+ * Storage is `local` for development. Before launch, switch to:
+ *   storage: { kind: 'github', repo: 'owner/chaos-to-creation' }
+ * and add the GitHub App credentials as environment variables.
+ */
+export default config({
+  storage: { kind: 'local' },
+
+  ui: {
+    brand: { name: 'Chaos to Creation' },
+    navigation: {
+      Book: ['book', 'formats', 'hallmarks', 'faq'],
+      Credibility: ['press', 'endorsements'],
+      Author: ['author'],
+    },
+  },
+
+  singletons: {
+    book: singleton({
+      label: 'Book details',
+      path: 'src/data/book',
+      format: { data: 'json' },
+      schema: {
+        title: fields.text({ label: 'Title' }),
+        subtitle: fields.text({ label: 'Subtitle' }),
+        tagline: fields.text({ label: 'Tagline' }),
+        summary: fields.text({
+          label: 'Short summary',
+          description: 'Used in the hero and as the meta description.',
+          multiline: true,
+        }),
+        description: fields.text({
+          label: 'Full description',
+          multiline: true,
+        }),
+        published: fields.text({ label: 'Publication year' }),
+        amazonAuthorStore: fields.url({ label: 'Amazon author store' }),
+        bestseller: fields.object(
+          {
+            claimed: fields.checkbox({
+              label: 'Show the best-seller mark',
+              defaultValue: true,
+            }),
+            label: fields.text({
+              label: 'Generic label',
+              defaultValue: 'Amazon Best Seller',
+            }),
+            category: fields.text({
+              label: 'Category',
+              description:
+                'e.g. "Regenerative Medicine". Amazon badges are category-specific — filling this upgrades the mark from the generic label to a precise claim. Leave blank until you have a dated screenshot to back it.',
+            }),
+            rank: fields.text({
+              label: 'Rank',
+              description: 'e.g. "1". Optional.',
+            }),
+            verifiedOn: fields.text({
+              label: 'Verified on',
+              description: 'Date the badge was captured, e.g. 2026-08-06.',
+            }),
+          },
+          { label: 'Best-seller mark' },
+        ),
+      },
+    }),
+
+    author: singleton({
+      label: 'Author',
+      path: 'src/data/author',
+      format: { data: 'json' },
+      schema: {
+        name: fields.text({ label: 'Short name' }),
+        fullName: fields.text({ label: 'Full name' }),
+        role: fields.text({ label: 'Role' }),
+        short: fields.text({ label: 'Short bio', multiline: true }),
+        long: fields.text({ label: 'Long bio', multiline: true }),
+        credentials: fields.array(
+          fields.object({
+            label: fields.text({ label: 'Credential' }),
+            detail: fields.text({ label: 'Detail' }),
+          }),
+          {
+            label: 'Credentials',
+            itemLabel: (props) => props.fields.label.value,
+          },
+        ),
+        practiceUrl: fields.url({ label: 'Practice website' }),
+        profileUrl: fields.url({ label: 'Practice profile page' }),
+        social: fields.array(
+          fields.object({
+            name: fields.text({ label: 'Network' }),
+            url: fields.url({ label: 'URL' }),
+          }),
+          {
+            label: 'Social profiles',
+            itemLabel: (props) => props.fields.name.value,
+          },
+        ),
+      },
+    }),
+  },
+
+  collections: {
+    hallmarks: collection({
+      label: 'Hallmarks of aging',
+      slugField: 'name',
+      path: 'src/content/hallmarks/*',
+      format: { data: 'yaml' },
+      columns: ['order', 'name'],
+      schema: {
+        order: fields.integer({
+          label: 'Order',
+          validation: { min: 1, max: 9 },
+        }),
+        name: fields.slug({ name: { label: 'Name' } }),
+        summary: fields.text({ label: 'Summary', multiline: true }),
+      },
+    }),
+
+    formats: collection({
+      label: 'Editions',
+      slugField: 'name',
+      path: 'src/content/formats/*',
+      format: { data: 'yaml' },
+      columns: ['order', 'name'],
+      schema: {
+        order: fields.integer({ label: 'Order' }),
+        name: fields.slug({ name: { label: 'Format' } }),
+        asin: fields.text({ label: 'Amazon ASIN' }),
+        isbn: fields.text({ label: 'ISBN' }),
+        price: fields.number({ label: 'Price' }),
+        currency: fields.text({ label: 'Currency', defaultValue: 'AUD' }),
+        url: fields.url({ label: 'Amazon URL' }),
+        note: fields.text({ label: 'Note', multiline: true }),
+      },
+    }),
+
+    press: collection({
+      label: 'Press coverage',
+      slugField: 'outlet',
+      path: 'src/content/press/*',
+      format: { data: 'yaml' },
+      columns: ['outlet', 'date'],
+      schema: {
+        outlet: fields.slug({ name: { label: 'Outlet' } }),
+        date: fields.date({ label: 'Date' }),
+        url: fields.url({ label: 'Link' }),
+        quote: fields.text({ label: 'Pull quote', multiline: true }),
+      },
+    }),
+
+    endorsements: collection({
+      label: 'Endorsements',
+      slugField: 'name',
+      path: 'src/content/endorsements/*',
+      format: { data: 'yaml' },
+      columns: ['name', 'title'],
+      schema: {
+        order: fields.integer({ label: 'Order', defaultValue: 0 }),
+        name: fields.slug({ name: { label: 'Name' } }),
+        title: fields.text({ label: 'Title or affiliation' }),
+        quote: fields.text({ label: 'Quote', multiline: true }),
+      },
+    }),
+
+    faq: collection({
+      label: 'FAQ',
+      slugField: 'question',
+      path: 'src/content/faq/*',
+      format: { data: 'yaml' },
+      columns: ['question'],
+      schema: {
+        order: fields.integer({ label: 'Order', defaultValue: 0 }),
+        question: fields.slug({ name: { label: 'Question' } }),
+        answer: fields.text({ label: 'Answer', multiline: true }),
+      },
+    }),
+  },
+});

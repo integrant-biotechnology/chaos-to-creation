@@ -1,0 +1,44 @@
+---
+const nav = [
+  { label: 'The book', href: '/the-book/' },
+  { label: 'Author', href: '/author/' },
+  { label: 'Press', href: '/press/' },
+  { label: 'Contact', href: '/contact/' },
+];
+
+const path = Astro.url.pathname;
+---
+
+<header class="absolute inset-x-0 top-0 z-50">
+  <div class="shell flex items-center justify-between gap-6 py-6">
+    <a
+      href="/"
+      class="label !tracking-[0.2em] text-field/90 transition-colors hover:text-lumen"
+      aria-label="Chaos to Creation — home"
+    >
+      Chaos&nbsp;to&nbsp;Creation
+    </a>
+
+    <nav aria-label="Primary" class="hidden md:block">
+      <ul class="flex items-center gap-8">
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={path === item.href ? 'page' : undefined}
+                class="label text-field/70 transition-colors hover:text-lumen aria-[current=page]:text-lumen"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <a href="/buy/" class="btn btn-primary !py-3 !px-6 text-[0.75rem]">
+      Order
+    </a>
+  </div>
+</header>

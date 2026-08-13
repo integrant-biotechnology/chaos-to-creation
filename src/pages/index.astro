@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Hallmarks from '../components/Hallmarks.astro';
+import Thesis from '../components/Thesis.astro';
+import AuthorCard from '../components/AuthorCard.astro';
+import BuySection from '../components/BuySection.astro';
+import book from '../data/book.json';
+import { bookNode, personNode, websiteNode } from '../lib/schema';
+
+const schema = [websiteNode(), personNode(), await bookNode()];
+---
+
+<Base
+  title={`${book.title}: ${book.subtitle} — Prof. Gordon Slater`}
+  description={book.summary}
+  schema={schema}
+>
+  <Hero />
+  <Hallmarks />
+  <Thesis />
+  <AuthorCard />
+  <BuySection />
+</Base>

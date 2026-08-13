@@ -1,0 +1,87 @@
+# Chaos to Creation
+
+Marketing site for *Chaos to Creation: Longevity & Regeneration Frontiers* by Prof. Gordon Slater.
+
+Rebuild of [chaostocreation.com.au](https://chaostocreation.com.au), replacing a WordPress
+(Astra + Elementor Pro + Easy Digital Downloads) single-pager.
+
+## Stack
+
+| | |
+|---|---|
+| Framework | Astro 7 (static output, Vercel adapter) |
+| Styling | Tailwind CSS 4 (`@theme` tokens) |
+| Content | Content Collections 2.0 + Zod |
+| CMS | Keystatic (git-based, admin at `/keystatic`) |
+| Fonts | Astro Fonts API — self-hosted, preloaded |
+| Commerce | Amazon AU deep links only. No cart, no payment surface. |
+
+## Commands
+
+```bash
+pnpm install
+pnpm dev      # http://localhost:4321 — CMS at /keystatic
+pnpm build
+pnpm preview
+```
+
+## Architecture notes
+
+**Static everywhere except the CMS.** `output: 'static'`, so every public page ships as
+HTML. Only the Keystatic admin route opts out via `prerender = false`. The 2.6MB Keystatic
+React bundle is admin-only — the public homepage loads **2,490 bytes** of JS (Astro's
+prefetch module) and nothing else.
+
+**The design direction is "dark field."** The palette is drawn from immunofluorescence
+microscopy — the actual visual artifact of regenerative-medicine research. The emissive
+cyan (`--color-lumen`) descends from the practice brand teal `#3AA6B9`, keeping the
+identity connected to Prof. Slater's clinical work.
+
+**The signature is the light progression.** The page opens dark (hero, the nine hallmarks)
+and dissolves into a clinical light register (author, editions) — chaos to creation
+expressed as the page's own brightening. It costs **zero JavaScript**: cards resolve via
+CSS `animation-timeline: view()`, and because the settled state is the default, browsers
+without support and users with `prefers-reduced-motion` get the finished layout rather
+than a broken one.
+
+**Numbering appears in exactly one place** — the nine hallmarks of aging — because that is
+a canonical enumerated set from the literature where the index carries real information.
+They are a set, not a sequence, so it renders as a constellation grid rather than a
+numbered process list.
+
+## Content model
+
+Editable at `/keystatic`. Collections live in `src/content/`, singletons in `src/data/`.
+
+- `hallmarks` — the nine hallmarks of aging
+- `formats` — hardcover / paperback / Kindle, with ASIN, ISBN, price, Amazon URL
+- `press`, `endorsements`, `faq`
+- `book`, `author` — singletons
+
+## Open items
+
+1. **The best-seller claim is unsubstantiated.** The press release states only "bestseller
+   status" — no category, rank, or date. Amazon badges are category- and time-specific.
+   `BestsellerMark.astro` renders the generic label until `category` / `rank` /
+   `verifiedOn` are filled in `src/data/book.json` (or via Keystatic), at which point it
+   upgrades to a precise claim with no code change. **Needs a dated screenshot before
+   launch.**
+2. **Compliance glance.** Prof. Slater is AHPRA-registered and the book covers stem cells
+   and hyperbaric oxygen therapy. Marketing a book is not marketing a therapy, but a
+   practitioner's site connecting the two can attract AHPRA advertising and TGA scrutiny.
+   Worth a check before launch.
+3. **Keystatic storage is `local`.** Before deploy, switch to
+   `{ kind: 'github', repo: 'skalaliya/chaos-to-creation' }` and add the GitHub App
+   credentials as environment variables.
+4. **Remaining routes.** `/the-book/`, `/author/`, `/press/`, `/buy/`, `/contact/` are
+   linked but not yet built.
+5. **Assets needed:** print-quality cover, current headshot, AMA and Australian
+   Orthopaedic Association logos at full resolution.
+6. **The practice site is out of scope.** `orthopaedic-surgeon.com.au` also needs a
+   best-seller mention; it is not covered by this repo.
+
+## Migration
+
+Before DNS cutover: crawl the live WordPress site for its full URL inventory, then
+redirect `/checkout-2/` → `/buy/`, and 410 `/feed/` and `/comments/feed/`.
+`.com.au` domains need auDA-registrar access.

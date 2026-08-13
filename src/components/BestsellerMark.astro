@@ -1,0 +1,25 @@
+---
+import book from '../data/book.json';
+
+const bs = book.bestseller;
+
+/**
+ * Amazon best-seller badges are category- and time-specific. Until the client
+ * supplies the category and a dated screenshot, this renders the generic claim
+ * only. Filling `category` (and optionally `rank`) in book.json upgrades it to
+ * a precise, substantiated statement with no code change.
+ */
+const text = bs.category
+  ? `${bs.rank ? `#${bs.rank}` : 'Best seller'} in ${bs.category} — Amazon`
+  : bs.label;
+---
+
+{
+  bs.claimed && (
+    <p class="label inline-flex flex-wrap items-center gap-x-3 gap-y-1 text-lumen">
+      <span aria-hidden="true" class="inline-block h-px w-8 bg-lumen/60" />
+      <span>{text}</span>
+      {bs.verifiedOn && <span class="text-field/40">verified {bs.verifiedOn}</span>}
+    </p>
+  )
+}

@@ -1,0 +1,23 @@
+{
+  "name": "Prof. Gordon Slater",
+  "fullName": "Professor Gordon Slater",
+  "role": "Orthopaedic surgeon, researcher, author",
+  "short": "Professor Gordon Slater is an internationally recognised orthopaedic surgeon specialising in foot and ankle surgery, a pioneer of minimally invasive technique, and a leading figure in regenerative medicine.",
+  "long": "Professor Gordon Slater has spent more than three decades in medicine and surgery. A Fellow of the Royal Australasian College of Surgeons in orthopaedics since 1997 and Professor at the University of Technology Sydney, he has published over fifty research papers and holds multiple patents for medical devices. He is the founder of Integrant Pty Ltd. His work sits at the junction of clinical practice and regenerative science — which is the vantage point this book is written from.",
+  "credentials": [
+    { "label": "FRACS (Orthopaedics)", "detail": "Royal Australasian College of Surgeons, since 1997" },
+    { "label": "Professor", "detail": "University of Technology Sydney" },
+    { "label": "50+ publications", "detail": "Peer-reviewed research" },
+    { "label": "Founder", "detail": "Integrant Pty Ltd" }
+  ],
+  "practiceUrl": "https://orthopaedic-surgeon.com.au/",
+  "profileUrl": "https://orthopaedic-surgeon.com.au/about-us/dr-gordon-slater/",
+  "social": [
+    { "name": "LinkedIn", "url": "https://www.linkedin.com/in/drgordonslater/" },
+    { "name": "Google Scholar", "url": "https://scholar.google.com/citations?user=tqOdeMQAAAAJ&hl=en" },
+    { "name": "ResearchGate", "url": "https://www.researchgate.net/profile/Gordon-Slater" },
+    { "name": "X", "url": "https://x.com/drgordonslater" },
+    { "name": "Instagram", "url": "https://www.instagram.com/profgordonslater/" },
+    { "name": "YouTube", "url": "https://www.youtube.com/@profgordonslater" }
+  ]
+}
