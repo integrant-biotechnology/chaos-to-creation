@@ -23,6 +23,14 @@ const {
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImageUrl = new URL(ogImage, Astro.site).href;
 
+/**
+ * Safe by default: every build is noindex unless explicitly told it is the
+ * live site. Staging carries unreleased copy and a best-seller claim that is
+ * not yet substantiated, and a preview competing with the real domain in the
+ * index is a genuine SEO problem. Set PUBLIC_SITE_LIVE=true at DNS cutover.
+ */
+const isLive = import.meta.env.PUBLIC_SITE_LIVE === 'true';
+
 const jsonLd =
   schema.length > 0
     ? JSON.stringify({ '@context': 'https://schema.org', '@graph': schema })
@@ -36,6 +44,7 @@ const jsonLd =
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="canonical" href={canonical} />
+    {!isLive && <meta name="robots" content="noindex, nofollow" />}
 
     <title>{title}</title>
     <meta name="description" content={description} />
