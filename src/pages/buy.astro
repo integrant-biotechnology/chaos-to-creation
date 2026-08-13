@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import BuySection from '../components/BuySection.astro';
+import book from '../data/book.json';
+import { bookNode, personNode, breadcrumbNode } from '../lib/schema';
+
+const schema = [
+  personNode(),
+  await bookNode(),
+  breadcrumbNode([
+    { name: 'Home', path: '/' },
+    { name: 'Buy', path: '/buy/' },
+  ]),
+];
+---
+
+<Base
+  title={`Buy ${book.title} — hardcover, paperback and Kindle`}
+  description={`Order ${book.title}: ${book.subtitle} by Prof. Gordon Slater. Available in hardcover, paperback and Kindle through Amazon Australia.`}
+  schema={schema}
+>
+  <PageHeader
+    figure="Figure 7 · Editions"
+    title="Order the book"
+    lede="Three editions, all fulfilled by Amazon Australia."
+  />
+  <BuySection />
+</Base>

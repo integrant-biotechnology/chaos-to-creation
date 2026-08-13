@@ -77,6 +77,21 @@ export function websiteNode() {
   };
 }
 
+export async function faqNode() {
+  const faq = (await getCollection('faq')).sort(
+    (a, b) => a.data.order - b.data.order,
+  );
+
+  return {
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.data.question,
+      acceptedAnswer: { '@type': 'Answer', text: f.data.answer },
+    })),
+  };
+}
+
 export function breadcrumbNode(
   trail: Array<{ name: string; path: string }>,
 ) {

@@ -31,7 +31,12 @@ const scatter = [
 const lift = ['0', '3.5rem', '1.25rem'];
 ---
 
-<section id="hallmarks" class="register-dark relative py-28 lg:py-40">
+<!-- overflow-x clip (not hidden) contains the scatter transforms without
+     creating a scroll container, which would break the sticky asides. -->
+<section
+  id="hallmarks"
+  class="register-dark relative [overflow-x:clip] py-28 lg:py-40"
+>
   <div class="shell">
     <header class="max-w-[34rem]">
       <p class="label text-lumen/80">Figure 1 &middot; The nine hallmarks</p>

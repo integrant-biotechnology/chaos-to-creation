@@ -1,0 +1,173 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import book from '../data/book.json';
+import { breadcrumbNode, personNode } from '../lib/schema';
+
+const schema = [
+  personNode(),
+  breadcrumbNode([
+    { name: 'Home', path: '/' },
+    { name: 'Contact', path: '/contact/' },
+  ]),
+];
+
+const topics = [
+  'Media or interview request',
+  'Speaking engagement',
+  'Bulk or institutional order',
+  'Rights and translation',
+  'Something else',
+];
+---
+
+<Base
+  title={`Contact — ${book.title}`}
+  description="Media, speaking, bulk order and rights enquiries for Chaos to Creation."
+  schema={schema}
+>
+  <PageHeader
+    figure="Figure 8 · Contact"
+    title="Get in touch"
+    lede="Media requests, speaking engagements, bulk orders and rights enquiries all reach the same desk."
+  />
+
+  <section class="register-light py-24 lg:py-32">
+    <div class="shell grid gap-16 lg:grid-cols-[1fr_20rem] lg:gap-24">
+      <form
+        method="post"
+        action="/api/contact"
+        class="max-w-[38rem]"
+        novalidate
+      >
+        <!-- Honeypot. Real people never see it; bots fill it in. -->
+        <div class="absolute left-[-9999px]" aria-hidden="true">
+          <label for="company">Company</label>
+          <input
+            id="company"
+            name="company"
+            type="text"
+            tabindex="-1"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="grid gap-6 sm:grid-cols-2">
+          <div class="flex flex-col gap-2">
+            <label for="name" class="label text-graphite">Name</label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              required
+              autocomplete="name"
+              class="field"
+            />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="email" class="label text-graphite">Email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              autocomplete="email"
+              class="field"
+            />
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-col gap-2">
+          <label for="topic" class="label text-graphite">Reason</label>
+          <select id="topic" name="topic" class="field">
+            {topics.map((t) => <option value={t}>{t}</option>)}
+          </select>
+        </div>
+
+        <div class="mt-6 flex flex-col gap-2">
+          <label for="message" class="label text-graphite">Message</label>
+          <textarea
+            id="message"
+            name="message"
+            rows="6"
+            required
+            class="field resize-y"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-ghost mt-8 !text-ink">
+          Send enquiry
+        </button>
+      </form>
+
+      <aside class="lg:sticky lg:top-12 lg:self-start">
+        <p class="label text-graphite">Direct</p>
+        <p class="mt-4 border-t border-ink/12 pt-4">
+          <a
+            href={`mailto:${book.enquiryEmail}`}
+            class="text-ink underline decoration-ink/30 underline-offset-4 transition-colors hover:text-graphite"
+          >
+            {book.enquiryEmail}
+          </a>
+        </p>
+
+        <p class="label mt-10 text-graphite">Also useful</p>
+        <ul class="mt-4 space-y-3">
+          <li class="border-t border-ink/12 pt-3">
+            <a
+              href="/press/"
+              class="text-sm text-ink transition-colors hover:text-graphite"
+              >Press kit and fact sheet</a
+            >
+          </li>
+          <li class="border-t border-ink/12 pt-3">
+            <a
+              href="/buy/"
+              class="text-sm text-ink transition-colors hover:text-graphite"
+              >Order the book</a
+            >
+          </li>
+        </ul>
+
+        <p class="mt-10 text-sm text-graphite">
+          For clinical or patient enquiries, please contact the
+          <a
+            href="https://orthopaedic-surgeon.com.au/"
+            rel="noopener"
+            class="underline decoration-ink/30 underline-offset-4 transition-colors hover:text-ink"
+            >surgical practice</a
+          > directly. This address is for the book only.
+        </p>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .field {
+    width: 100%;
+    background: transparent;
+    border: 1px solid color-mix(in oklab, var(--color-ink) 22%, transparent);
+    padding: 0.85rem 1rem;
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition:
+      border-color 160ms ease,
+      background-color 160ms ease;
+  }
+
+  .field:hover {
+    border-color: color-mix(in oklab, var(--color-ink) 38%, transparent);
+  }
+
+  .field:focus-visible {
+    border-color: var(--color-ink);
+    background: color-mix(in oklab, var(--color-ink) 3%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .field {
+      transition: none;
+    }
+  }
+</style>

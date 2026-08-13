@@ -16,10 +16,34 @@ const text = bs.category
 
 {
   bs.claimed && (
-    <p class="label inline-flex flex-wrap items-center gap-x-3 gap-y-1 text-lumen">
-      <span aria-hidden="true" class="inline-block h-px w-8 bg-lumen/60" />
+    <p class="bestseller label inline-flex flex-wrap items-center gap-x-3 gap-y-1">
+      <span aria-hidden="true" class="bestseller-rule" />
       <span>{text}</span>
-      {bs.verifiedOn && <span class="text-field/40">verified {bs.verifiedOn}</span>}
+      {bs.verifiedOn && <span class="bestseller-date">verified {bs.verifiedOn}</span>}
     </p>
   )
 }
+
+<style>
+  /* Register-aware: the emissive cyan only clears AA on the dark field, so the
+     light register swaps to its darker counterpart rather than washing out. */
+  .bestseller {
+    color: var(--color-lumen);
+  }
+
+  :global(.register-light) .bestseller {
+    color: var(--color-lumen-deep);
+  }
+
+  .bestseller-rule {
+    display: inline-block;
+    height: 1px;
+    width: 2rem;
+    background: currentColor;
+    opacity: 0.6;
+  }
+
+  .bestseller-date {
+    color: color-mix(in oklab, currentColor 62%, transparent);
+  }
+</style>

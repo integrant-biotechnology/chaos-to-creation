@@ -15,6 +15,10 @@
   --color-ground: #07090c;
   --color-ground-raised: #0f141a;
   --color-lumen: #47e0e8;
+  /* The emissive cyan reads at 1.46:1 on the light field — nowhere near AA.
+     This is its counterpart for the light register: same hue family, dark
+     enough to clear 4.5:1 on --color-field. */
+  --color-lumen-deep: #0b6b75;
   --color-stain: #f0567a;
 
   /* Light register — where credibility and conversion live.
@@ -260,6 +264,15 @@
     --resolve-x: 0rem;
     --resolve-y: 0rem;
     --resolve-rotate: 0deg;
+  }
+
+  /* Below the two-column breakpoint there is no side margin to absorb the
+     horizontal scatter, and it pushes the document wider than the viewport.
+     Drop the x component there — the vertical settle still reads. */
+  @media (width < 40rem) {
+    .resolve {
+      --resolve-x: 0rem !important;
+    }
   }
 
   @supports (animation-timeline: view()) {

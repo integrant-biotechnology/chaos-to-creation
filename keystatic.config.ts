@@ -5,12 +5,23 @@ import { config, collection, singleton, fields } from '@keystatic/core';
  * the repo, which triggers a rebuild. Content stays version-controlled, there
  * is no monthly cost, and no external service holds the copy.
  *
- * Storage is `local` for development. Before launch, switch to:
- *   storage: { kind: 'github', repo: 'owner/chaos-to-creation' }
- * and add the GitHub App credentials as environment variables.
+ * Storage switches by environment. `local` writes to the working tree, which
+ * only works on a writable filesystem — a serverless function has none, so
+ * production must use `github`.
+ *
+ * To finish the production wiring:
+ *   1. Visit /keystatic on the deployed URL and follow the GitHub App setup.
+ *   2. It writes back KEYSTATIC_GITHUB_CLIENT_ID, KEYSTATIC_GITHUB_CLIENT_SECRET
+ *      and KEYSTATIC_SECRET — add all three to the Vercel project.
+ * Until those exist the admin falls back to local mode, so the build never
+ * breaks on a missing credential.
  */
+const useGitHub = Boolean(process.env.KEYSTATIC_GITHUB_CLIENT_ID);
+
 export default config({
-  storage: { kind: 'local' },
+  storage: useGitHub
+    ? { kind: 'github', repo: { owner: 'skalaliya', name: 'chaos-to-creation' } }
+    : { kind: 'local' },
 
   ui: {
     brand: { name: 'Chaos to Creation' },

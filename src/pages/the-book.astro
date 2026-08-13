@@ -1,0 +1,127 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import BuySection from '../components/BuySection.astro';
+import cover from '../assets/cover.png';
+import book from '../data/book.json';
+import author from '../data/author.json';
+import {
+  bookNode,
+  personNode,
+  faqNode,
+  breadcrumbNode,
+} from '../lib/schema';
+
+const hallmarks = (await getCollection('hallmarks')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const faq = (await getCollection('faq')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const schema = [
+  personNode(),
+  await bookNode(),
+  await faqNode(),
+  breadcrumbNode([
+    { name: 'Home', path: '/' },
+    { name: 'The book', path: '/the-book/' },
+  ]),
+];
+---
+
+<Base
+  title={`The book — ${book.title}: ${book.subtitle}`}
+  description={book.summary}
+  schema={schema}
+>
+  <PageHeader
+    figure="Figure 3 · The book"
+    title={book.subtitle}
+    lede={book.tagline}
+  />
+
+  <section class="register-light py-24 lg:py-32">
+    <div class="shell grid gap-16 lg:grid-cols-[1fr_20rem] lg:gap-24">
+      <div>
+        <p class="text-lead text-ink/85">{book.summary}</p>
+        <p class="mt-8 max-w-measure text-ink/75">{book.description}</p>
+
+        <hr class="rule my-14 text-ink" />
+
+        <h2 class="text-h3 text-ink">What the book covers</h2>
+        <ol class="mt-8 space-y-6">
+          {
+            hallmarks.map((h) => (
+              <li class="grid grid-cols-[2.5rem_1fr] gap-4 border-t border-ink/10 pt-5">
+                <span class="label text-graphite tabular-nums">
+                  {String(h.data.order).padStart(2, '0')}
+                </span>
+                <div>
+                  <h3 class="text-h3 !text-[1.0625rem] font-semibold text-ink">
+                    {h.data.name}
+                  </h3>
+                  <p class="mt-1.5 text-sm text-graphite">{h.data.summary}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+
+      <aside class="lg:sticky lg:top-12 lg:self-start">
+        <Image
+          src={cover}
+          alt={`Cover of ${book.title}`}
+          widths={[320, 640]}
+          sizes="20rem"
+          loading="lazy"
+          class="w-full max-w-[20rem] drop-shadow-[0_24px_48px_rgba(11,26,34,0.22)]"
+        />
+        <dl class="mt-8 space-y-3 text-sm">
+          <div class="flex justify-between gap-4 border-t border-ink/10 pt-3">
+            <dt class="label text-graphite">Author</dt>
+            <dd class="text-right text-ink">{author.fullName}</dd>
+          </div>
+          <div class="flex justify-between gap-4 border-t border-ink/10 pt-3">
+            <dt class="label text-graphite">Published</dt>
+            <dd class="text-right text-ink">{book.published}</dd>
+          </div>
+          <div class="flex justify-between gap-4 border-t border-ink/10 pt-3">
+            <dt class="label text-graphite">Editions</dt>
+            <dd class="text-right text-ink">Hardcover, paperback, Kindle</dd>
+          </div>
+        </dl>
+        <a href="/buy/" class="btn btn-ghost mt-8 w-full !text-ink">
+          See editions
+        </a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="register-light border-t border-ink/10 py-24 lg:py-32">
+    <div class="shell grid gap-16 lg:grid-cols-[22rem_1fr] lg:gap-24">
+      <header>
+        <p class="label text-graphite">Figure 4 · Questions</p>
+        <h2 class="mt-5 text-h2 text-ink">Before you read.</h2>
+      </header>
+
+      <dl class="divide-y divide-ink/10">
+        {
+          faq.map((f) => (
+            <div class="py-6 first:pt-0">
+              <dt class="text-h3 !text-[1.125rem] font-semibold text-ink">
+                {f.data.question}?
+              </dt>
+              <dd class="mt-2 max-w-measure text-graphite">{f.data.answer}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <BuySection />
+</Base>
