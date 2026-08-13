@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageHeader from '../components/PageHeader.astro';
+import BestsellerMark from '../components/BestsellerMark.astro';
 import author from '../data/author.json';
 import book from '../data/book.json';
 import { personNode, breadcrumbNode } from '../lib/schema';
@@ -28,6 +29,14 @@ const schema = [
   <section class="register-light py-24 lg:py-32">
     <div class="shell grid gap-16 lg:grid-cols-[1fr_20rem] lg:gap-24">
       <div>
+        {
+          book.bestseller.claimed && (
+            <div class="mb-10">
+              <BestsellerMark variant="seal" withAuthor />
+            </div>
+          )
+        }
+
         <p class="max-w-measure text-lead text-ink/85">{author.long}</p>
 
         <hr class="rule my-14 text-ink" />

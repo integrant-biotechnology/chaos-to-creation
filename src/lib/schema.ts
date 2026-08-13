@@ -12,6 +12,13 @@ const BOOK_ID = `${SITE}/#book`;
  * strongest entity signal available for an academic author — it lets search
  * engines reconcile this page with an already-established researcher identity.
  */
+const bs = book.bestseller;
+
+/** The precise form when a category is known, the publisher's form otherwise. */
+export const bestsellerAward = bs.category
+  ? `Amazon ${bs.rank ? `#${bs.rank}` : 'Best Seller'} in ${bs.category}`
+  : bs.label;
+
 export function personNode() {
   return {
     '@type': 'Person',
@@ -21,6 +28,7 @@ export function personNode() {
     jobTitle: author.role,
     description: author.short,
     url: `${SITE}/author/`,
+    ...(bs.claimed ? { award: bs.authorLabel } : {}),
     sameAs: [...author.social.map((s) => s.url), author.practiceUrl],
     affiliation: {
       '@type': 'CollegeOrUniversity',
@@ -44,6 +52,7 @@ export async function bookNode() {
     inLanguage: 'en',
     datePublished: book.published,
     url: `${SITE}/the-book/`,
+    ...(bs.claimed ? { award: bestsellerAward } : {}),
     workExample: formats.map((f) => ({
       '@type': 'Book',
       bookFormat: `https://schema.org/${

@@ -6,14 +6,25 @@ import Thesis from '../components/Thesis.astro';
 import AuthorCard from '../components/AuthorCard.astro';
 import BuySection from '../components/BuySection.astro';
 import book from '../data/book.json';
-import { bookNode, personNode, websiteNode } from '../lib/schema';
+import {
+  bookNode,
+  personNode,
+  websiteNode,
+  bestsellerAward,
+} from '../lib/schema';
 
 const schema = [websiteNode(), personNode(), await bookNode()];
+
+// Lead the search snippet with the accolade — it is the strongest
+// click-through signal the page has.
+const description = book.bestseller.claimed
+  ? `${bestsellerAward}. ${book.summary}`
+  : book.summary;
 ---
 
 <Base
   title={`${book.title}: ${book.subtitle} — Prof. Gordon Slater`}
-  description={book.summary}
+  description={description}
   schema={schema}
 >
   <Hero />

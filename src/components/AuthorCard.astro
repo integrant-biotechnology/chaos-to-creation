@@ -1,5 +1,7 @@
 ---
 import author from '../data/author.json';
+import book from '../data/book.json';
+import BestsellerMark from './BestsellerMark.astro';
 ---
 
 <section id="author" class="register-light py-28 lg:py-36">
@@ -8,6 +10,14 @@ import author from '../data/author.json';
       <p class="label text-graphite">Figure 2 &middot; The author</p>
       <h2 class="mt-5 text-h2 text-ink">{author.fullName}</h2>
       <p class="label mt-4 text-graphite">{author.role}</p>
+
+      {
+        book.bestseller.claimed && (
+          <div class="mt-7">
+            <BestsellerMark variant="seal" withAuthor />
+          </div>
+        )
+      }
 
       <dl class="mt-10 space-y-5">
         {

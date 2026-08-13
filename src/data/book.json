@@ -10,6 +10,7 @@
   "bestseller": {
     "claimed": true,
     "label": "Amazon Best Seller",
+    "authorLabel": "Amazon Best-Selling Author",
     "category": "",
     "rank": "",
     "verifiedOn": ""

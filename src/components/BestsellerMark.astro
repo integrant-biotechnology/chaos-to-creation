@@ -1,27 +1,62 @@
 ---
 import book from '../data/book.json';
 
+interface Props {
+  /**
+   * `seal` is the full stamped credential for prominent placements.
+   * `inline` is the single-line rule-and-label for tight spots.
+   */
+  variant?: 'seal' | 'inline';
+  /** Adds the author credential line beneath the book claim. */
+  withAuthor?: boolean;
+  class?: string;
+}
+
+const {
+  variant = 'seal',
+  withAuthor = false,
+  class: className = '',
+} = Astro.props;
+
 const bs = book.bestseller;
 
 /**
- * Amazon best-seller badges are category- and time-specific. Until the client
- * supplies the category and a dated screenshot, this renders the generic claim
- * only. Filling `category` (and optionally `rank`) in book.json upgrades it to
- * a precise, substantiated statement with no code change.
+ * Amazon best-seller badges are category- and time-specific. With a category
+ * supplied the mark states it precisely ("#1 in Regenerative Medicine");
+ * without one it states the claim as the publisher gave it. Filling
+ * `category` / `rank` / `verifiedOn` in book.json upgrades every placement
+ * on the site at once, with no code change.
  */
-const text = bs.category
-  ? `${bs.rank ? `#${bs.rank}` : 'Best seller'} in ${bs.category} — Amazon`
+const precise = Boolean(bs.category);
+const headline = precise
+  ? `${bs.rank ? `#${bs.rank}` : 'Best Seller'} in ${bs.category}`
   : bs.label;
 ---
 
 {
-  bs.claimed && (
-    <p class="bestseller label inline-flex flex-wrap items-center gap-x-3 gap-y-1">
-      <span aria-hidden="true" class="bestseller-rule" />
-      <span>{text}</span>
-      {bs.verifiedOn && <span class="bestseller-date">verified {bs.verifiedOn}</span>}
-    </p>
-  )
+  bs.claimed &&
+    (variant === 'inline' ? (
+      <p class:list={['bestseller bestseller-inline label', className]}>
+        <span aria-hidden="true" class="bestseller-rule" />
+        <span>{precise ? `Amazon — ${headline}` : headline}</span>
+      </p>
+    ) : (
+      <div class:list={['bestseller bestseller-seal', className]}>
+        <span aria-hidden="true" class="bestseller-diamond" />
+        <div class="bestseller-body">
+          <p class="bestseller-headline">
+            {precise && <span class="bestseller-source">Amazon</span>}
+            {headline}
+          </p>
+          {withAuthor && (
+            <p class="bestseller-author">{bs.authorLabel}</p>
+          )}
+          {bs.verifiedOn && (
+            <p class="bestseller-date">Verified {bs.verifiedOn}</p>
+          )}
+        </div>
+      </div>
+    ))
 }
 
 <style>
@@ -35,15 +70,73 @@ const text = bs.category
     color: var(--color-lumen-deep);
   }
 
+  /* -- Seal ---------------------------------------------------------------
+     A stamped credential, not a retail sticker: hairline rule, letterspaced
+     caps, one precise geometric mark. It has to sit beside a surgeon's name
+     without cheapening it. */
+  .bestseller-seal {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.75rem 1.15rem 0.75rem 1rem;
+    border: 1px solid color-mix(in oklab, currentColor 38%, transparent);
+    background: color-mix(in oklab, currentColor 7%, transparent);
+  }
+
+  .bestseller-diamond {
+    width: 0.4rem;
+    height: 0.4rem;
+    flex: none;
+    background: currentColor;
+    transform: rotate(45deg);
+  }
+
+  .bestseller-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .bestseller-headline {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    line-height: 1.3;
+    text-transform: uppercase;
+  }
+
+  /* Hierarchy here comes from size and weight, never from lowering opacity:
+     fading these lines put them at 3.07:1, below AA. They stay at full
+     currentColor so they measure identically to the headline. */
+  .bestseller-source {
+    font-weight: 400;
+    margin-right: 0.5em;
+  }
+
+  .bestseller-author,
+  .bestseller-date {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+
+  /* -- Inline -------------------------------------------------------------- */
+  .bestseller-inline {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.75rem;
+  }
+
   .bestseller-rule {
     display: inline-block;
     height: 1px;
     width: 2rem;
     background: currentColor;
     opacity: 0.6;
-  }
-
-  .bestseller-date {
-    color: color-mix(in oklab, currentColor 62%, transparent);
   }
 </style>
