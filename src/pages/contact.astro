@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import PageHeader from '../components/PageHeader.astro';
 import book from '../data/book.json';
+import author from '../data/author.json';
 import { breadcrumbNode, personNode } from '../lib/schema';
 
 const schema = [
@@ -12,12 +13,48 @@ const schema = [
   ]),
 ];
 
-const topics = [
-  'Media or interview request',
-  'Speaking engagement',
-  'Bulk or institutional order',
-  'Rights and translation',
-  'Something else',
+/**
+ * Enquiries route by pre-addressed mail links rather than a posted form.
+ * No backend, nothing to break, and the subject line arrives already sorted —
+ * which matters more for press and speaking than a generic message box does.
+ *
+ * When a verified sending domain is in place, a posted form can replace this
+ * without changing the page's structure.
+ */
+const to = book.enquiryEmail;
+const mailto = (subject: string, body?: string) =>
+  `mailto:${to}?subject=${encodeURIComponent(subject)}` +
+  (body ? `&body=${encodeURIComponent(body)}` : '');
+
+const routes = [
+  {
+    label: 'Media and interviews',
+    detail:
+      'Review copies, interview requests, extracts and high-resolution assets.',
+    subject: `Media enquiry — ${book.title}`,
+    body: 'Outlet:\nDeadline:\nWhat you need:\n',
+    aside: { text: 'Press kit', href: '/press/' },
+  },
+  {
+    label: 'Speaking and events',
+    detail:
+      'Conferences, panels and lectures on regenerative medicine, longevity science and surgical innovation.',
+    subject: `Speaking enquiry — ${author.fullName}`,
+    body: 'Event:\nDate:\nAudience and format:\nLocation:\n',
+  },
+  {
+    label: 'Bulk and institutional orders',
+    detail:
+      'Universities, hospitals, libraries, conferences and corporate gifting.',
+    subject: `Bulk order — ${book.title}`,
+    body: 'Organisation:\nQuantity:\nEdition:\nDelivery date:\n',
+  },
+  {
+    label: 'Rights and translation',
+    detail: 'Foreign language, audio and territorial rights.',
+    subject: `Rights enquiry — ${book.title}`,
+    body: 'Territory or language:\nRights sought:\nPublisher:\n',
+  },
 ];
 ---
 
@@ -29,84 +66,52 @@ const topics = [
   <PageHeader
     figure="Figure 8 · Contact"
     title="Get in touch"
-    lede="Media requests, speaking engagements, bulk orders and rights enquiries all reach the same desk."
+    lede="Choose the line that fits and your message arrives already sorted. Everything reaches the same desk."
   />
 
   <section class="register-light py-24 lg:py-32">
-    <div class="shell grid gap-16 lg:grid-cols-[1fr_20rem] lg:gap-24">
-      <form
-        method="post"
-        action="/api/contact"
-        class="max-w-[38rem]"
-        novalidate
-      >
-        <!-- Honeypot. Real people never see it; bots fill it in. -->
-        <div class="absolute left-[-9999px]" aria-hidden="true">
-          <label for="company">Company</label>
-          <input
-            id="company"
-            name="company"
-            type="text"
-            tabindex="-1"
-            autocomplete="off"
-          />
-        </div>
-
-        <div class="grid gap-6 sm:grid-cols-2">
-          <div class="flex flex-col gap-2">
-            <label for="name" class="label text-graphite">Name</label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              required
-              autocomplete="name"
-              class="field"
-            />
-          </div>
-          <div class="flex flex-col gap-2">
-            <label for="email" class="label text-graphite">Email</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              autocomplete="email"
-              class="field"
-            />
-          </div>
-        </div>
-
-        <div class="mt-6 flex flex-col gap-2">
-          <label for="topic" class="label text-graphite">Reason</label>
-          <select id="topic" name="topic" class="field">
-            {topics.map((t) => <option value={t}>{t}</option>)}
-          </select>
-        </div>
-
-        <div class="mt-6 flex flex-col gap-2">
-          <label for="message" class="label text-graphite">Message</label>
-          <textarea
-            id="message"
-            name="message"
-            rows="6"
-            required
-            class="field resize-y"></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-ghost mt-8 !text-ink">
-          Send enquiry
-        </button>
-      </form>
+    <div class="shell grid gap-16 lg:grid-cols-[1fr_19rem] lg:gap-24">
+      <ul class="divide-y divide-ink/12 border-y border-ink/12">
+        {
+          routes.map((r) => (
+            <li class="group py-8 first:pt-0 last:pb-0">
+              <div class="flex flex-wrap items-start justify-between gap-x-8 gap-y-4">
+                <div class="max-w-[42ch]">
+                  <h2 class="text-h3 !text-[1.25rem] font-semibold text-ink">
+                    {r.label}
+                  </h2>
+                  <p class="mt-2 text-graphite">{r.detail}</p>
+                  {r.aside && (
+                    <p class="mt-3">
+                      <a
+                        href={r.aside.href}
+                        class="label text-ink underline decoration-ink/30 underline-offset-4 transition-colors hover:text-graphite"
+                      >
+                        {r.aside.text}
+                      </a>
+                    </p>
+                  )}
+                </div>
+                <a
+                  href={mailto(r.subject, r.body)}
+                  class="btn btn-ghost shrink-0 !text-ink"
+                >
+                  Write to us
+                </a>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
 
       <aside class="lg:sticky lg:top-12 lg:self-start">
         <p class="label text-graphite">Direct</p>
         <p class="mt-4 border-t border-ink/12 pt-4">
           <a
-            href={`mailto:${book.enquiryEmail}`}
+            href={`mailto:${to}`}
             class="text-ink underline decoration-ink/30 underline-offset-4 transition-colors hover:text-graphite"
           >
-            {book.enquiryEmail}
+            {to}
           </a>
         </p>
 
@@ -129,9 +134,8 @@ const topics = [
         </ul>
 
         <p class="mt-10 text-sm text-graphite">
-          For clinical or patient enquiries, please contact the
-          <a
-            href="https://orthopaedic-surgeon.com.au/"
+          For clinical or patient enquiries, please contact the <a
+            href={author.practiceUrl}
             rel="noopener"
             class="underline decoration-ink/30 underline-offset-4 transition-colors hover:text-ink"
             >surgical practice</a
@@ -141,33 +145,3 @@ const topics = [
     </div>
   </section>
 </Base>
-
-<style>
-  .field {
-    width: 100%;
-    background: transparent;
-    border: 1px solid color-mix(in oklab, var(--color-ink) 22%, transparent);
-    padding: 0.85rem 1rem;
-    color: var(--color-ink);
-    font-family: var(--font-body);
-    font-size: 1rem;
-    transition:
-      border-color 160ms ease,
-      background-color 160ms ease;
-  }
-
-  .field:hover {
-    border-color: color-mix(in oklab, var(--color-ink) 38%, transparent);
-  }
-
-  .field:focus-visible {
-    border-color: var(--color-ink);
-    background: color-mix(in oklab, var(--color-ink) 3%, transparent);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .field {
-      transition: none;
-    }
-  }
-</style>

@@ -62,22 +62,40 @@ Editable at `/keystatic`. Collections live in `src/content/`, singletons in `src
 
 1. **The best-seller claim is unsubstantiated.** The press release states only "bestseller
    status" — no category, rank, or date. Amazon badges are category- and time-specific.
-   `BestsellerMark.astro` renders the generic label until `category` / `rank` /
-   `verifiedOn` are filled in `src/data/book.json` (or via Keystatic), at which point it
-   upgrades to a precise claim with no code change. **Needs a dated screenshot before
-   launch.**
-2. **Compliance glance.** Prof. Slater is AHPRA-registered and the book covers stem cells
+   `BestsellerMark.astro` renders the claim as given until `category` / `rank` /
+   `verifiedOn` are filled in `src/data/book.json` (or via Keystatic), at which point
+   every placement upgrades to "#1 in &lt;category&gt;" with no code change. **Needs a
+   dated screenshot before launch.**
+
+2. **Confirm the enquiry address.** `book.enquiryEmail` is currently
+   `admin@drgordonslater.com.au`, taken from Adelaide's email signature. That is the
+   practice admin inbox, not a confirmed book address — it routes all media, speaking,
+   bulk-order and rights enquiries into clinical admin. One field to change.
+
+3. **The contact form is deliberately mail-routed, not posted.** `/contact/` offers four
+   pre-addressed enquiry lines (media, speaking, bulk, rights), each opening a `mailto:`
+   with the subject and a field prompt already filled. No backend, nothing to break, and
+   press enquiries arrive pre-sorted. A posted form needs a verified sending domain —
+   Resend is available on the Vercel Marketplace and its terms are already accepted, but
+   nothing is provisioned. Provisioning needs a sending domain
+   (`send.chaostocreation.com.au` recommended, to isolate sending reputation) plus SPF and
+   DKIM records on the `chaostocreation.com.au` zone.
+4. **Compliance glance.** Prof. Slater is AHPRA-registered and the book covers stem cells
    and hyperbaric oxygen therapy. Marketing a book is not marketing a therapy, but a
    practitioner's site connecting the two can attract AHPRA advertising and TGA scrutiny.
    Worth a check before launch.
-3. **Keystatic storage is `local`.** Before deploy, switch to
-   `{ kind: 'github', repo: 'skalaliya/chaos-to-creation' }` and add the GitHub App
-   credentials as environment variables.
-4. **Remaining routes.** `/the-book/`, `/author/`, `/press/`, `/buy/`, `/contact/` are
-   linked but not yet built.
-5. **Assets needed:** print-quality cover, current headshot, AMA and Australian
+5. **Finish the Keystatic GitHub wiring.** Storage is already environment-aware: `local`
+   in development, `github` as soon as `KEYSTATIC_GITHUB_CLIENT_ID` exists, so a missing
+   credential can never break the build. To activate the CMS in production, visit
+   `/keystatic` on the deployed URL, follow the GitHub App setup, and add the three
+   variables it returns (`KEYSTATIC_GITHUB_CLIENT_ID`, `KEYSTATIC_GITHUB_CLIENT_SECRET`,
+   `KEYSTATIC_SECRET`) to the Vercel project.
+6. **Staging is noindexed.** Every build emits `robots: noindex,nofollow` and a
+   `Disallow: /` robots.txt unless `PUBLIC_SITE_LIVE=true`. Set that env var at DNS
+   cutover; it also switches robots.txt to `Allow` with the sitemap reference.
+7. **Assets needed:** print-quality cover, current headshot, AMA and Australian
    Orthopaedic Association logos at full resolution.
-6. **The practice site is out of scope.** `orthopaedic-surgeon.com.au` also needs a
+8. **The practice site is out of scope.** `orthopaedic-surgeon.com.au` also needs a
    best-seller mention; it is not covered by this repo.
 
 ## Migration
