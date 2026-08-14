@@ -114,14 +114,14 @@ const schema = [
         </dl>
 
         <p class="label mt-12 text-muted">Elsewhere</p>
-        <ul class="mt-5 space-y-3">
+        <ul class="mt-5">
           {
             author.social.map((s) => (
-              <li class="border-t border-line pt-3">
+              <li class="border-t border-line">
                 <a
                   href={s.url}
                   target="_blank" rel="noopener me"
-                  class="group flex items-center justify-between gap-3 text-sm text-fg transition-colors hover:text-muted"
+                  class="group flex min-h-11 items-center justify-between gap-3 text-sm text-fg transition-colors hover:text-muted"
                 >
                   <span>{s.name}</span>
                   <span aria-hidden="true" class="text-muted">&rarr;</span>
@@ -129,11 +129,11 @@ const schema = [
               </li>
             ))
           }
-          <li class="border-t border-line pt-3">
+          <li class="border-t border-line">
             <a
               href={author.practiceUrl}
               target="_blank" rel="noopener"
-              class="flex items-center justify-between gap-3 text-sm text-fg transition-colors hover:text-muted"
+              class="flex min-h-11 items-center justify-between gap-3 text-sm text-fg transition-colors hover:text-muted"
             >
               <span>Surgical practice</span>
               <span aria-hidden="true" class="text-muted">&rarr;</span>

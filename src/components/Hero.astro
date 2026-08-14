@@ -112,7 +112,7 @@ const chaos = [
         <BestsellerMark variant="seal" />
         {
           press && (
-            <p class="label mt-3 text-muted">
+            <p class="label mt-3 !text-[0.8125rem] text-muted">
               Featured in{' '}
               <a
                 href={press.data.url}
@@ -128,7 +128,7 @@ const chaos = [
         }
         {
           rating && (
-            <p class="label mt-3 text-muted">
+            <p class="label mt-3 !text-[0.8125rem] text-muted">
               &#9733; {rating.stars} &middot; {rating.count} ratings &middot;{' '}
               <a
                 href={rating.url}
@@ -160,7 +160,7 @@ const chaos = [
               <a
                 href={f.data.url}
                 target="_blank" rel="noopener"
-                class="label hero-enter flex min-h-11 items-center text-fg transition-colors hover:text-accent"
+                class="label hero-enter flex min-h-11 items-center !text-[0.8125rem] text-fg transition-colors hover:text-accent"
                 style={`--ed:${1080 + i * 40}ms; --edur:400ms`}
               >
                 <span class="fmt">

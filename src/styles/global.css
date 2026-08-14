@@ -141,6 +141,8 @@ html:active-view-transition .caption-rule {
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
+    /* Press feedback comes from :active states, not the OS grey flash. */
+    -webkit-tap-highlight-color: transparent;
     scroll-behavior: smooth;
   }
 
@@ -334,6 +336,11 @@ html:active-view-transition .caption-rule {
     .btn {
       transition: none;
     }
+  }
+
+  /* The press: instant, physical, the touch equivalent of the hover lift. */
+  .btn:active {
+    transform: scale(0.985);
   }
 
   .btn-primary {
