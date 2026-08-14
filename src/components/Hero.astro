@@ -61,11 +61,9 @@ const chaos = [
        animates. Grain rides on it, under the content. -->
   <div aria-hidden="true" class="hero-scrim grain"></div>
 
-  <div
-    class="shell relative grid items-center gap-16 pb-24 pt-20 lg:grid-cols-[1.28fr_0.72fr] lg:gap-16 lg:pb-32 lg:pt-28"
-  >
-    <!-- Type -->
-    <div>
+  <div class="hero-grid shell relative">
+    <!-- Head: byline, title, lede -->
+    <div class="hero-head">
       <p class="label hero-enter mb-6 text-muted" style="--ed:120ms">
         {author.fullName} &middot; {author.postNominals}
       </p>
@@ -105,8 +103,12 @@ const chaos = [
       >
         {book.summary}
       </p>
+    </div>
 
-      <div class="hero-seal mt-10">
+    <!-- Act: seal, citation, CTAs, formats — the conversion block. Fitting
+         this above the fold is the whole point of the height-aware grid. -->
+    <div class="hero-act">
+      <div class="hero-seal">
         <BestsellerMark variant="seal" />
         {
           press && (
@@ -141,7 +143,7 @@ const chaos = [
       </div>
 
       <div
-        class="hero-enter mt-8 flex flex-wrap items-center gap-3"
+        class="hero-enter mt-6 flex flex-wrap items-center gap-3"
         style="--ed:1000ms; --edur:450ms"
       >
         <a href="/buy/" class="btn btn-primary">
@@ -151,7 +153,7 @@ const chaos = [
         <a href="/the-book/" class="btn btn-ghost">About the book</a>
       </div>
 
-      <ul class="mt-10 flex flex-wrap items-center gap-x-7 gap-y-2">
+      <ul class="mt-4 flex flex-wrap items-center gap-x-7">
         {
           formats.map((f, i) => (
             <li>
@@ -176,7 +178,7 @@ const chaos = [
          the plate links to the book page, where the view transition carries
          the cover across. -->
     <figure
-      class="hero-enter relative mx-auto w-full max-w-[17rem] lg:mx-0 lg:ml-auto lg:max-w-[19rem]"
+      class="hero-plate hero-enter relative mx-auto w-full max-w-[17rem] lg:mx-0 lg:ml-auto lg:max-w-[19rem]"
       style="--ed:320ms; --edur:900ms; --eo:0.01"
     >
       <a
@@ -263,8 +265,59 @@ const chaos = [
         var(--color-surface) 100%);
   }
 
+  /* -- Viewport fit ---------------------------------------------------------
+     The composition targets the first screen: on lg+ the grid takes the
+     viewport height minus the sticky header, centres its content, and the
+     title is capped by HEIGHT as well as width — a width-only clamp is why
+     13" laptops (wide, short) were cutting the CTA row at the fold. svh is
+     the stable small-viewport unit on mobile; the vh line is the fallback.
+
+     Areas: head (byline/title/lede), plate (cover), act (seal/CTAs/formats).
+     On phones the plate sits between head and act, so the product is not
+     buried under the whole conversion stack. */
+  .hero-grid {
+    display: grid;
+    grid-template-areas: 'head' 'plate' 'act';
+    row-gap: clamp(1.75rem, 4svh, 3rem);
+    padding-top: clamp(1.25rem, 3.5svh, 3rem);
+    padding-bottom: clamp(2.25rem, 6svh, 4.5rem);
+    align-content: center;
+    min-height: calc(100vh - 5.5rem);
+    min-height: calc(100svh - 5.5rem);
+  }
+
+  .hero-head {
+    grid-area: head;
+  }
+
+  .hero-plate {
+    grid-area: plate;
+  }
+
+  .hero-act {
+    grid-area: act;
+  }
+
+  @media (width >= 64rem) {
+    .hero-grid {
+      grid-template-areas:
+        'head plate'
+        'act plate';
+      grid-template-columns: 1.28fr 0.72fr;
+      grid-template-rows: auto auto;
+      column-gap: clamp(2.5rem, 4vw, 4rem);
+    }
+
+    .hero-plate {
+      align-self: center;
+    }
+  }
+
   .hero-title {
-    font-size: var(--text-mega);
+    /* Width clamp, then a height cap: two lines at 14svh each stay ≈24% of
+       the viewport, which is what guarantees the act block a place above
+       the fold on short screens. */
+    font-size: min(var(--text-mega), 14svh);
     line-height: var(--text-mega--line-height);
     letter-spacing: -0.03em;
     text-transform: uppercase;
@@ -405,7 +458,7 @@ const chaos = [
     transition: color 200ms ease;
   }
 
-  @media (width >= 64rem) {
+  @media (width >= 64rem) and (height >= 44rem) {
     .hero-cue {
       display: flex;
     }
