@@ -13,25 +13,25 @@ const nav = [
 ];
 ---
 
-<footer class="register-dark border-t border-field/10">
+<footer class="surface border-t border-line">
   <div class="shell py-16">
     <div class="grid gap-12 md:grid-cols-[1.2fr_1fr_1fr]">
       <div>
-        <p class="label text-field/90">{book.title}</p>
-        <p class="mt-3 max-w-[34ch] text-sm text-field/65">
+        <p class="label text-fg">{book.title}</p>
+        <p class="mt-3 max-w-[34ch] text-sm text-muted">
           {book.subtitle} &middot; {author.fullName}
         </p>
       </div>
 
       <nav aria-label="Footer">
-        <p class="label text-field/60">Site</p>
+        <p class="label text-muted">Site</p>
         <ul class="mt-2">
           {
             nav.map((item) => (
               <li>
                 <a
                   href={item.href}
-                  class="flex min-h-11 items-center text-sm text-field/65 transition-colors hover:text-lumen"
+                  class="flex min-h-11 items-center text-sm text-muted transition-colors hover:text-accent"
                 >
                   {item.label}
                 </a>
@@ -42,7 +42,7 @@ const nav = [
       </nav>
 
       <div>
-        <p class="label text-field/60">Elsewhere</p>
+        <p class="label text-muted">Elsewhere</p>
         <ul class="mt-2">
           {
             author.social.map((s) => (
@@ -50,7 +50,7 @@ const nav = [
                 <a
                   href={s.url}
                   rel="noopener me"
-                  class="flex min-h-11 items-center text-sm text-field/65 transition-colors hover:text-lumen"
+                  class="flex min-h-11 items-center text-sm text-muted transition-colors hover:text-accent"
                 >
                   {s.name}
                 </a>
@@ -61,7 +61,7 @@ const nav = [
             <a
               href={author.practiceUrl}
               rel="noopener"
-              class="flex min-h-11 items-center text-sm text-field/65 transition-colors hover:text-lumen"
+              class="flex min-h-11 items-center text-sm text-muted transition-colors hover:text-accent"
             >
               Surgical practice
             </a>
@@ -71,7 +71,7 @@ const nav = [
     </div>
 
     <hr class="rule mt-14" />
-    <p class="label mt-6 text-field/60">
+    <p class="label mt-6 text-muted">
       &copy; {year} {book.title}
     </p>
   </div>

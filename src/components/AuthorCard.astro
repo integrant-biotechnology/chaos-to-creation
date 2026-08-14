@@ -4,12 +4,12 @@ import book from '../data/book.json';
 import BestsellerMark from './BestsellerMark.astro';
 ---
 
-<section id="author" class="register-light py-28 lg:py-36">
+<section id="author" class="surface py-28 lg:py-36">
   <div class="shell grid gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24">
     <div>
-      <p class="label text-graphite">Figure 2 &middot; The author</p>
-      <h2 class="mt-5 text-h2 text-ink">{author.fullName}</h2>
-      <p class="label mt-4 text-graphite">{author.role}</p>
+      <p class="label text-muted">Figure 2 &middot; The author</p>
+      <h2 class="mt-5 text-h2 text-fg">{author.fullName}</h2>
+      <p class="label mt-4 text-muted">{author.role}</p>
 
       {
         book.bestseller.claimed && (
@@ -22,9 +22,9 @@ import BestsellerMark from './BestsellerMark.astro';
       <dl class="mt-10 space-y-5">
         {
           author.credentials.map((c) => (
-            <div class="border-t border-ink/12 pt-4">
-              <dt class="label text-ink">{c.label}</dt>
-              <dd class="mt-1.5 text-sm text-graphite">{c.detail}</dd>
+            <div class="border-t border-line pt-4">
+              <dt class="label text-fg">{c.label}</dt>
+              <dd class="mt-1.5 text-sm text-muted">{c.detail}</dd>
             </div>
           ))
         }
@@ -32,15 +32,15 @@ import BestsellerMark from './BestsellerMark.astro';
     </div>
 
     <div class="lg:pt-16">
-      <p class="text-lead text-ink/85">{author.short}</p>
-      <p class="mt-6 max-w-measure text-ink/70">{author.long}</p>
+      <p class="text-lead text-muted">{author.short}</p>
+      <p class="mt-6 max-w-measure text-muted">{author.long}</p>
 
       <div class="mt-10 flex flex-wrap gap-3">
-        <a href="/author/" class="btn btn-ghost !text-ink">Full biography</a>
+        <a href="/author/" class="btn btn-ghost">Full biography</a>
         <a
           href={author.practiceUrl}
           rel="noopener"
-          class="btn btn-ghost !text-ink"
+          class="btn btn-ghost"
         >
           Surgical practice
         </a>

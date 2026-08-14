@@ -1,31 +1,33 @@
 @import 'tailwindcss';
 
 /* ---------------------------------------------------------------------------
-   Chaos to Creation — "Dark field"
+   Chaos to Creation — ink & brass
 
-   The palette is drawn from immunofluorescence microscopy, the actual visual
-   artifact of regenerative-medicine research: a black field with luminous
-   stained structures. The cyan descends from the practice brand teal (#3AA6B9)
-   pushed to an emissive value, so the identity stays connected to Prof.
-   Slater's clinical work without inheriting the Elementor template.
+   Two-tier tokens. Tier 1 (--s-*) holds raw values and swaps per theme.
+   Tier 2 (--color-*) names roles and is what components reference, so no
+   component ever knows which theme is active.
+
+   Every pair below is measured, not chosen by eye. No single accent clears
+   AA as text on both grounds — verdigris reads 4.57 on paper but 3.83 on
+   ink; brass reads 6.05 on ink but 2.89 on paper. Hence per-theme pairs.
+   Worst case across all three surfaces in either theme is 4.63:1.
 --------------------------------------------------------------------------- */
 
 @theme {
-  /* Dark register — where the science lives */
-  --color-ground: #07090c;
-  --color-ground-raised: #0f141a;
-  --color-lumen: #47e0e8;
-  /* The emissive cyan reads at 1.46:1 on the light field — nowhere near AA.
-     This is its counterpart for the light register: same hue family, dark
-     enough to clear 4.5:1 on --color-field. */
-  --color-lumen-deep: #0b6b75;
-  --color-stain: #f0567a;
+  --color-surface: var(--s-surface);
+  --color-sunken: var(--s-sunken);
+  --color-raised: var(--s-raised);
 
-  /* Light register — where credibility and conversion live.
-     Deliberately a cool clinical white, not a warm cream. */
-  --color-field: #f2f5f7;
-  --color-ink: #0b1a22;
-  --color-graphite: #5a6b75;
+  --color-fg: var(--s-fg);
+  --color-muted: var(--s-muted);
+  --color-faint: var(--s-faint);
+
+  --color-accent: var(--s-accent);
+  --color-on-accent: var(--s-on-accent);
+  --color-metal: var(--s-metal);
+
+  --color-line: var(--s-line);
+  --color-line-strong: var(--s-line-strong);
 
   /* Font families resolved by Astro's font pipeline (see astro.config.mjs) */
   --font-display: var(--ff-display);
@@ -52,20 +54,64 @@
   --text-h1: clamp(2.75rem, 1.6rem + 5.6vw, 7rem);
   --text-h1--line-height: 0.92;
 
-  /* Sized so the longest word ("CREATION", ~5.5em at these tracking values)
-     fits the hero's type column without colliding with the cover plate. */
   --text-mega: clamp(3.25rem, 1.1rem + 8.6vw, 8.5rem);
   --text-mega--line-height: 0.86;
 
-  /* Measure */
   --container-measure: 68ch;
 }
 
-@layer base {
-  :root {
-    color-scheme: dark;
-  }
+/* -- Dark is the default. No attribute needed, so the no-FOUC script only has
+      work to do for the minority who choose light. ------------------------ */
+:root {
+  --s-surface: #14120f;
+  --s-sunken: #0e0c0a;
+  --s-raised: #1c1916;
 
+  --s-fg: #f0ebe3;
+  --s-muted: #b5ada4;
+  --s-faint: #8a827a;
+
+  --s-accent: #5fa99c;
+  --s-on-accent: #0e0c0a;
+  --s-metal: #b08d57;
+
+  --s-line: rgb(240 235 227 / 0.11);
+  --s-line-strong: rgb(240 235 227 / 0.22);
+
+  /* Elevation reads differently per theme: a drop shadow is invisible on
+     near-black, so dark lifts a panel with a hairline top highlight and a
+     lighter fill, while light uses a real shadow. */
+  --elevation: inset 0 1px 0 rgb(240 235 227 / 0.07);
+  --elevation-hover: inset 0 1px 0 rgb(240 235 227 / 0.13);
+  --grain-opacity: 0.16;
+
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --s-surface: #faf7f2;
+  --s-sunken: #f6f2ec;
+  --s-raised: #ffffff;
+
+  --s-fg: #1a1714;
+  --s-muted: #5c554d;
+  --s-faint: #6a6258;
+
+  --s-accent: #2b7168;
+  --s-on-accent: #ffffff;
+  --s-metal: #7a5c2e;
+
+  --s-line: rgb(26 23 20 / 0.12);
+  --s-line-strong: rgb(26 23 20 / 0.24);
+
+  --elevation: 0 1px 2px rgb(26 23 20 / 0.05), 0 8px 24px -12px rgb(26 23 20 / 0.18);
+  --elevation-hover: 0 2px 4px rgb(26 23 20 / 0.06), 0 18px 40px -16px rgb(26 23 20 / 0.24);
+  --grain-opacity: 0.05;
+
+  color-scheme: light;
+}
+
+@layer base {
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
@@ -84,28 +130,40 @@
   }
 
   body {
-    background-color: var(--color-ground);
-    color: var(--color-field);
+    background-color: var(--color-surface);
+    color: var(--color-fg);
     font-family: var(--font-body);
     font-size: var(--text-base);
     line-height: var(--text-base--line-height);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    /* Notched devices: keep sticky chrome and footers clear of the inset. */
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    transition:
+      background-color 320ms ease,
+      color 320ms ease;
   }
 
-  /* Fraunces carries real optical-size and "wonk" axes. Setting them
-     explicitly is what stops it reading as a generic high-contrast serif. */
+  @media (prefers-reduced-motion: reduce) {
+    body {
+      transition: none;
+    }
+  }
+
+  /* Fraunces carries real optical-size and wonk axes. WONK sits at 0: the
+     quirk that suited a science pamphlet reads as noise at book scale. */
   h1,
   h2,
   h3,
   .font-display {
     font-family: var(--font-display);
     font-variation-settings:
-      'SOFT' 18,
-      'WONK' 1,
-      'opsz' 108;
+      'SOFT' 12,
+      'WONK' 0,
+      'opsz' 120;
     font-weight: 400;
-    letter-spacing: -0.022em;
+    letter-spacing: -0.02em;
     text-wrap: balance;
   }
 
@@ -113,61 +171,59 @@
     text-wrap: pretty;
   }
 
-  /* Visible, high-contrast focus in both registers */
   :focus-visible {
-    outline: 2px solid var(--color-lumen);
+    outline: 2px solid var(--color-accent);
     outline-offset: 3px;
     border-radius: 2px;
   }
 
-  .register-light :focus-visible {
-    outline-color: var(--color-ink);
-  }
-
   ::selection {
-    background: var(--color-lumen);
-    color: var(--color-ground);
-  }
-
-  .register-light ::selection {
-    background: var(--color-ink);
-    color: var(--color-field);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
   }
 }
 
 @layer components {
-  /* -- Registers ---------------------------------------------------------- */
-
-  .register-dark {
-    background-color: var(--color-ground);
-    color: var(--color-field);
+  /* -- Surfaces ------------------------------------------------------------
+     Replaces the old register-dark / register-light pair. Sections alternate
+     surface and sunken, which keeps the page's rhythm in both themes. */
+  .surface {
+    background-color: var(--color-surface);
   }
 
-  .register-light {
-    background-color: var(--color-field);
-    color: var(--color-ink);
-    color-scheme: light;
+  .surface-sunken {
+    background-color: var(--color-sunken);
   }
 
-  /* The dissolve between the two registers. This is the site's thesis made
-     literal — chaos resolving into creation as the page brightens. A static
-     gradient, so it costs nothing and works everywhere. */
-  .register-dissolve {
-    /* Ground is held through 45% so section content always sits on a dark
-       enough field for light text, however long the copy grows in the CMS.
-       The visible dissolve happens across the empty lower half. */
-    background-image: linear-gradient(
-      to bottom,
-      var(--color-ground) 0%,
-      var(--color-ground) 45%,
-      color-mix(in oklab, var(--color-ground) 55%, var(--color-field)) 72%,
-      var(--color-field) 100%
-    );
+  /* -- Panel ---------------------------------------------------------------
+     One class, two elevation mechanisms — see --elevation above. */
+  .panel {
+    background-color: var(--color-raised);
+    border: 1px solid var(--color-line);
+    box-shadow: var(--elevation);
+    transition:
+      box-shadow 260ms ease,
+      transform 260ms ease,
+      border-color 260ms ease;
+  }
+
+  .panel-lift:hover {
+    box-shadow: var(--elevation-hover);
+    border-color: var(--color-line-strong);
+    transform: translateY(-3px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .panel,
+    .panel-lift:hover {
+      transition: none;
+      transform: none;
+    }
   }
 
   /* -- Specimen label ------------------------------------------------------
-     The mono eyebrow used for figure numbers, plate captions and section
-     markers. Borrowed from scientific plate apparatus, not decoration. */
+     Reserved for real data: plate and figure numbers, ISBNs, prices. It is no
+     longer the default voice for every heading on the site. */
   .label {
     font-family: var(--font-mono);
     font-size: var(--text-label);
@@ -177,25 +233,27 @@
     font-weight: 500;
   }
 
-  /* -- Optical alignment ---------------------------------------------------
-     Fraunces carries ~0.05em of left side bearing on capitals — measured at
-     6.8px on a 136px "C" against 0.79px on 22px body text. Setting both to the
-     same margin aligns them mathematically and misaligns them optically: the
-     headline reads as indented. This pulls the ink edge back into line.
-
-     Only worth applying at display sizes, where the offset is visible. */
-  .hang {
-    margin-left: -0.044em;
+  /* -- Eyebrow -------------------------------------------------------------
+     The sentence-case replacement for most former .label uses. */
+  .eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    letter-spacing: 0.02em;
+    font-weight: 500;
+    color: var(--color-metal);
   }
 
-  /* -- Hairline ----------------------------------------------------------- */
   .rule {
     border: 0;
-    border-top: 1px solid currentColor;
-    opacity: 0.18;
+    border-top: 1px solid var(--color-line);
   }
 
-  /* -- Layout ------------------------------------------------------------- */
+  .rule-metal {
+    border: 0;
+    border-top: 1px solid var(--color-metal);
+    opacity: 0.5;
+  }
+
   .shell {
     width: 100%;
     margin-inline: auto;
@@ -203,24 +261,32 @@
     max-width: 90rem;
   }
 
-  /* -- Buttons ------------------------------------------------------------ */
+  /* -- Optical alignment ---------------------------------------------------
+     Fraunces carries ~0.05em of left side bearing on capitals — measured at
+     6.8px on a 136px "C" against 0.79px on 22px body text. Equal margins
+     align them mathematically and misalign them optically. */
+  .hang {
+    margin-left: -0.044em;
+  }
+
+  /* -- Buttons ------------------------------------------------------------- */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.6em;
-    font-family: var(--font-mono);
-    font-size: 0.8125rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    min-height: 2.75rem;
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
     font-weight: 500;
-    padding: 1.05em 1.9em;
+    letter-spacing: 0.01em;
+    padding: 0.9em 1.75em;
     border: 1px solid transparent;
     transition:
-      background-color 180ms ease,
-      color 180ms ease,
-      border-color 180ms ease,
-      transform 180ms ease;
+      background-color 200ms ease,
+      color 200ms ease,
+      border-color 200ms ease,
+      transform 200ms ease;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -230,62 +296,65 @@
   }
 
   .btn-primary {
-    background-color: var(--color-lumen);
-    color: var(--color-ground);
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
   }
 
   .btn-primary:hover {
-    background-color: color-mix(in oklab, var(--color-lumen) 82%, white);
+    background-color: color-mix(in oklab, var(--color-accent) 88%, var(--color-fg));
   }
 
   .btn-ghost {
-    border-color: color-mix(in oklab, currentColor 34%, transparent);
-    color: inherit;
+    border-color: var(--color-line-strong);
+    color: var(--color-fg);
   }
 
   .btn-ghost:hover {
-    border-color: currentColor;
-    background-color: color-mix(in oklab, currentColor 8%, transparent);
+    border-color: var(--color-fg);
+    background-color: color-mix(in oklab, var(--color-fg) 6%, transparent);
   }
 
-  /* -- Skip link ---------------------------------------------------------- */
+  /* -- Skip link ----------------------------------------------------------- */
   .skip-link {
     position: absolute;
     left: 1rem;
     top: -100%;
     z-index: 100;
-    background: var(--color-lumen);
-    color: var(--color-ground);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
     padding: 0.75rem 1.25rem;
-    font-family: var(--font-mono);
-    font-size: 0.8125rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+    font-weight: 500;
   }
 
   .skip-link:focus {
     top: 1rem;
   }
+
+  /* -- Grain ---------------------------------------------------------------
+     A single tiled SVG noise layer. Paper tooth in light, film grain in dark;
+     the opacity token carries the difference. Costs one inline data URI. */
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: var(--grain-opacity);
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
 }
 
 @layer utilities {
   /* -- Scroll-driven resolve ----------------------------------------------
-     Hallmark cards arrive scattered and settle into alignment as they enter
-     the viewport — the book's thesis performed rather than described.
-
-     Guarded three ways: the settled state is the DEFAULT, so anything that
-     doesn't run the animation (Firefox, reduced motion, no JS — there is no
-     JS) simply shows the finished layout. Zero JavaScript.
-  --------------------------------------------------------------------------- */
+     Cards and figures arrive displaced and settle as they enter the viewport.
+     The settled state is the DEFAULT, so anything that does not run the
+     animation simply shows the finished layout. Zero JavaScript. */
   .resolve {
     --resolve-x: 0rem;
     --resolve-y: 0rem;
     --resolve-rotate: 0deg;
   }
 
-  /* Below the two-column breakpoint there is no side margin to absorb the
-     horizontal scatter, and it pushes the document wider than the viewport.
-     Drop the x component there — the vertical settle still reads. */
   @media (width < 40rem) {
     .resolve {
       --resolve-x: 0rem !important;
@@ -313,6 +382,24 @@
       opacity: 1;
       filter: blur(0);
       transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+  }
+
+  /* -- Ambient drift -------------------------------------------------------
+     Very slow scale and pan on the hero micrograph. Long enough to read as
+     life rather than motion. */
+  @media (prefers-reduced-motion: no-preference) {
+    .drift {
+      animation: drift 48s ease-in-out infinite alternate;
+    }
+  }
+
+  @keyframes drift {
+    from {
+      transform: scale(1.06) translate3d(-1.2%, -0.8%, 0);
+    }
+    to {
+      transform: scale(1.14) translate3d(1.2%, 0.8%, 0);
     }
   }
 }

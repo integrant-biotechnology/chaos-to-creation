@@ -41,7 +41,17 @@ const jsonLd =
 <html lang="en-AU">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+    {/* Runs before first paint, so the chosen theme is never seen to flip.
+        Absence of the attribute means dark, which is the default for
+        everyone — so this only has work to do for light-theme visitors. */}
+    <script is:inline>
+      try {
+        if (localStorage.getItem('theme') === 'light')
+          document.documentElement.dataset.theme = 'light';
+      } catch {}
+    </script>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="canonical" href={canonical} />
     {!isLive && <meta name="robots" content="noindex, nofollow" />}

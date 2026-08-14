@@ -45,42 +45,42 @@ const schema = [
   />
 
   <!-- Fact sheet -->
-  <section class="register-light py-24 lg:py-32">
+  <section class="surface py-24 lg:py-32">
     <div class="shell">
       <div class="grid gap-16 lg:grid-cols-[22rem_1fr] lg:gap-24">
         <header>
-          <p class="label text-graphite">Fact sheet</p>
-          <h2 class="mt-5 text-h2 text-ink">The essentials.</h2>
+          <p class="label text-muted">Fact sheet</p>
+          <h2 class="mt-5 text-h2 text-fg">The essentials.</h2>
           <div class="mt-8">
             <BestsellerMark variant="seal" withAuthor />
           </div>
         </header>
 
         <dl class="grid gap-x-12 gap-y-6 sm:grid-cols-2">
-          <div class="border-t border-ink/12 pt-4">
-            <dt class="label text-graphite">Title</dt>
-            <dd class="mt-2 text-ink">{book.title}</dd>
+          <div class="border-t border-line pt-4">
+            <dt class="label text-muted">Title</dt>
+            <dd class="mt-2 text-fg">{book.title}</dd>
           </div>
-          <div class="border-t border-ink/12 pt-4">
-            <dt class="label text-graphite">Subtitle</dt>
-            <dd class="mt-2 text-ink">{book.subtitle}</dd>
+          <div class="border-t border-line pt-4">
+            <dt class="label text-muted">Subtitle</dt>
+            <dd class="mt-2 text-fg">{book.subtitle}</dd>
           </div>
-          <div class="border-t border-ink/12 pt-4">
-            <dt class="label text-graphite">Author</dt>
-            <dd class="mt-2 text-ink">{author.fullName}</dd>
+          <div class="border-t border-line pt-4">
+            <dt class="label text-muted">Author</dt>
+            <dd class="mt-2 text-fg">{author.fullName}</dd>
           </div>
-          <div class="border-t border-ink/12 pt-4">
-            <dt class="label text-graphite">Published</dt>
-            <dd class="mt-2 text-ink">{book.published}</dd>
+          <div class="border-t border-line pt-4">
+            <dt class="label text-muted">Published</dt>
+            <dd class="mt-2 text-fg">{book.published}</dd>
           </div>
           {
             formats.map((f) => (
-              <div class="border-t border-ink/12 pt-4">
-                <dt class="label text-graphite">{f.data.name}</dt>
-                <dd class="mt-2 text-ink tabular-nums">
+              <div class="border-t border-line pt-4">
+                <dt class="label text-muted">{f.data.name}</dt>
+                <dd class="mt-2 text-fg tabular-nums">
                   ${f.data.price.toFixed(2)} {f.data.currency}
                   {f.data.isbn && (
-                    <span class="label ml-2 text-graphite">
+                    <span class="label ml-2 text-muted">
                       ISBN {f.data.isbn}
                     </span>
                   )}
@@ -94,33 +94,33 @@ const schema = [
   </section>
 
   <!-- Biography, copy-paste ready -->
-  <section class="register-light border-t border-ink/10 py-24 lg:py-32">
+  <section class="surface border-t border-line py-24 lg:py-32">
     <div class="shell grid gap-16 lg:grid-cols-[22rem_1fr] lg:gap-24">
       <header>
-        <p class="label text-graphite">Biography</p>
-        <h2 class="mt-5 text-h2 text-ink">Ready to quote.</h2>
-        <p class="mt-6 text-graphite">
+        <p class="label text-muted">Biography</p>
+        <h2 class="mt-5 text-h2 text-fg">Ready to quote.</h2>
+        <p class="mt-6 text-muted">
           Both versions are approved for publication as written.
         </p>
       </header>
 
       <div class="space-y-10">
         <div>
-          <p class="label text-graphite">Short &mdash; 40 words</p>
-          <blockquote class="mt-4 border-l-2 border-ink/20 pl-6">
-            <p class="text-ink/85">{author.short}</p>
+          <p class="label text-muted">Short &mdash; 40 words</p>
+          <blockquote class="mt-4 border-l-2 border-line pl-6">
+            <p class="text-muted">{author.short}</p>
           </blockquote>
         </div>
         <div>
-          <p class="label text-graphite">Long &mdash; 100 words</p>
-          <blockquote class="mt-4 border-l-2 border-ink/20 pl-6">
-            <p class="text-ink/85">{author.long}</p>
+          <p class="label text-muted">Long &mdash; 100 words</p>
+          <blockquote class="mt-4 border-l-2 border-line pl-6">
+            <p class="text-muted">{author.long}</p>
           </blockquote>
         </div>
         <div>
-          <p class="label text-graphite">Book description</p>
-          <blockquote class="mt-4 border-l-2 border-ink/20 pl-6">
-            <p class="text-ink/85">{book.description}</p>
+          <p class="label text-muted">Book description</p>
+          <blockquote class="mt-4 border-l-2 border-line pl-6">
+            <p class="text-muted">{book.description}</p>
           </blockquote>
         </div>
       </div>
@@ -128,29 +128,29 @@ const schema = [
   </section>
 
   <!-- Coverage -->
-  <section class="register-light border-t border-ink/10 py-24 lg:py-32">
+  <section class="surface border-t border-line py-24 lg:py-32">
     <div class="shell grid gap-16 lg:grid-cols-[22rem_1fr] lg:gap-24">
       <header>
-        <p class="label text-graphite">Coverage</p>
-        <h2 class="mt-5 text-h2 text-ink">In the press.</h2>
+        <p class="label text-muted">Coverage</p>
+        <h2 class="mt-5 text-h2 text-fg">In the press.</h2>
       </header>
 
       <div>
         {
           press.length > 0 ? (
-            <ul class="divide-y divide-ink/10">
+            <ul class="divide-y divide-line">
               {press.map((p) => (
                 <li class="py-6 first:pt-0">
                   <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-                    <h3 class="text-h3 !text-[1.125rem] font-semibold text-ink">
+                    <h3 class="text-h3 !text-[1.125rem] font-semibold text-fg">
                       {p.data.outlet}
                     </h3>
-                    <p class="label text-graphite">
+                    <p class="label text-muted">
                       {dateFmt.format(p.data.date)}
                     </p>
                   </div>
                   {p.data.quote && (
-                    <p class="mt-3 max-w-measure text-graphite">
+                    <p class="mt-3 max-w-measure text-muted">
                       {p.data.quote}
                     </p>
                   )}
@@ -158,7 +158,7 @@ const schema = [
                     <a
                       href={p.data.url}
                       rel="noopener"
-                      class="label mt-4 inline-block text-ink underline decoration-ink/30 underline-offset-4 transition-colors hover:text-graphite"
+                      class="label mt-4 inline-block text-fg underline decoration-line underline-offset-4 transition-colors hover:text-muted"
                     >
                       Read the piece
                     </a>
@@ -167,20 +167,20 @@ const schema = [
               ))}
             </ul>
           ) : (
-            <p class="text-graphite">Coverage will be listed here as it runs.</p>
+            <p class="text-muted">Coverage will be listed here as it runs.</p>
           )
         }
 
         {
           endorsements.length > 0 && (
             <div class="mt-16">
-              <p class="label text-graphite">Endorsements</p>
+              <p class="label text-muted">Endorsements</p>
               <ul class="mt-6 space-y-8">
                 {endorsements.map((e) => (
                   <li>
-                    <blockquote class="border-l-2 border-ink/20 pl-6">
-                      <p class="text-lead text-ink/85">{e.data.quote}</p>
-                      <footer class="label mt-3 text-graphite">
+                    <blockquote class="border-l-2 border-line pl-6">
+                      <p class="text-lead text-muted">{e.data.quote}</p>
+                      <footer class="label mt-3 text-muted">
                         {e.data.name} &mdash; {e.data.title}
                       </footer>
                     </blockquote>
@@ -195,11 +195,11 @@ const schema = [
   </section>
 
   <!-- Enquiries -->
-  <section class="register-dark py-24 lg:py-28">
+  <section class="surface py-24 lg:py-28">
     <div class="shell flex flex-wrap items-center justify-between gap-8">
       <div>
-        <h2 class="text-h3 text-field">Need assets or an interview?</h2>
-        <p class="mt-3 max-w-[46ch] text-field/65">
+        <h2 class="text-h3 text-fg">Need assets or an interview?</h2>
+        <p class="mt-3 max-w-[46ch] text-muted">
           High-resolution cover art, author photography and review copies are
           available on request.
         </p>

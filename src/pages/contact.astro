@@ -69,23 +69,23 @@ const routes = [
     lede="Choose the line that fits and your message arrives already sorted. Everything reaches the same desk."
   />
 
-  <section class="register-light py-24 lg:py-32">
+  <section class="surface py-24 lg:py-32">
     <div class="shell grid gap-16 lg:grid-cols-[1fr_19rem] lg:gap-24">
-      <ul class="divide-y divide-ink/12 border-y border-ink/12">
+      <ul class="divide-y divide-line border-y border-line">
         {
           routes.map((r) => (
             <li class="group py-8 first:pt-0 last:pb-0">
               <div class="flex flex-wrap items-start justify-between gap-x-8 gap-y-4">
                 <div class="max-w-[42ch]">
-                  <h2 class="text-h3 !text-[1.25rem] font-semibold text-ink">
+                  <h2 class="text-h3 !text-[1.25rem] font-semibold text-fg">
                     {r.label}
                   </h2>
-                  <p class="mt-2 text-graphite">{r.detail}</p>
+                  <p class="mt-2 text-muted">{r.detail}</p>
                   {r.aside && (
                     <p class="mt-3">
                       <a
                         href={r.aside.href}
-                        class="label text-ink underline decoration-ink/30 underline-offset-4 transition-colors hover:text-graphite"
+                        class="label text-fg underline decoration-line underline-offset-4 transition-colors hover:text-muted"
                       >
                         {r.aside.text}
                       </a>
@@ -94,7 +94,7 @@ const routes = [
                 </div>
                 <a
                   href={mailto(r.subject, r.body)}
-                  class="btn btn-ghost shrink-0 !text-ink"
+                  class="btn btn-ghost shrink-0"
                 >
                   Write to us
                 </a>
@@ -105,39 +105,39 @@ const routes = [
       </ul>
 
       <aside class="lg:sticky lg:top-12 lg:self-start">
-        <p class="label text-graphite">Direct</p>
-        <p class="mt-4 border-t border-ink/12 pt-4">
+        <p class="label text-muted">Direct</p>
+        <p class="mt-4 border-t border-line pt-4">
           <a
             href={`mailto:${to}`}
-            class="text-ink underline decoration-ink/30 underline-offset-4 transition-colors hover:text-graphite"
+            class="text-fg underline decoration-line underline-offset-4 transition-colors hover:text-muted"
           >
             {to}
           </a>
         </p>
 
-        <p class="label mt-10 text-graphite">Also useful</p>
+        <p class="label mt-10 text-muted">Also useful</p>
         <ul class="mt-4 space-y-3">
-          <li class="border-t border-ink/12 pt-3">
+          <li class="border-t border-line pt-3">
             <a
               href="/press/"
-              class="text-sm text-ink transition-colors hover:text-graphite"
+              class="text-sm text-fg transition-colors hover:text-muted"
               >Press kit and fact sheet</a
             >
           </li>
-          <li class="border-t border-ink/12 pt-3">
+          <li class="border-t border-line pt-3">
             <a
               href="/buy/"
-              class="text-sm text-ink transition-colors hover:text-graphite"
+              class="text-sm text-fg transition-colors hover:text-muted"
               >Order the book</a
             >
           </li>
         </ul>
 
-        <p class="mt-10 text-sm text-graphite">
+        <p class="mt-10 text-sm text-muted">
           For clinical or patient enquiries, please contact the <a
             href={author.practiceUrl}
             rel="noopener"
-            class="underline decoration-ink/30 underline-offset-4 transition-colors hover:text-ink"
+            class="underline decoration-line underline-offset-4 transition-colors hover:text-fg"
             >surgical practice</a
           > directly. This address is for the book only.
         </p>

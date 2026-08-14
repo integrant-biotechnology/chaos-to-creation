@@ -6,6 +6,8 @@ const nav = [
   { label: 'Contact', href: '/contact/' },
 ];
 
+import ThemeToggle from './ThemeToggle.astro';
+
 const path = Astro.url.pathname;
 const isCurrent = (href: string) => path === href;
 ---
@@ -14,7 +16,7 @@ const isCurrent = (href: string) => path === href;
   <div class="shell flex items-center justify-between gap-6 py-5">
     <a
       href="/"
-      class="label flex min-h-11 items-center !tracking-[0.2em] text-field/90 transition-colors hover:text-lumen"
+      class="label flex min-h-11 items-center !tracking-[0.2em] text-fg transition-colors hover:text-accent"
       aria-label="Chaos to Creation — home"
     >
       Chaos&nbsp;to&nbsp;Creation
@@ -29,7 +31,7 @@ const isCurrent = (href: string) => path === href;
               <a
                 href={item.href}
                 aria-current={isCurrent(item.href) ? 'page' : undefined}
-                class="label flex items-center py-2 text-field/75 transition-colors hover:text-lumen aria-[current=page]:text-lumen"
+                class="label flex items-center py-2 text-muted transition-colors hover:text-accent aria-[current=page]:text-accent"
               >
                 {item.label}
               </a>
@@ -40,9 +42,9 @@ const isCurrent = (href: string) => path === href;
     </nav>
 
     <div class="flex items-center gap-2">
-      <a href="/buy/" class="btn btn-primary !px-6 !py-3.5 text-[0.75rem]">
-        Order
-      </a>
+      <ThemeToggle />
+
+      <a href="/buy/" class="btn btn-primary !px-6 text-[0.875rem]">Order</a>
 
       <!-- Mobile. A native disclosure: focusable, toggles on Enter and Space,
            and announces its own expanded state — no JavaScript involved. -->
@@ -80,10 +82,10 @@ const isCurrent = (href: string) => path === href;
     position: sticky;
     top: 0;
     z-index: 50;
-    background: color-mix(in oklab, var(--color-ground) 82%, transparent);
+    background: color-mix(in oklab, var(--color-surface) 82%, transparent);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
-    border-bottom: 1px solid color-mix(in oklab, var(--color-field) 8%, transparent);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-fg) 8%, transparent);
   }
 
   /* The header carries light text, so it keeps its dark ground even over the
@@ -99,14 +101,14 @@ const isCurrent = (href: string) => path === href;
 
     @keyframes header-settle {
       from {
-        background: color-mix(in oklab, var(--color-ground) 0%, transparent);
+        background: color-mix(in oklab, var(--color-surface) 0%, transparent);
         border-bottom-color: transparent;
       }
       to {
-        background: color-mix(in oklab, var(--color-ground) 82%, transparent);
+        background: color-mix(in oklab, var(--color-surface) 82%, transparent);
         border-bottom-color: color-mix(
           in oklab,
-          var(--color-field) 8%,
+          var(--color-fg) 8%,
           transparent
         );
       }
@@ -121,7 +123,7 @@ const isCurrent = (href: string) => path === href;
     width: 2.75rem;
     height: 2.75rem;
     cursor: pointer;
-    border: 1px solid color-mix(in oklab, var(--color-field) 22%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-fg) 22%, transparent);
     list-style: none;
   }
 
@@ -139,7 +141,7 @@ const isCurrent = (href: string) => path === href;
     display: block;
     height: 1px;
     width: 100%;
-    background: var(--color-field);
+    background: var(--color-fg);
     transition: transform 220ms ease;
   }
 
@@ -161,9 +163,9 @@ const isCurrent = (href: string) => path === href;
     position: absolute;
     inset-inline: 0;
     top: 100%;
-    background: var(--color-ground);
+    background: var(--color-surface);
     border-bottom: 1px solid
-      color-mix(in oklab, var(--color-field) 10%, transparent);
+      color-mix(in oklab, var(--color-fg) 10%, transparent);
     padding: 0.5rem clamp(1.25rem, 5vw, 4.5rem) 1.25rem;
   }
 
@@ -177,15 +179,15 @@ const isCurrent = (href: string) => path === href;
     align-items: center;
     /* Generous rows: comfortably past the 44px floor. */
     min-height: 3.25rem;
-    border-top: 1px solid color-mix(in oklab, var(--color-field) 10%, transparent);
+    border-top: 1px solid color-mix(in oklab, var(--color-fg) 10%, transparent);
     font-family: var(--font-mono);
     font-size: 0.8125rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--color-field);
+    color: var(--color-fg);
   }
 
   .nav-panel a[aria-current='page'] {
-    color: var(--color-lumen);
+    color: var(--color-accent);
   }
 </style>

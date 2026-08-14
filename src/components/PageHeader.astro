@@ -13,21 +13,21 @@ interface Props {
 const { figure, title, lede } = Astro.props;
 ---
 
-<section class="register-dark relative overflow-hidden">
+<section class="surface relative overflow-hidden">
   <div aria-hidden="true" class="pointer-events-none absolute inset-0">
     <div
       class="absolute -left-[8%] top-[-30%] h-[34rem] w-[34rem] rounded-full opacity-[0.13] blur-[110px]"
-      style="background: radial-gradient(circle, var(--color-lumen) 0%, transparent 68%)"
+      style="background: radial-gradient(circle, var(--color-accent) 0%, transparent 68%)"
     >
     </div>
   </div>
 
   <div class="shell relative pb-24 pt-24 lg:pb-28 lg:pt-32">
-    <p class="label text-lumen/80">{figure}</p>
+    <p class="eyebrow">{figure}</p>
     <h1 class="hang mt-5 max-w-[20ch] text-h1">{title}</h1>
     {
       lede && (
-        <p class="mt-8 max-w-[52ch] text-lead text-field/70">{lede}</p>
+        <p class="mt-8 max-w-[52ch] text-lead text-muted">{lede}</p>
       )
     }
   </div>

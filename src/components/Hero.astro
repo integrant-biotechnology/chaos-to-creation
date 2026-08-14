@@ -26,18 +26,18 @@ const chaos = [
 ];
 ---
 
-<section class="register-dark relative overflow-hidden">
+<section class="surface relative overflow-hidden">
   <!-- Dark-field wash: two out-of-focus fluorescence blooms, the visual
        signature of the confocal imagery this direction is drawn from. -->
   <div aria-hidden="true" class="pointer-events-none absolute inset-0">
     <div
       class="absolute -left-[10%] top-[8%] h-[46rem] w-[46rem] rounded-full opacity-[0.16] blur-[110px]"
-      style="background: radial-gradient(circle, var(--color-lumen) 0%, transparent 68%)"
+      style="background: radial-gradient(circle, var(--color-accent) 0%, transparent 68%)"
     >
     </div>
     <div
       class="absolute -right-[14%] bottom-[-12%] h-[38rem] w-[38rem] rounded-full opacity-[0.10] blur-[120px]"
-      style="background: radial-gradient(circle, var(--color-stain) 0%, transparent 68%)"
+      style="background: radial-gradient(circle, var(--color-metal) 0%, transparent 68%)"
     >
     </div>
   </div>
@@ -47,7 +47,7 @@ const chaos = [
   >
     <!-- Type -->
     <div>
-      <p class="label mb-6 text-field/55">
+      <p class="label mb-6 text-muted">
         {author.fullName} &middot; MBBS, FRACS
       </p>
 
@@ -74,7 +74,7 @@ const chaos = [
         <span class="hero-creation" aria-hidden="true">Creation</span>
       </h1>
 
-      <p class="mt-8 max-w-[46ch] text-lead text-field/72">
+      <p class="mt-8 max-w-[46ch] text-lead text-muted">
         {book.summary}
       </p>
 
@@ -94,10 +94,10 @@ const chaos = [
               <a
                 href={f.data.url}
                 rel="noopener"
-                class="label flex min-h-11 items-center text-field/65 transition-colors hover:text-lumen"
+                class="label flex min-h-11 items-center text-fg transition-colors hover:text-accent"
               >
                 {f.data.name}
-                <span class="ml-1.5 text-field/60">
+                <span class="ml-1.5 text-muted">
                   ${f.data.price.toFixed(2)}
                 </span>
               </a>
@@ -119,9 +119,9 @@ const chaos = [
         fetchpriority="high"
         class="w-full drop-shadow-[0_36px_70px_rgba(0,0,0,0.72)]"
       />
-      <figcaption class="label mt-6 flex items-center gap-3 text-field/60">
-        <span class="whitespace-nowrap text-lumen/70">Plate I</span>
-        <span aria-hidden="true" class="h-px flex-1 bg-field/15"></span>
+      <figcaption class="label mt-6 flex items-center gap-3 text-muted">
+        <span class="whitespace-nowrap text-metal">Plate I</span>
+        <span aria-hidden="true" class="h-px flex-1 bg-line"></span>
         <span class="whitespace-nowrap">Hardcover, {book.published}</span>
       </figcaption>
     </figure>
@@ -173,7 +173,7 @@ const chaos = [
     height: 1px;
     flex: 1;
     min-width: 1.5rem;
-    background: color-mix(in oklab, var(--color-lumen) 55%, transparent);
+    background: color-mix(in oklab, var(--color-accent) 55%, transparent);
   }
 
   .hero-hinge-word {
@@ -182,7 +182,7 @@ const chaos = [
     letter-spacing: 0.3em;
     text-transform: lowercase;
     font-weight: 400;
-    color: var(--color-lumen);
+    color: var(--color-accent);
     padding-right: 0.3em;
   }
 
@@ -202,7 +202,7 @@ const chaos = [
   }
 
   .hero-creation {
-    color: var(--color-field);
+    color: var(--color-fg);
   }
 
   /* Settled is the default state. The scatter only exists inside the

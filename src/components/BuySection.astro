@@ -7,33 +7,33 @@ const formats = (await getCollection('formats')).sort(
 );
 ---
 
-<section id="buy" class="register-light border-t border-ink/10 py-28 lg:py-36">
+<section id="buy" class="surface border-t border-line py-28 lg:py-36">
   <div class="shell">
     <header class="max-w-[30rem]">
-      <p class="label text-graphite">Available now</p>
-      <h2 class="mt-5 text-h2 text-ink">Three editions.</h2>
-      <p class="mt-6 text-lead text-ink/70">
+      <p class="label text-muted">Available now</p>
+      <h2 class="mt-5 text-h2 text-fg">Three editions.</h2>
+      <p class="mt-6 text-lead text-muted">
         Published {book.published}. Ordered through Amazon Australia.
       </p>
     </header>
 
-    <ul class="mt-16 grid gap-px overflow-hidden border border-ink/12 bg-ink/12 md:grid-cols-3">
+    <ul class="mt-16 grid gap-px overflow-hidden border border-line bg-line md:grid-cols-3">
       {
         formats.map((f) => (
-          <li class="flex flex-col bg-field p-8 lg:p-10">
-            <p class="label text-graphite">{f.data.name}</p>
-            <p class="mt-6 font-display text-h3 text-ink tabular-nums">
+          <li class="flex flex-col bg-raised p-8 lg:p-10">
+            <p class="label text-muted">{f.data.name}</p>
+            <p class="mt-6 font-display text-h3 text-fg tabular-nums">
               ${f.data.price.toFixed(2)}
-              <span class="label ml-1 text-graphite">{f.data.currency}</span>
+              <span class="label ml-1 text-muted">{f.data.currency}</span>
             </p>
-            <p class="mt-4 flex-1 text-sm text-graphite">{f.data.note}</p>
+            <p class="mt-4 flex-1 text-sm text-muted">{f.data.note}</p>
             {f.data.isbn && (
-              <p class="label mt-6 text-graphite">ISBN {f.data.isbn}</p>
+              <p class="label mt-6 text-muted">ISBN {f.data.isbn}</p>
             )}
             <a
               href={f.data.url}
               rel="noopener"
-              class="btn btn-ghost mt-8 !text-ink"
+              class="btn btn-ghost mt-8"
             >
               Order {f.data.name.toLowerCase()}
               <span class="sr-only"> on Amazon Australia</span>
@@ -43,15 +43,15 @@ const formats = (await getCollection('formats')).sort(
       }
     </ul>
 
-    <p class="mt-10 text-sm text-graphite">
+    <p class="mt-10 text-sm text-muted">
       Also available through the <a
         href={book.amazonAuthorStore}
         rel="noopener"
-        class="underline decoration-ink/30 underline-offset-4 transition-colors hover:text-ink"
+        class="underline decoration-line underline-offset-4 transition-colors hover:text-fg"
         >author store</a
       >. For bulk or institutional orders, <a
         href="/contact/"
-        class="underline decoration-ink/30 underline-offset-4 transition-colors hover:text-ink"
+        class="underline decoration-line underline-offset-4 transition-colors hover:text-fg"
         >get in touch</a
       >.
     </p>

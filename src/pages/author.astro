@@ -26,7 +26,7 @@ const schema = [
     lede={author.short}
   />
 
-  <section class="register-light py-24 lg:py-32">
+  <section class="surface py-24 lg:py-32">
     <div class="shell grid gap-16 lg:grid-cols-[1fr_20rem] lg:gap-24">
       <div>
         {
@@ -37,12 +37,12 @@ const schema = [
           )
         }
 
-        <p class="max-w-measure text-lead text-ink/85">{author.long}</p>
+        <p class="max-w-measure text-lead text-muted">{author.long}</p>
 
-        <hr class="rule my-14 text-ink" />
+        <hr class="rule my-14" />
 
-        <h2 class="text-h3 text-ink">Why he wrote this book</h2>
-        <p class="mt-5 max-w-measure text-ink/75">
+        <h2 class="text-h3 text-fg">Why he wrote this book</h2>
+        <p class="mt-5 max-w-measure text-muted">
           Three decades of operating gives you a particular view of the body:
           you see, directly and repeatedly, what tissue does when it is damaged
           and what it does when it repairs. That vantage point is unusual among
@@ -50,55 +50,55 @@ const schema = [
           written from.
         </p>
 
-        <h2 class="mt-14 text-h3 text-ink">Speaking and media</h2>
-        <p class="mt-5 max-w-measure text-ink/75">
+        <h2 class="mt-14 text-h3 text-fg">Speaking and media</h2>
+        <p class="mt-5 max-w-measure text-muted">
           Professor Slater considers selected speaking engagements, interviews
           and commentary on regenerative medicine, longevity science and
           surgical innovation.
         </p>
         <div class="mt-8 flex flex-wrap gap-3">
           <a href="/contact/" class="btn btn-primary">Make an enquiry</a>
-          <a href="/press/" class="btn btn-ghost !text-ink">Press kit</a>
+          <a href="/press/" class="btn btn-ghost">Press kit</a>
         </div>
       </div>
 
       <aside class="lg:sticky lg:top-12 lg:self-start">
-        <p class="label text-graphite">Credentials</p>
+        <p class="label text-muted">Credentials</p>
         <dl class="mt-5 space-y-4">
           {
             author.credentials.map((c) => (
-              <div class="border-t border-ink/12 pt-4">
-                <dt class="label text-ink">{c.label}</dt>
-                <dd class="mt-1.5 text-sm text-graphite">{c.detail}</dd>
+              <div class="border-t border-line pt-4">
+                <dt class="label text-fg">{c.label}</dt>
+                <dd class="mt-1.5 text-sm text-muted">{c.detail}</dd>
               </div>
             ))
           }
         </dl>
 
-        <p class="label mt-12 text-graphite">Elsewhere</p>
+        <p class="label mt-12 text-muted">Elsewhere</p>
         <ul class="mt-5 space-y-3">
           {
             author.social.map((s) => (
-              <li class="border-t border-ink/12 pt-3">
+              <li class="border-t border-line pt-3">
                 <a
                   href={s.url}
                   rel="noopener me"
-                  class="group flex items-center justify-between gap-3 text-sm text-ink transition-colors hover:text-graphite"
+                  class="group flex items-center justify-between gap-3 text-sm text-fg transition-colors hover:text-muted"
                 >
                   <span>{s.name}</span>
-                  <span aria-hidden="true" class="text-graphite">&rarr;</span>
+                  <span aria-hidden="true" class="text-muted">&rarr;</span>
                 </a>
               </li>
             ))
           }
-          <li class="border-t border-ink/12 pt-3">
+          <li class="border-t border-line pt-3">
             <a
               href={author.practiceUrl}
               rel="noopener"
-              class="flex items-center justify-between gap-3 text-sm text-ink transition-colors hover:text-graphite"
+              class="flex items-center justify-between gap-3 text-sm text-fg transition-colors hover:text-muted"
             >
               <span>Surgical practice</span>
-              <span aria-hidden="true" class="text-graphite">&rarr;</span>
+              <span aria-hidden="true" class="text-muted">&rarr;</span>
             </a>
           </li>
         </ul>
