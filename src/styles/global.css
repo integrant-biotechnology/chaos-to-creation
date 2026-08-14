@@ -71,6 +71,12 @@
     scroll-behavior: smooth;
   }
 
+  /* The header is sticky, so anything scrolled to by id — including #main,
+     where the skip link lands — would otherwise arrive underneath it. */
+  [id] {
+    scroll-margin-top: 7rem;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
@@ -169,6 +175,17 @@
     letter-spacing: var(--text-label--letter-spacing);
     text-transform: uppercase;
     font-weight: 500;
+  }
+
+  /* -- Optical alignment ---------------------------------------------------
+     Fraunces carries ~0.05em of left side bearing on capitals — measured at
+     6.8px on a 136px "C" against 0.79px on 22px body text. Setting both to the
+     same margin aligns them mathematically and misaligns them optically: the
+     headline reads as indented. This pulls the ink edge back into line.
+
+     Only worth applying at display sizes, where the offset is visible. */
+  .hang {
+    margin-left: -0.044em;
   }
 
   /* -- Hairline ----------------------------------------------------------- */

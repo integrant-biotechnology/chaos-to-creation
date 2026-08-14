@@ -43,7 +43,7 @@ const chaos = [
   </div>
 
   <div
-    class="shell relative grid items-center gap-16 pb-24 pt-36 lg:grid-cols-[1.28fr_0.72fr] lg:gap-16 lg:pb-32 lg:pt-40"
+    class="shell relative grid items-center gap-16 pb-24 pt-20 lg:grid-cols-[1.28fr_0.72fr] lg:gap-16 lg:pb-32 lg:pt-28"
   >
     <!-- Type -->
     <div>
@@ -51,7 +51,7 @@ const chaos = [
         {author.fullName} &middot; MBBS, FRACS
       </p>
 
-      <h1 class="hero-title">
+      <h1 class="hero-title hang">
         <span class="sr-only">Chaos to Creation</span>
         <span class="hero-line" aria-hidden="true">
           <span class="hero-chaos">
@@ -94,7 +94,7 @@ const chaos = [
               <a
                 href={f.data.url}
                 rel="noopener"
-                class="label text-field/65 transition-colors hover:text-lumen"
+                class="label flex min-h-11 items-center text-field/65 transition-colors hover:text-lumen"
               >
                 {f.data.name}
                 <span class="ml-1.5 text-field/60">
@@ -184,6 +184,21 @@ const chaos = [
     font-weight: 400;
     color: var(--color-lumen);
     padding-right: 0.3em;
+  }
+
+  /* On a narrow screen the rule stretched to 115px against a 182px word —
+     at 52px type that reads as a divider rather than a hinge. Fixed short
+     length below the two-column breakpoint keeps the proportion. */
+  @media (width < 48rem) {
+    .hero-hinge {
+      flex: none;
+    }
+
+    .hero-hinge-rule {
+      flex: none;
+      width: 2.25rem;
+      min-width: 0;
+    }
   }
 
   .hero-creation {

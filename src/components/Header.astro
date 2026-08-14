@@ -7,18 +7,20 @@ const nav = [
 ];
 
 const path = Astro.url.pathname;
+const isCurrent = (href: string) => path === href;
 ---
 
-<header class="absolute inset-x-0 top-0 z-50">
-  <div class="shell flex items-center justify-between gap-6 py-6">
+<header class="site-header">
+  <div class="shell flex items-center justify-between gap-6 py-5">
     <a
       href="/"
-      class="label !tracking-[0.2em] text-field/90 transition-colors hover:text-lumen"
+      class="label flex min-h-11 items-center !tracking-[0.2em] text-field/90 transition-colors hover:text-lumen"
       aria-label="Chaos to Creation — home"
     >
       Chaos&nbsp;to&nbsp;Creation
     </a>
 
+    <!-- Desktop -->
     <nav aria-label="Primary" class="hidden md:block">
       <ul class="flex items-center gap-8">
         {
@@ -26,8 +28,8 @@ const path = Astro.url.pathname;
             <li>
               <a
                 href={item.href}
-                aria-current={path === item.href ? 'page' : undefined}
-                class="label text-field/70 transition-colors hover:text-lumen aria-[current=page]:text-lumen"
+                aria-current={isCurrent(item.href) ? 'page' : undefined}
+                class="label flex items-center py-2 text-field/75 transition-colors hover:text-lumen aria-[current=page]:text-lumen"
               >
                 {item.label}
               </a>
@@ -37,8 +39,153 @@ const path = Astro.url.pathname;
       </ul>
     </nav>
 
-    <a href="/buy/" class="btn btn-primary !py-3 !px-6 text-[0.75rem]">
-      Order
-    </a>
+    <div class="flex items-center gap-2">
+      <a href="/buy/" class="btn btn-primary !px-6 !py-3.5 text-[0.75rem]">
+        Order
+      </a>
+
+      <!-- Mobile. A native disclosure: focusable, toggles on Enter and Space,
+           and announces its own expanded state — no JavaScript involved. -->
+      <details class="nav-disclosure md:hidden">
+        <summary aria-label="Menu">
+          <span class="nav-glyph" aria-hidden="true">
+            <span></span><span></span>
+          </span>
+        </summary>
+        <nav aria-label="Primary" class="nav-panel">
+          <ul>
+            {
+              nav.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    aria-current={isCurrent(item.href) ? 'page' : undefined}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </details>
+    </div>
   </div>
 </header>
+
+<style>
+  /* Sticky, not absolute. With five routes, navigation that scrolls away
+     leaves no way back without returning to the top of the page. */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in oklab, var(--color-ground) 82%, transparent);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-field) 8%, transparent);
+  }
+
+  /* The header carries light text, so it keeps its dark ground even over the
+     light register — the backdrop is what makes that legible rather than a
+     floating slab. Where scroll-driven animation is available it starts fully
+     transparent over the hero and settles in as the page moves. */
+  @supports (animation-timeline: scroll()) {
+    .site-header {
+      animation: header-settle linear both;
+      animation-timeline: scroll();
+      animation-range: 0 5rem;
+    }
+
+    @keyframes header-settle {
+      from {
+        background: color-mix(in oklab, var(--color-ground) 0%, transparent);
+        border-bottom-color: transparent;
+      }
+      to {
+        background: color-mix(in oklab, var(--color-ground) 82%, transparent);
+        border-bottom-color: color-mix(
+          in oklab,
+          var(--color-field) 8%,
+          transparent
+        );
+      }
+    }
+  }
+
+  /* -- Mobile disclosure --------------------------------------------------- */
+  .nav-disclosure summary {
+    display: grid;
+    place-items: center;
+    /* 44px minimum, per the platform touch-target floor. */
+    width: 2.75rem;
+    height: 2.75rem;
+    cursor: pointer;
+    border: 1px solid color-mix(in oklab, var(--color-field) 22%, transparent);
+    list-style: none;
+  }
+
+  .nav-disclosure summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .nav-glyph {
+    display: grid;
+    gap: 5px;
+    width: 1rem;
+  }
+
+  .nav-glyph span {
+    display: block;
+    height: 1px;
+    width: 100%;
+    background: var(--color-field);
+    transition: transform 220ms ease;
+  }
+
+  .nav-disclosure[open] .nav-glyph span:first-child {
+    transform: translateY(3px) rotate(45deg);
+  }
+
+  .nav-disclosure[open] .nav-glyph span:last-child {
+    transform: translateY(-3px) rotate(-45deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-glyph span {
+      transition: none;
+    }
+  }
+
+  .nav-panel {
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    background: var(--color-ground);
+    border-bottom: 1px solid
+      color-mix(in oklab, var(--color-field) 10%, transparent);
+    padding: 0.5rem clamp(1.25rem, 5vw, 4.5rem) 1.25rem;
+  }
+
+  .nav-panel ul {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .nav-panel a {
+    display: flex;
+    align-items: center;
+    /* Generous rows: comfortably past the 44px floor. */
+    min-height: 3.25rem;
+    border-top: 1px solid color-mix(in oklab, var(--color-field) 10%, transparent);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-field);
+  }
+
+  .nav-panel a[aria-current='page'] {
+    color: var(--color-lumen);
+  }
+</style>

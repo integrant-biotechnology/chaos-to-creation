@@ -25,13 +25,13 @@ const nav = [
 
       <nav aria-label="Footer">
         <p class="label text-field/60">Site</p>
-        <ul class="mt-4 space-y-2.5">
+        <ul class="mt-2">
           {
             nav.map((item) => (
               <li>
                 <a
                   href={item.href}
-                  class="text-sm text-field/65 transition-colors hover:text-lumen"
+                  class="flex min-h-11 items-center text-sm text-field/65 transition-colors hover:text-lumen"
                 >
                   {item.label}
                 </a>
@@ -43,14 +43,14 @@ const nav = [
 
       <div>
         <p class="label text-field/60">Elsewhere</p>
-        <ul class="mt-4 space-y-2.5">
+        <ul class="mt-2">
           {
             author.social.map((s) => (
               <li>
                 <a
                   href={s.url}
                   rel="noopener me"
-                  class="text-sm text-field/65 transition-colors hover:text-lumen"
+                  class="flex min-h-11 items-center text-sm text-field/65 transition-colors hover:text-lumen"
                 >
                   {s.name}
                 </a>
@@ -61,7 +61,7 @@ const nav = [
             <a
               href={author.practiceUrl}
               rel="noopener"
-              class="text-sm text-field/65 transition-colors hover:text-lumen"
+              class="flex min-h-11 items-center text-sm text-field/65 transition-colors hover:text-lumen"
             >
               Surgical practice
             </a>
