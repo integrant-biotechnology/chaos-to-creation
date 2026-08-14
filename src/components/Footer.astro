@@ -47,7 +47,7 @@ const elsewhere = [...author.social].sort(
         <p class="font-display text-h3 !text-[1.375rem] text-fg">
           {book.title}
         </p>
-        <p class="mt-1 text-sm text-muted">
+        <p class="mt-1 text-[0.9375rem] text-muted">
           {book.subtitle} &middot; {author.fullName}
         </p>
       </div>
@@ -71,13 +71,13 @@ const elsewhere = [...author.social].sort(
           {
             formats.map((f) => (
               <div class="flex items-baseline justify-between gap-4 border-t border-line py-3">
-                <dt class="text-sm text-fg">{f.data.name}</dt>
+                <dt class="text-[1rem] text-fg">{f.data.name}</dt>
                 <dd class="text-right">
-                  <span class="label tabular-nums text-muted">
+                  <span class="label !text-[0.8125rem] tabular-nums text-muted">
                     {money(f.data.price, f.data.currency)}
                   </span>
                   {f.data.isbn && (
-                    <span class="label ml-3 hidden tabular-nums text-faint lg:inline">
+                    <span class="label ml-3 hidden !text-[0.8125rem] tabular-nums text-faint lg:inline">
                       {f.data.isbn}
                     </span>
                   )}
@@ -96,7 +96,7 @@ const elsewhere = [...author.social].sort(
               <li class="border-t border-line">
                 <a
                   href={item.href}
-                  class="flex min-h-11 items-center text-sm text-fg transition-colors hover:text-accent"
+                  class="flex min-h-12 items-center text-[1.0625rem] font-medium text-fg transition-colors hover:text-accent"
                 >
                   {item.label}
                 </a>
@@ -115,7 +115,7 @@ const elsewhere = [...author.social].sort(
                 <a
                   href={s.url}
                   target="_blank" rel="noopener me"
-                  class="group flex min-h-11 items-center justify-between gap-3 text-sm text-fg transition-colors hover:text-accent"
+                  class="group flex min-h-12 items-center justify-between gap-3 text-[1.0625rem] font-medium text-fg transition-colors hover:text-accent"
                 >
                   <span>{s.name}</span>
                   <span aria-hidden="true" class="text-faint">&#8599;</span>
@@ -130,7 +130,7 @@ const elsewhere = [...author.social].sort(
     <hr class="rule-metal mt-16" />
 
     <div
-      class="mt-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-3 text-sm text-faint"
+      class="mt-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-3 text-[0.9375rem] text-faint"
     >
       <p>&copy; {year} {author.fullName}. All rights reserved.</p>
 
@@ -138,7 +138,7 @@ const elsewhere = [...author.social].sort(
         <!-- CC BY 4.0 requires attribution wherever the work is used. The
              README is not where a reader looks, so it is discharged here. -->
         <span>
-          Micrograph by Erin Rod,
+          Micrograph by Erin Rod,{' '}
           <a
             href="https://creativecommons.org/licenses/by/4.0/"
             target="_blank" rel="noopener license"
