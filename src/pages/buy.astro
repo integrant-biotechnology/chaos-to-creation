@@ -3,10 +3,16 @@ import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import BestsellerMark from '../components/BestsellerMark.astro';
-import BuySection from '../components/BuySection.astro';
+import EditionCards from '../components/EditionCards.astro';
 import launch from '../assets/launch.jpg';
 import book from '../data/book.json';
-import { bookNode, personNode, breadcrumbNode, bestsellerAward, faqNode } from '../lib/schema';
+import {
+  bookNode,
+  personNode,
+  breadcrumbNode,
+  bestsellerAward,
+  faqNode,
+} from '../lib/schema';
 
 /** The three purchase-anxiety questions, reused from the FAQ collection. */
 const purchaseFaqSlugs = [
@@ -37,6 +43,12 @@ const pressDate = press
       press.data.date,
     )
   : null;
+
+const reassurance = [
+  'Secure checkout on Amazon',
+  'Fulfilled and shipped by Amazon AU',
+  'Kindle edition delivers instantly',
+];
 ---
 
 <Base
@@ -44,95 +56,104 @@ const pressDate = press
   description={`${bestsellerAward}. Order ${book.title}: ${book.subtitle} by Prof. Gordon Slater in hardcover, paperback or Kindle through Amazon Australia.`}
   schema={schema}
 >
-  <!-- The commerce page opens on the product itself: the launch photograph,
-       client-supplied, with its Amazon endorsement — which is exactly where
-       every order on this page completes. -->
-  <section class="surface relative overflow-hidden">
-    <div
-      class="shell grid gap-12 pb-20 pt-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:items-center lg:gap-24 lg:pb-24 lg:pt-24"
-    >
-      <div>
-        <p class="eyebrow">Figure 7 · Editions</p>
-        <h1 class="hang mt-5 text-h1">Order the book</h1>
-        <p class="mt-8 max-w-[46ch] text-lead text-muted">
-          {book.title} has been an Amazon Best Seller. Three editions, all
-          fulfilled by Amazon Australia.
-        </p>
+  <!-- One continuous flow: intro, cards, handoff reassurance. A utility page
+       gets one headline, not a manifesto and then a second headline. -->
+  <section class="surface">
+    <div class="shell pb-20 pt-16 lg:pb-24 lg:pt-20">
+      <div
+        class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,19rem)] lg:items-center lg:gap-24"
+      >
+        <div>
+          <p class="eyebrow">Figure 7 · Editions</p>
+          <h1 class="hang mt-5 text-h2">Order the book</h1>
+          <p class="mt-6 max-w-[46ch] text-lead text-muted">
+            {book.title} has been an Amazon Best Seller. Three editions, all
+            fulfilled by Amazon Australia.
+          </p>
 
-        <div class="mt-10">
-          <BestsellerMark variant="seal" withAuthor />
-          {
-            press && (
-              <p class="label mt-3 text-muted">
-                Featured in{' '}
-                <a
-                  href={press.data.url}
-                  target="_blank" rel="noopener"
-                  class="text-fg underline decoration-line underline-offset-4 transition-colors hover:text-accent"
-                >
-                  {press.data.outlet}
-                </a>{' '}
-                &middot; {pressDate}
-              </p>
-            )
-          }
+          <div class="mt-8">
+            <BestsellerMark variant="seal" withAuthor />
+            {
+              press && (
+                <p class="label mt-3 text-muted">
+                  Featured in{' '}
+                  <a
+                    href={press.data.url}
+                    target="_blank"
+                    rel="noopener"
+                    class="text-fg underline decoration-line underline-offset-4 transition-colors hover:text-accent"
+                  >
+                    {press.data.outlet}
+                    <span class="sr-only"> (opens in a new tab)</span>
+                  </a>{' '}
+                  &middot; {pressDate}
+                </p>
+              )
+            }
+          </div>
         </div>
+
+        <figure class="mx-auto w-full max-w-[17rem] lg:mx-0 lg:max-w-none">
+          <Image
+            src={launch}
+            alt={`The hardcover edition of ${book.title} standing on a table, beneath the words "Now available on Amazon"`}
+            widths={[272, 400, 560]}
+            sizes="(max-width: 1023px) 17rem, 19rem"
+            loading="eager"
+            fetchpriority="high"
+            class="launch-plate w-full"
+          />
+          <figcaption class="label mt-4 flex items-center gap-3 text-muted">
+            <span class="whitespace-nowrap text-metal">Plate IV</span>
+            <span aria-hidden="true" class="h-px flex-1 bg-line"></span>
+            <span class="whitespace-nowrap">The hardcover, at launch</span>
+          </figcaption>
+        </figure>
       </div>
 
-      <figure class="mx-auto w-full max-w-[19rem] lg:mx-0 lg:max-w-none">
-        <Image
-          src={launch}
-          alt={`The hardcover edition of ${book.title} standing on a table, beneath the words "Now available on Amazon"`}
-          widths={[304, 448, 608, 768]}
-          sizes="(max-width: 1023px) 19rem, 24rem"
-          loading="eager"
-          fetchpriority="high"
-          class="launch-plate w-full"
-        />
-        <figcaption class="label mt-4 flex items-center gap-3 text-muted">
-          <span class="whitespace-nowrap text-metal">Plate IV</span>
-          <span aria-hidden="true" class="h-px flex-1 bg-line"></span>
-          <span class="whitespace-nowrap">The hardcover, at launch</span>
-        </figcaption>
-      </figure>
-    </div>
-  </section>
+      <div class="mt-16 lg:mt-20">
+        <EditionCards />
+      </div>
 
-  <BuySection />
-
-  <!-- What happens after the click — named at the moment of maximum
-       hesitation. Row furniture, deliberately: not another card grid. -->
-  <section class="surface-sunken border-t border-line py-10">
-    <div class="shell">
+      <!-- What happens after the click, named at the moment of maximum
+           hesitation — a quiet row inside the same section, not another band. -->
       <ul
-        class="flex flex-col gap-x-12 gap-y-3 sm:flex-row sm:flex-wrap sm:items-center"
+        class="mt-14 flex flex-col gap-x-12 gap-y-3 border-t border-line pt-8 sm:flex-row sm:flex-wrap sm:items-center"
       >
-        <li class="label flex items-center gap-3 text-muted">
-          <span aria-hidden="true" class="inline-block size-1.5 rotate-45 bg-metal"
-          ></span>
-          Secure checkout on Amazon
-        </li>
-        <li class="label flex items-center gap-3 text-muted">
-          <span aria-hidden="true" class="inline-block size-1.5 rotate-45 bg-metal"
-          ></span>
-          Fulfilled and shipped by Amazon AU
-        </li>
-        <li class="label flex items-center gap-3 text-muted">
-          <span aria-hidden="true" class="inline-block size-1.5 rotate-45 bg-metal"
-          ></span>
-          Kindle edition delivers instantly
-        </li>
+        {
+          reassurance.map((item) => (
+            <li class="label flex items-center gap-3 text-muted">
+              <span
+                aria-hidden="true"
+                class="inline-block size-1.5 rotate-45 bg-metal"
+              />
+              {item}
+            </li>
+          ))
+        }
       </ul>
     </div>
   </section>
 
-  <!-- Before you order: the three purchase questions, straight from the FAQ
-       collection — same answers as /the-book/, zero duplicated copy. -->
-  <section class="surface border-t border-line py-24 lg:py-28">
+  <!-- Answers and the institutional path, one section. The header column
+       carries the bulk-order callout — filling what was dead space below
+       the h2, and retiring what was previously a fifth band. -->
+  <section class="surface-sunken border-t border-line py-24 lg:py-28">
     <div class="shell grid gap-16 lg:grid-cols-[22rem_1fr] lg:gap-24">
       <header>
         <p class="eyebrow">Before you order</p>
         <h2 class="hang mt-5 text-h2 text-fg">Three quick answers.</h2>
+
+        <div class="mt-12 border-t border-line pt-8">
+          <h3 class="text-h3 !text-[1.25rem] text-fg">
+            Ordering for an institution?
+          </h3>
+          <p class="mt-3 text-sm text-muted">
+            Universities, hospitals, libraries and conferences order in bulk
+            directly &mdash; with invoicing, not a cart.
+          </p>
+          <a href="/contact/" class="btn btn-ghost mt-6">Start a bulk enquiry</a>
+        </div>
       </header>
 
       <dl class="divide-y divide-line">
@@ -147,20 +168,6 @@ const pressDate = press
           ))
         }
       </dl>
-    </div>
-  </section>
-
-  <!-- Institutional orders: a real audience, no longer a footnote. -->
-  <section class="surface-sunken border-t border-line py-16 lg:py-20">
-    <div class="shell flex flex-wrap items-center justify-between gap-x-12 gap-y-6">
-      <div>
-        <h2 class="text-h3 text-fg">Ordering for an institution?</h2>
-        <p class="mt-3 max-w-[52ch] text-muted">
-          Universities, hospitals, libraries and conferences order in bulk
-          directly &mdash; with invoicing, not a cart.
-        </p>
-      </div>
-      <a href="/contact/" class="btn btn-ghost">Start a bulk enquiry</a>
     </div>
   </section>
 </Base>
