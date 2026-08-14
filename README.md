@@ -68,6 +68,7 @@ commercial use; attribution is required where stated and is discharged here.
 | `src/assets/micrograph.jpg` | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Bovine_Pulmonary_Artery_Endothelial_Cells_Fluorescent_Image_3.jpg) | **CC BY 4.0** | Erin Rod |
 | `src/assets/cover.png` | Client-supplied book cover | Client-owned | Prof. Gordon Slater |
 | `src/assets/portrait.jpg` + `public/portrait-gordon-slater-hero.jpg` | Client-supplied author portrait | Client-owned | Prof. Gordon Slater |
+| `src/assets/launch.jpg` + `public/launch-chaos-to-creation.jpg` | Client marketing art from the previous site (contains Amazon branding as supplied) | Client-owned | Prof. Gordon Slater |
 
 The micrograph is a triple-stain immunofluorescence image of bovine pulmonary
 artery endothelial cells — blue nuclei, green actin, red mitochondria. It was

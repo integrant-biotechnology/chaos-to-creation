@@ -5,6 +5,7 @@ import Base from '../layouts/Base.astro';
 import PageHeader from '../components/PageHeader.astro';
 import BestsellerMark from '../components/BestsellerMark.astro';
 import portrait from '../assets/portrait.jpg';
+import launch from '../assets/launch.jpg';
 import book from '../data/book.json';
 import author from '../data/author.json';
 import { personNode, bookNode, breadcrumbNode } from '../lib/schema';
@@ -139,58 +140,72 @@ const schema = [
         <p class="label text-muted">Photography</p>
         <h2 class="mt-5 text-h2 text-fg">Ready to run.</h2>
         <p class="mt-6 text-muted">
-          Supplied for editorial use alongside coverage of the book or its
-          author.
+          Two assets, ready to run with coverage.
         </p>
       </header>
 
-      <div class="flex flex-wrap items-start gap-10">
-        <Image
-          src={portrait}
-          alt={`${author.fullName}, photographed in front of his framed qualifications`}
-          widths={[224, 448]}
-          sizes="14rem"
-          loading="lazy"
-          decoding="async"
-          class="press-portrait w-56"
-          style="view-transition-name: author-portrait"
-        />
-        <dl class="min-w-[16rem] flex-1 space-y-3 text-sm">
-          <div class="flex justify-between gap-4 border-t border-line pt-3">
-            <dt class="label text-muted">Subject</dt>
-            <dd class="text-right text-fg">{author.fullName}</dd>
-          </div>
-          <div class="flex justify-between gap-4 border-t border-line pt-3">
-            <dt class="label text-muted">File</dt>
-            <dd class="label text-right text-fg">JPG &middot; 750 &times; 1000</dd>
-          </div>
-          <div class="flex justify-between gap-4 border-t border-line pt-3">
-            <dt class="label text-muted">Use</dt>
-            <dd class="text-right text-fg">Editorial, with coverage</dd>
-          </div>
-          <div class="pt-4">
+      <div>
+        <div class="grid gap-10 sm:grid-cols-2">
+          <figure>
+            <Image
+              src={portrait}
+              alt={`${author.fullName}, photographed in front of his framed qualifications`}
+              widths={[288, 448, 576]}
+              sizes="(max-width: 639px) 90vw, 18rem"
+              loading="lazy"
+              decoding="async"
+              class="press-asset w-full max-w-[18rem]"
+              style="view-transition-name: author-portrait"
+            />
+            <figcaption class="label mt-4 text-muted">
+              The author &middot; JPG &middot; 750 &times; 1000
+            </figcaption>
             <a
               href="/portrait-gordon-slater-hero.jpg"
               download="gordon-slater-portrait.jpg"
-              class="btn btn-ghost"
+              class="btn btn-ghost mt-4"
             >
               Download portrait
             </a>
-          </div>
-          <p class="pt-2 text-muted">
-            Print-resolution photography and cover art are available <a
-              href="/contact/"
-              class="underline decoration-line underline-offset-4 transition-colors hover:text-fg"
-              >on request</a
-            >.
-          </p>
-        </dl>
+          </figure>
+
+          <figure>
+            <Image
+              src={launch}
+              alt={`The hardcover edition of ${book.title} standing on a table, beneath the words "Now available on Amazon"`}
+              widths={[288, 448, 576]}
+              sizes="(max-width: 639px) 90vw, 18rem"
+              loading="lazy"
+              decoding="async"
+              class="press-asset w-full max-w-[18rem]"
+            />
+            <figcaption class="label mt-4 text-muted">
+              Launch shot &middot; JPG &middot; 1600 &times; 2000
+            </figcaption>
+            <a
+              href="/launch-chaos-to-creation.jpg"
+              download="chaos-to-creation-launch.jpg"
+              class="btn btn-ghost mt-4"
+            >
+              Download launch shot
+            </a>
+          </figure>
+        </div>
+
+        <p class="mt-8 text-sm text-muted">
+          Supplied for editorial use alongside coverage of the book or its
+          author. Print-resolution photography and cover art are available <a
+            href="/contact/"
+            class="underline decoration-line underline-offset-4 transition-colors hover:text-fg"
+            >on request</a
+          >.
+        </p>
       </div>
     </div>
   </section>
 
   <style>
-    .press-portrait {
+    .press-asset {
       border: 1px solid var(--color-line);
       box-shadow: var(--elevation);
     }
