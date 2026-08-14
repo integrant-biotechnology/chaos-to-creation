@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import cover from '../assets/cover.png';
+import micrograph from '../assets/micrograph.jpg';
 import book from '../data/book.json';
 import author from '../data/author.json';
 import BestsellerMark from './BestsellerMark.astro';
@@ -27,20 +28,21 @@ const chaos = [
 ---
 
 <section class="surface relative overflow-hidden">
-  <!-- Dark-field wash: two out-of-focus fluorescence blooms, the visual
-       signature of the confocal imagery this direction is drawn from. -->
-  <div aria-hidden="true" class="pointer-events-none absolute inset-0">
-    <div
-      class="absolute -left-[10%] top-[8%] h-[46rem] w-[46rem] rounded-full opacity-[0.16] blur-[110px]"
-      style="background: radial-gradient(circle, var(--color-accent) 0%, transparent 68%)"
-    >
-    </div>
-    <div
-      class="absolute -right-[14%] bottom-[-12%] h-[38rem] w-[38rem] rounded-full opacity-[0.10] blur-[120px]"
-      style="background: radial-gradient(circle, var(--color-metal) 0%, transparent 68%)"
-    >
-    </div>
+  <!-- Dark-field ground: a real immunofluorescence micrograph rather than a
+       CSS gradient pretending to be one. It is heavily blurred, so it is
+       served at a fraction of its native size — resolution is wasted on an
+       image nobody sees sharply. Decorative, hence aria-hidden and empty alt. -->
+  <div aria-hidden="true" class="hero-ground pointer-events-none absolute inset-0">
+    <Image
+      src={micrograph}
+      alt=""
+      widths={[560, 720]}
+      sizes="100vw"
+      loading="eager"
+      class="drift h-full w-full object-cover"
+    />
   </div>
+  <div aria-hidden="true" class="hero-scrim"></div>
 
   <div
     class="shell relative grid items-center gap-16 pb-24 pt-20 lg:grid-cols-[1.28fr_0.72fr] lg:gap-16 lg:pb-32 lg:pt-28"
@@ -113,7 +115,7 @@ const chaos = [
       <Image
         src={cover}
         alt={`Cover of ${book.title}: ${book.subtitle}, by ${author.fullName}`}
-        widths={[272, 304, 448, 608]}
+        widths={[272, 340, 480]}
         sizes="(max-width: 1023px) 17rem, 19rem"
         loading="eager"
         fetchpriority="high"
@@ -129,6 +131,38 @@ const chaos = [
 </section>
 
 <style>
+  /* The micrograph is atmosphere, not subject: blurred past legibility, held
+     under a wash of the surface colour so type contrast is never at its mercy.
+     Measured, not eyeballed — see the contrast audit. */
+  .hero-ground {
+    filter: blur(46px) saturate(135%);
+    opacity: 0.34;
+    transform: scale(1.18);
+  }
+
+  :root[data-theme='light'] .hero-ground {
+    opacity: 0.16;
+    filter: blur(46px) saturate(115%);
+  }
+
+  /* A scrim between the image and the type, so contrast is structural rather
+     than a happy accident of which pixels sit behind which word. */
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(to right,
+        var(--color-surface) 0%,
+        color-mix(in oklab, var(--color-surface) 82%, transparent) 46%,
+        color-mix(in oklab, var(--color-surface) 40%, transparent) 100%),
+      linear-gradient(to bottom,
+        var(--color-surface) 0%,
+        transparent 22%,
+        transparent 74%,
+        var(--color-surface) 100%);
+  }
+
   .hero-title {
     font-size: var(--text-mega);
     line-height: var(--text-mega--line-height);

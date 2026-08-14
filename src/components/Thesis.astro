@@ -1,27 +1,83 @@
 ---
+import { Image } from 'astro:assets';
+import micrograph from '../assets/micrograph.jpg';
+
 /**
- * The dissolve. The page brightens from the dark field of the science into the
- * clinical light of the author and the conversion path — chaos to creation
- * expressed as the site's own light progression.
+ * The book's argument, set over the thing the book is about.
  *
- * The text sits in the upper, still-dark portion of the gradient so contrast
- * holds; the lower half carries no content and simply resolves into the light
- * register that follows.
+ * This replaces a full viewport of grey gradient — the weakest moment on the
+ * old site. The image is a triple-stain immunofluorescence micrograph: blue
+ * nuclei, green actin, red mitochondria — mitochondrial dysfunction being one
+ * of the nine hallmarks the book works through. It is the subject, not decor.
+ *
+ * Contrast over imagery is structural rather than hopeful: the scrim holds the
+ * type at AA regardless of which pixels sit behind any given word.
  */
 ---
 
-<section class="register-dissolve">
-  <div class="shell pb-40 pt-28 lg:pb-56 lg:pt-36">
-    <!-- Measure is set in rem, not ch: `ch` resolves against this element's own
-         1rem font-size rather than the display size of the quote inside it. -->
-    <figure class="mx-auto max-w-[44rem] text-center">
-      <p class="label text-accent">The argument</p>
-      <blockquote class="mt-7">
-        <p class="text-h2 font-display text-fg">
+<section class="thesis surface-sunken relative isolate overflow-hidden">
+  <Image
+    src={micrograph}
+    alt=""
+    aria-hidden="true"
+    widths={[900, 1360]}
+    sizes="100vw"
+    loading="lazy"
+    decoding="async"
+    class="thesis-image absolute inset-0 h-full w-full object-cover"
+  />
+  <div aria-hidden="true" class="thesis-scrim absolute inset-0"></div>
+
+  <div class="shell relative py-32 lg:py-44">
+    <figure class="mx-auto max-w-[46rem] text-center">
+      <p class="eyebrow">The argument</p>
+      <blockquote class="mt-8">
+        <p class="thesis-quote font-display">
           Darwin asked how life began. This asks where it is going &mdash; and
           whether its duration is fixed.
         </p>
       </blockquote>
+      <figcaption class="label mt-10 text-muted">
+        Plate II &middot; Endothelial cells &mdash; nuclei, actin, mitochondria
+      </figcaption>
     </figure>
   </div>
 </section>
+
+<style>
+  .thesis-image {
+    filter: saturate(120%) contrast(105%);
+  }
+
+  .thesis-scrim {
+    background: radial-gradient(
+      ellipse at center,
+      color-mix(in oklab, var(--color-sunken) 88%, transparent) 0%,
+      color-mix(in oklab, var(--color-sunken) 76%, transparent) 55%,
+      color-mix(in oklab, var(--color-sunken) 88%, transparent) 100%
+    );
+  }
+
+  /* Dark ink over a bright image is the harder case, so light suppresses the
+     micrograph considerably further than dark does. */
+  :root[data-theme='light'] .thesis-image {
+    filter: saturate(80%) contrast(92%);
+  }
+
+  :root[data-theme='light'] .thesis-scrim {
+    background: radial-gradient(
+      ellipse at center,
+      color-mix(in oklab, var(--color-sunken) 95%, transparent) 0%,
+      color-mix(in oklab, var(--color-sunken) 89%, transparent) 55%,
+      color-mix(in oklab, var(--color-sunken) 95%, transparent) 100%
+    );
+  }
+
+  .thesis-quote {
+    font-size: var(--text-h2);
+    line-height: 1.14;
+    letter-spacing: -0.02em;
+    color: var(--color-fg);
+    text-wrap: balance;
+  }
+</style>

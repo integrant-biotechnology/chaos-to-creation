@@ -58,6 +58,29 @@ Editable at `/keystatic`. Collections live in `src/content/`, singletons in `src
 - `press`, `endorsements`, `faq`
 - `book`, `author` — singletons
 
+## Image credits
+
+Licence obligations are real, not decorative. Every image below is cleared for
+commercial use; attribution is required where stated and is discharged here.
+
+| File | Source | Licence | Attribution |
+|---|---|---|---|
+| `src/assets/micrograph.jpg` | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Bovine_Pulmonary_Artery_Endothelial_Cells_Fluorescent_Image_3.jpg) | **CC BY 4.0** | Erin Rod |
+| `src/assets/cover.png` | Client-supplied book cover | Client-owned | Prof. Gordon Slater |
+| `src/assets/portrait.webp` | orthopaedic-surgeon.com.au | Client-owned | Prof. Gordon Slater |
+
+The micrograph is a triple-stain immunofluorescence image of bovine pulmonary
+artery endothelial cells — blue nuclei, green actin, red mitochondria. It was
+chosen over the alternatives deliberately: several higher-ranked search results
+were oral-cancer imagery, which is both contextually wrong for a longevity book
+and needlessly loaded on an AHPRA-registered practitioner's site. Healthy cells,
+and mitochondrial dysfunction happens to be one of the nine hallmarks the book
+works through.
+
+**Deliberately excluded:** stock photography of people presented as patients.
+Imagery implying clinical treatment or outcomes on a site that also markets a
+registered practitioner sits squarely inside AHPRA advertising rules.
+
 ## Open items
 
 1. **The best-seller claim is unsubstantiated.** The press release states only "bestseller
