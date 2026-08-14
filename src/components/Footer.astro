@@ -1,37 +1,101 @@
 ---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import cover from '../assets/cover.png';
 import author from '../data/author.json';
 import book from '../data/book.json';
 
 const year = new Date().getFullYear();
 
-const nav = [
+const formats = (await getCollection('formats')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const explore = [
   { label: 'The book', href: '/the-book/' },
-  { label: 'Author', href: '/author/' },
-  { label: 'Press', href: '/press/' },
-  { label: 'Buy', href: '/buy/' },
+  { label: 'The author', href: '/author/' },
+  { label: 'Press kit', href: '/press/' },
+  { label: 'Editions', href: '/buy/' },
   { label: 'Contact', href: '/contact/' },
 ];
+
+/** Scholar and ResearchGate first: for an academic author they carry the most weight. */
+const order = ['Google Scholar', 'ResearchGate', 'LinkedIn', 'X', 'Instagram', 'YouTube'];
+const elsewhere = [...author.social].sort(
+  (a, b) => order.indexOf(a.name) - order.indexOf(b.name),
+);
 ---
 
-<footer class="surface border-t border-line">
-  <div class="shell py-16">
-    <div class="grid gap-12 md:grid-cols-[1.2fr_1fr_1fr]">
+<!-- Closing band. A book site's footer is the last conversion point, so it
+     ends on the book rather than on a sitemap. -->
+<aside class="surface-sunken border-t border-line">
+  <div
+    class="shell flex flex-wrap items-center justify-between gap-x-12 gap-y-8 py-14"
+  >
+    <div class="flex items-center gap-6">
+      <Image
+        src={cover}
+        alt=""
+        aria-hidden="true"
+        widths={[96, 192]}
+        sizes="4rem"
+        loading="lazy"
+        class="w-16 shrink-0 shadow-[var(--elevation)]"
+      />
       <div>
-        <p class="label text-fg">{book.title}</p>
-        <p class="mt-3 max-w-[34ch] text-sm text-muted">
+        <p class="font-display text-h3 !text-[1.375rem] text-fg">
+          {book.title}
+        </p>
+        <p class="mt-1 text-sm text-muted">
           {book.subtitle} &middot; {author.fullName}
         </p>
       </div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-3">
+      <a href="/buy/" class="btn btn-primary">Order the book</a>
+      <a href="/press/" class="btn btn-ghost">Press kit</a>
+    </div>
+  </div>
+</aside>
+
+<footer class="surface border-t border-line">
+  <div class="shell py-16 lg:py-20">
+    <div class="grid gap-12 md:grid-cols-3 lg:gap-16">
+      <!-- Editions. Real data, which is also what stops this column dying
+           two lines in and leaving the row ragged. -->
+      <div>
+        <p class="eyebrow">Editions</p>
+        <dl class="mt-5">
+          {
+            formats.map((f) => (
+              <div class="flex items-baseline justify-between gap-4 border-t border-line py-3">
+                <dt class="text-sm text-fg">{f.data.name}</dt>
+                <dd class="text-right">
+                  <span class="label tabular-nums text-muted">
+                    ${f.data.price.toFixed(2)}
+                  </span>
+                  {f.data.isbn && (
+                    <span class="label ml-3 hidden tabular-nums text-faint lg:inline">
+                      {f.data.isbn}
+                    </span>
+                  )}
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
 
       <nav aria-label="Footer">
-        <p class="label text-muted">Site</p>
+        <p class="eyebrow">Explore</p>
         <ul class="mt-2">
           {
-            nav.map((item) => (
-              <li>
+            explore.map((item) => (
+              <li class="border-t border-line">
                 <a
                   href={item.href}
-                  class="flex min-h-11 items-center text-sm text-muted transition-colors hover:text-accent"
+                  class="flex min-h-11 items-center text-sm text-fg transition-colors hover:text-accent"
                 >
                   {item.label}
                 </a>
@@ -42,37 +106,53 @@ const nav = [
       </nav>
 
       <div>
-        <p class="label text-muted">Elsewhere</p>
+        <p class="eyebrow">Prof. Gordon Slater</p>
         <ul class="mt-2">
           {
-            author.social.map((s) => (
-              <li>
+            elsewhere.map((s) => (
+              <li class="border-t border-line">
                 <a
                   href={s.url}
                   rel="noopener me"
-                  class="flex min-h-11 items-center text-sm text-muted transition-colors hover:text-accent"
+                  class="group flex min-h-11 items-center justify-between gap-3 text-sm text-fg transition-colors hover:text-accent"
                 >
-                  {s.name}
+                  <span>{s.name}</span>
+                  <span aria-hidden="true" class="text-faint">&#8599;</span>
                 </a>
               </li>
             ))
           }
-          <li>
-            <a
-              href={author.practiceUrl}
-              rel="noopener"
-              class="flex min-h-11 items-center text-sm text-muted transition-colors hover:text-accent"
-            >
-              Surgical practice
-            </a>
-          </li>
         </ul>
       </div>
     </div>
 
-    <hr class="rule mt-14" />
-    <p class="label mt-6 text-muted">
-      &copy; {year} {book.title}
-    </p>
+    <hr class="rule-metal mt-16" />
+
+    <div
+      class="mt-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-3 text-sm text-faint"
+    >
+      <p>&copy; {year} {author.fullName}. All rights reserved.</p>
+
+      <p class="flex flex-wrap items-center gap-x-6 gap-y-2">
+        <!-- CC BY 4.0 requires attribution wherever the work is used. The
+             README is not where a reader looks, so it is discharged here. -->
+        <span>
+          Micrograph by Erin Rod,
+          <a
+            href="https://creativecommons.org/licenses/by/4.0/"
+            rel="noopener license"
+            class="underline decoration-line underline-offset-4 transition-colors hover:text-fg"
+            >CC BY 4.0</a
+          >
+        </span>
+        <a
+          href={author.practiceUrl}
+          rel="noopener"
+          class="underline decoration-line underline-offset-4 transition-colors hover:text-fg"
+        >
+          Surgical practice
+        </a>
+      </p>
+    </div>
   </div>
 </footer>
