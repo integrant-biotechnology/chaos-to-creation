@@ -116,8 +116,18 @@ registered practitioner sits squarely inside AHPRA advertising rules.
 6. **Staging is noindexed.** Every build emits `robots: noindex,nofollow` and a
    `Disallow: /` robots.txt unless `PUBLIC_SITE_LIVE=true`. Set that env var at DNS
    cutover; it also switches robots.txt to `Allow` with the sitemap reference.
-7. **Assets needed:** print-quality cover, current headshot, AMA and Australian
-   Orthopaedic Association logos at full resolution.
+7. **Assets needed:** print-quality cover, current headshot. (Association logos were
+   considered and rejected — implied-endorsement risk under AHPRA advertising rules.)
+9. **Star ratings**: `book.rating` in `src/data/book.json` ships empty and renders
+   nothing. Fill `stars`/`count`/`url` with the real Amazon numbers to show them.
+10. **MBBS**: the byline now renders `author.postNominals` ("MBBS, FRACS"), sourced
+   from the qualifications printed on the client-supplied cover art. Confirm with
+   Adelaide.
+11. **Extract text**: the hero CTA reads "About the book" because no extract exists.
+   When the client supplies one, add it to /the-book/ with `id="extract"` and relabel
+   the CTA to a specific promise.
+12. **Icons and the OG share card are committed artifacts** — regenerate locally with
+   `node scripts/icons.mjs` / `node scripts/og.mjs` (not build steps: CI fonts differ).
 8. **The practice site is out of scope.** `orthopaedic-surgeon.com.au` also needs a
    best-seller mention; it is not covered by this repo.
 

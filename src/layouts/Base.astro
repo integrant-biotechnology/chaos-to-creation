@@ -42,17 +42,26 @@ const jsonLd =
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    {/* Mobile browser chrome follows the theme; values mirror --s-surface.
+        Placed before the theme script so it can correct for light visitors. */}
+    <meta name="theme-color" content="#14120f" />
 
     {/* Runs before first paint, so the chosen theme is never seen to flip.
         Absence of the attribute means dark, which is the default for
         everyone — so this only has work to do for light-theme visitors. */}
     <script is:inline>
       try {
-        if (localStorage.getItem('theme') === 'light')
+        if (localStorage.getItem('theme') === 'light') {
           document.documentElement.dataset.theme = 'light';
+          document
+            .querySelector('meta[name="theme-color"]')
+            ?.setAttribute('content', '#faf7f2');
+        }
       } catch {}
     </script>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="canonical" href={canonical} />
     {!isLive && <meta name="robots" content="noindex, nofollow" />}
 

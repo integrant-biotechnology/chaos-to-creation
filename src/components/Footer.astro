@@ -4,6 +4,7 @@ import { getCollection } from 'astro:content';
 import cover from '../assets/cover.png';
 import author from '../data/author.json';
 import book from '../data/book.json';
+import { money } from '../lib/format';
 
 const year = new Date().getFullYear();
 
@@ -73,7 +74,7 @@ const elsewhere = [...author.social].sort(
                 <dt class="text-sm text-fg">{f.data.name}</dt>
                 <dd class="text-right">
                   <span class="label tabular-nums text-muted">
-                    ${f.data.price.toFixed(2)}
+                    {money(f.data.price, f.data.currency)}
                   </span>
                   {f.data.isbn && (
                     <span class="label ml-3 hidden tabular-nums text-faint lg:inline">

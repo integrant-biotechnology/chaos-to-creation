@@ -111,6 +111,33 @@
   color-scheme: light;
 }
 
+
+/* ---------------------------------------------------------------------------
+   Cross-document view transitions — zero JavaScript.
+
+   Same-origin navigations get a native root crossfade, and the book cover
+   (view-transition-name: book-cover, set on the hero plate link and the
+   /the-book/ aside) morphs between pages. Firefox has no support and falls
+   back to a plain navigation, which is a perfectly good monograph behaviour.
+
+   The entrance choreography is suppressed while a transition is active so
+   the morph never lands into a re-scattering title; once the transition
+   finishes, the entrance plays as it would for any arrival.
+--------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+html:active-view-transition .hero-glyph,
+html:active-view-transition .hero-enter,
+html:active-view-transition .hero-seal,
+html:active-view-transition .hero-hinge-rule,
+html:active-view-transition .caption-rule {
+  animation: none;
+}
+
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;

@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import book from '../data/book.json';
+import { money } from '../lib/format';
 
 const formats = (await getCollection('formats')).sort(
   (a, b) => a.data.order - b.data.order,
@@ -23,8 +24,7 @@ const formats = (await getCollection('formats')).sort(
           <li class="flex flex-col bg-raised p-8 lg:p-10">
             <p class="label text-muted">{f.data.name}</p>
             <p class="mt-6 font-display text-h3 text-fg tabular-nums">
-              ${f.data.price.toFixed(2)}
-              <span class="label ml-1 text-muted">{f.data.currency}</span>
+              {money(f.data.price, f.data.currency)}
             </p>
             <p class="mt-4 flex-1 text-sm text-muted">{f.data.note}</p>
             {f.data.isbn && (

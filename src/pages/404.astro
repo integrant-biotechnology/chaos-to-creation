@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+---
+
+<Base
+  title="Page not found — Chaos to Creation"
+  description="That page does not exist. The book, the author and the press kit are one step away."
+>
+  <PageHeader
+    figure="Plate · Not found"
+    title="Nothing under this label"
+    lede="The address may have moved with the new site, or the link was mistyped. Everything worth reading is one step away."
+  />
+
+  <section class="surface pb-28">
+    <div class="shell flex flex-wrap gap-3">
+      <a href="/" class="btn btn-primary">Back to the start</a>
+      <a href="/buy/" class="btn btn-ghost">Order the book</a>
+      <a href="/press/" class="btn btn-ghost">Press kit</a>
+    </div>
+  </section>
+</Base>

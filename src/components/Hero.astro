@@ -6,16 +6,32 @@ import micrograph from '../assets/micrograph.jpg';
 import book from '../data/book.json';
 import author from '../data/author.json';
 import BestsellerMark from './BestsellerMark.astro';
+import { money } from '../lib/format';
 
 const formats = (await getCollection('formats')).sort(
   (a, b) => a.data.order - b.data.order,
 );
+const fromPrice = Math.min(...formats.map((f) => f.data.price));
+const hardcover = formats.find((f) => f.data.name === 'Hardcover');
+
+/** Newest press item anchors the seal to a checkable third-party source. */
+const press = (await getCollection('press')).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+)[0];
+const pressDate = press
+  ? new Intl.DateTimeFormat('en-AU', { month: 'long', year: 'numeric' }).format(
+      press.data.date,
+    )
+  : null;
+
+/** Renders nothing until real numbers are supplied — no ghost stars, ever. */
+const rating = book.rating?.stars ? book.rating : null;
 
 /**
  * "CHAOS" is set as individual glyphs carrying a deterministic scatter —
  * displacement, rotation and blur that resolve on load. "CREATION" is crisp
- * throughout. The title performs the argument of the book rather than
- * describing it, and the values are hard-coded rather than random so the
+ * throughout: it never scatters — on entrance it develops, opacity only, like
+ * a print in the tray. The values are hard-coded rather than random so the
  * composition is identical on every build.
  */
 const chaos = [
@@ -29,9 +45,8 @@ const chaos = [
 
 <section class="surface relative overflow-hidden">
   <!-- Dark-field ground: a real immunofluorescence micrograph rather than a
-       CSS gradient pretending to be one. It is heavily blurred, so it is
-       served at a fraction of its native size — resolution is wasted on an
-       image nobody sees sharply. Decorative, hence aria-hidden and empty alt. -->
+       CSS gradient pretending to be one. Heavily blurred, so served small —
+       resolution is wasted on an image nobody sees sharply. Decorative. -->
   <div aria-hidden="true" class="hero-ground pointer-events-none absolute inset-0">
     <Image
       src={micrograph}
@@ -42,15 +57,17 @@ const chaos = [
       class="drift h-full w-full object-cover"
     />
   </div>
-  <div aria-hidden="true" class="hero-scrim"></div>
+  <!-- The scrim is contrast infrastructure: it exists at frame 0 and never
+       animates. Grain rides on it, under the content. -->
+  <div aria-hidden="true" class="hero-scrim grain"></div>
 
   <div
     class="shell relative grid items-center gap-16 pb-24 pt-20 lg:grid-cols-[1.28fr_0.72fr] lg:gap-16 lg:pb-32 lg:pt-28"
   >
     <!-- Type -->
     <div>
-      <p class="label mb-6 text-muted">
-        {author.fullName} &middot; MBBS, FRACS
+      <p class="label hero-enter mb-6 text-muted" style="--ed:120ms">
+        {author.fullName} &middot; {author.postNominals}
       </p>
 
       <h1 class="hero-title hang">
@@ -70,37 +87,83 @@ const chaos = [
           </span>
           <span class="hero-hinge">
             <span class="hero-hinge-rule"></span>
-            <span class="hero-hinge-word">to</span>
+            <span class="hero-enter hero-hinge-word" style="--ed:780ms; --edur:350ms"
+              >to</span
+            >
           </span>
         </span>
-        <span class="hero-creation" aria-hidden="true">Creation</span>
+        <span
+          class="hero-creation hero-enter"
+          aria-hidden="true"
+          style="--ed:560ms; --edur:700ms">Creation</span
+        >
       </h1>
 
-      <p class="mt-8 max-w-[46ch] text-lead text-muted">
+      <p
+        class="hero-enter mt-8 max-w-[46ch] text-lead text-muted"
+        style="--ed:700ms; --edur:550ms"
+      >
         {book.summary}
       </p>
 
-      <div class="mt-10">
-        <BestsellerMark variant="seal" withAuthor />
+      <div class="hero-seal mt-10">
+        <BestsellerMark variant="seal" />
+        {
+          press && (
+            <p class="label mt-3 text-muted">
+              Featured in{' '}
+              <a
+                href={press.data.url}
+                rel="noopener"
+                class="press-cite text-fg transition-colors hover:text-accent"
+              >
+                {press.data.outlet}
+              </a>{' '}
+              &middot; {pressDate}
+              <span aria-hidden="true" class="text-faint">&#8599;</span>
+            </p>
+          )
+        }
+        {
+          rating && (
+            <p class="label mt-3 text-muted">
+              &#9733; {rating.stars} &middot; {rating.count} ratings &middot;{' '}
+              <a
+                href={rating.url}
+                rel="noopener"
+                class="text-fg transition-colors hover:text-accent"
+              >
+                on Amazon
+              </a>
+            </p>
+          )
+        }
       </div>
 
-      <div class="mt-8 flex flex-wrap items-center gap-3">
-        <a href="/buy/" class="btn btn-primary">Order the book</a>
-        <a href="/the-book/" class="btn btn-ghost">Read an extract</a>
+      <div
+        class="hero-enter mt-8 flex flex-wrap items-center gap-3"
+        style="--ed:1000ms; --edur:450ms"
+      >
+        <a href="/buy/" class="btn btn-primary">
+          Order the book
+          <span class="btn-note">from {money(fromPrice)}</span>
+        </a>
+        <a href="/the-book/" class="btn btn-ghost">About the book</a>
       </div>
 
       <ul class="mt-10 flex flex-wrap items-center gap-x-7 gap-y-2">
         {
-          formats.map((f) => (
+          formats.map((f, i) => (
             <li>
               <a
                 href={f.data.url}
                 rel="noopener"
-                class="label flex min-h-11 items-center text-fg transition-colors hover:text-accent"
+                class="label hero-enter flex min-h-11 items-center text-fg transition-colors hover:text-accent"
+                style={`--ed:${1080 + i * 40}ms; --edur:400ms`}
               >
-                {f.data.name}
-                <span class="ml-1.5 text-muted">
-                  ${f.data.price.toFixed(2)}
+                <span class="fmt">
+                  {f.data.name}
+                  <span class="ml-1.5 text-muted">{money(f.data.price)}</span>
                 </span>
               </a>
             </li>
@@ -109,44 +172,81 @@ const chaos = [
       </ul>
     </div>
 
-    <!-- Plate. Deliberately restrained: this is a specimen placed beside the
-         argument, not the argument itself. The title carries the page. -->
-    <figure class="relative mx-auto w-full max-w-[17rem] lg:mx-0 lg:ml-auto lg:max-w-[19rem]">
-      <Image
-        src={cover}
-        alt={`Cover of ${book.title}: ${book.subtitle}, by ${author.fullName}`}
-        widths={[272, 340, 480]}
-        sizes="(max-width: 1023px) 17rem, 19rem"
-        loading="eager"
-        fetchpriority="high"
-        class="w-full drop-shadow-[0_36px_70px_rgba(0,0,0,0.72)]"
-      />
-      <figcaption class="label mt-6 flex items-center gap-3 text-muted">
-        <span class="whitespace-nowrap text-metal">Plate I</span>
-        <span aria-hidden="true" class="h-px flex-1 bg-line"></span>
-        <span class="whitespace-nowrap">Hardcover, {book.published}</span>
+    <!-- Plate. A specimen placed beside the argument — and the door to it:
+         the plate links to the book page, where the view transition carries
+         the cover across. -->
+    <figure
+      class="hero-enter relative mx-auto w-full max-w-[17rem] lg:mx-0 lg:ml-auto lg:max-w-[19rem]"
+      style="--ed:320ms; --edur:900ms; --eo:0.01"
+    >
+      <a
+        href="/the-book/"
+        class="hero-cover-link block"
+        style="view-transition-name: book-cover"
+      >
+        <Image
+          src={cover}
+          alt={`Cover of ${book.title}: ${book.subtitle}, by ${author.fullName}`}
+          widths={[272, 340, 480]}
+          sizes="(max-width: 1023px) 17rem, 19rem"
+          loading="eager"
+          fetchpriority="high"
+          class="w-full"
+        />
+      </a>
+      <figcaption class="label mt-6 text-muted">
+        <span class="flex items-center gap-3">
+          <span class="plate-label whitespace-nowrap text-metal">Plate I</span>
+          <span aria-hidden="true" class="caption-rule h-px flex-1 bg-line"></span>
+          <span class="hero-enter whitespace-nowrap" style="--ed:1150ms; --edur:400ms"
+            >Hardcover, {book.published}</span
+          >
+        </span>
+        {
+          hardcover?.data.isbn && (
+            <span
+              class="hero-enter mt-1.5 block text-right text-faint"
+              style="--ed:1150ms; --edur:400ms"
+            >
+              ISBN {hardcover.data.isbn}
+            </span>
+          )
+        }
       </figcaption>
     </figure>
   </div>
+
+  <!-- Index-line scroll cue, not a chevron. Desktop only; lowest priority in
+       the entrance, first thing to be ignored — exactly as it should be. -->
+  <a
+    href="#hallmarks"
+    class="hero-cue label hero-enter"
+    style="--ed:1400ms; --edur:500ms"
+  >
+    <span aria-hidden="true" class="hero-cue-rule"></span>
+    01 &middot; The hallmarks
+  </a>
 </section>
 
 <style>
   /* The micrograph is atmosphere, not subject: blurred past legibility, held
      under a wash of the surface colour so type contrast is never at its mercy.
-     Measured, not eyeballed — see the contrast audit. */
+     --breath-lo bounds the ambient swell AT the audited opacity maximum, so
+     the animation only ever reduces ground competition. Light theme sets it to
+     the authored value — a ±0.03 swing on 0.16 reads as flicker, not breath. */
   .hero-ground {
     filter: blur(46px) saturate(135%);
     opacity: 0.34;
     transform: scale(1.18);
+    --breath-lo: 0.31;
   }
 
   :root[data-theme='light'] .hero-ground {
     opacity: 0.16;
     filter: blur(46px) saturate(115%);
+    --breath-lo: 0.16;
   }
 
-  /* A scrim between the image and the type, so contrast is structural rather
-     than a happy accident of which pixels sit behind which word. */
   .hero-scrim {
     position: absolute;
     inset: 0;
@@ -173,6 +273,7 @@ const chaos = [
 
   .hero-creation {
     display: block;
+    color: var(--color-fg);
   }
 
   .hero-glyph {
@@ -180,9 +281,6 @@ const chaos = [
     will-change: transform, filter, opacity;
   }
 
-  /* The hinge occupies the gap the shorter word leaves, so the ragged edge
-     becomes structure rather than dead space. Set in the utility face: it is
-     the pivot between two states, not part of either. */
   .hero-line {
     display: flex;
     align-items: center;
@@ -199,7 +297,6 @@ const chaos = [
     align-items: center;
     gap: clamp(0.6rem, 1.4vw, 1.1rem);
     min-width: 0;
-    /* Sits on the optical centre of the cap height, not the em box. */
     transform: translateY(0.12em);
   }
 
@@ -207,6 +304,7 @@ const chaos = [
     height: 1px;
     flex: 1;
     min-width: 1.5rem;
+    transform-origin: left center;
     background: color-mix(in oklab, var(--color-accent) 55%, transparent);
   }
 
@@ -220,9 +318,6 @@ const chaos = [
     padding-right: 0.3em;
   }
 
-  /* On a narrow screen the rule stretched to 115px against a 182px word —
-     at 52px type that reads as a divider rather than a hinge. Fixed short
-     length below the two-column breakpoint keeps the proportion. */
   @media (width < 48rem) {
     .hero-hinge {
       flex: none;
@@ -235,17 +330,225 @@ const chaos = [
     }
   }
 
-  .hero-creation {
-    color: var(--color-fg);
+  /* -- Trust furniture ---------------------------------------------------- */
+
+  .btn-note {
+    font-size: 0.8125rem;
+    font-weight: 400;
   }
 
-  /* Settled is the default state. The scatter only exists inside the
-     motion-safe block, so reduced-motion users get the resolved title
-     immediately and nothing is animated on their behalf. */
+  .press-cite {
+    text-decoration: underline;
+    text-decoration-color: var(--color-line-strong);
+    text-underline-offset: 3px;
+  }
+
+  /* Format entries: the underline draws like a line being marked in an
+     index. Applied to the inner span so it hugs the text, not the 44px
+     touch box. */
+  .fmt {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    background-size: 0% 1px;
+    padding-bottom: 2px;
+    transition: background-size 220ms ease;
+  }
+
+  a:hover .fmt,
+  a:focus-visible .fmt {
+    background-size: 100% 1px;
+  }
+
+  /* -- The plate as a door ------------------------------------------------ */
+
+  .hero-cover-link {
+    filter: drop-shadow(0 36px 70px rgb(0 0 0 / 0.72));
+    transition:
+      transform 300ms ease,
+      filter 300ms ease;
+  }
+
+  .hero-cover-link:hover,
+  .hero-cover-link:focus-visible {
+    transform: translateY(-3px);
+    filter: drop-shadow(0 26px 52px rgb(0 0 0 / 0.8));
+  }
+
+  :root[data-theme='light'] .hero-cover-link {
+    filter: drop-shadow(0 24px 48px rgb(26 23 20 / 0.28));
+  }
+
+  :root[data-theme='light'] .hero-cover-link:hover,
+  :root[data-theme='light'] .hero-cover-link:focus-visible {
+    filter: drop-shadow(0 18px 38px rgb(26 23 20 / 0.34));
+  }
+
+  /* The annotation lights up when the plate is inspected. */
+  figure:has(.hero-cover-link:hover) .plate-label,
+  figure:has(.hero-cover-link:focus-visible) .plate-label {
+    color: var(--color-accent);
+  }
+
+  /* -- Scroll cue ---------------------------------------------------------- */
+
+  .hero-cue {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    translate: -50% 0;
+    display: none;
+    align-items: center;
+    flex-direction: column;
+    gap: 0.6rem;
+    color: var(--color-faint);
+    transition: color 200ms ease;
+  }
+
+  @media (width >= 64rem) {
+    .hero-cue {
+      display: flex;
+    }
+  }
+
+  .hero-cue:hover {
+    color: var(--color-accent);
+  }
+
+  .hero-cue-rule {
+    display: block;
+    width: 1px;
+    height: 1.5rem;
+    background: currentColor;
+    opacity: 0.6;
+  }
+
+  /* -- Entrance: one gesture, not a parade ---------------------------------
+     The glyph scatter is the event. Everything secondary arrives by opacity
+     only; the two rules draw; the seal stamps. Every keyframe below omits its
+     `to` frame, so elements animate toward their authored settled state — the
+     settled layout stays the single source of truth, and outside this motion-
+     safe block no animation exists at all. */
   @media (prefers-reduced-motion: no-preference) {
+    .hero-enter {
+      animation: enter-fade var(--edur, 500ms) ease-out both;
+      animation-delay: var(--ed, 0ms);
+    }
+
+    .hero-seal {
+      animation: enter-stamp 450ms ease-out both;
+      animation-delay: 880ms;
+    }
+
+    .hero-hinge-rule {
+      animation:
+        enter-draw 550ms cubic-bezier(0.22, 1, 0.36, 1) both,
+        hinge-breath 12s ease-in-out 2s infinite alternate;
+      animation-delay: 480ms, 2s;
+    }
+
+    .caption-rule {
+      animation: enter-draw 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-delay: 1050ms;
+    }
+
+    .hero-ground {
+      animation:
+        enter-fade 1600ms ease-out both,
+        ground-breath 48s ease-in-out 2400ms infinite alternate;
+    }
+
     .hero-glyph {
       animation: glyph-settle 1100ms cubic-bezier(0.16, 1, 0.3, 1) both;
       animation-delay: var(--gd);
+    }
+
+    /* -- Scroll exit: entropy resumes ------------------------------------
+       As the hero leaves, CHAOS quietly comes apart again — continuing past
+       settled in the opposite direction, not rewinding — while the hallmarks
+       below run their .resolve settle. The missing `from` frames compose
+       over whatever the load-time animations left behind. No support for
+       view(): no exit animation, settled state stands. */
+    @supports (animation-timeline: view()) {
+      .hero-glyph {
+        animation:
+          glyph-settle 1100ms cubic-bezier(0.16, 1, 0.3, 1) both,
+          glyph-unsettle linear both;
+        animation-delay: var(--gd), 0s;
+        animation-timeline: auto, view();
+        animation-range: normal, exit 10% exit 85%;
+      }
+
+      .hero-ground {
+        animation:
+          enter-fade 1600ms ease-out both,
+          ground-breath 48s ease-in-out 2400ms infinite alternate,
+          ground-recede linear both;
+        animation-timeline: auto, auto, view();
+        animation-range: normal, normal, exit 0% exit 70%;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-cover-link,
+    .fmt,
+    .hero-cue {
+      transition: none;
+    }
+  }
+
+  @keyframes enter-fade {
+    from {
+      /* The cover figure overrides --eo to 0.01: elements at opacity 0 are
+         excluded from LCP until visible, and the plate is the likely LCP
+         element. 0.01 registers for LCP and is visually indistinguishable. */
+      opacity: var(--eo, 0);
+    }
+  }
+
+  @keyframes enter-draw {
+    from {
+      transform: scaleX(0);
+    }
+  }
+
+  @keyframes enter-stamp {
+    from {
+      opacity: 0;
+      transform: scale(1.015);
+    }
+  }
+
+  @keyframes ground-breath {
+    from {
+      opacity: var(--breath-lo);
+    }
+  }
+
+  @keyframes hinge-breath {
+    from {
+      background: color-mix(in oklab, var(--color-accent) 55%, transparent);
+    }
+    to {
+      background: color-mix(in oklab, var(--color-accent) 68%, transparent);
+    }
+  }
+
+  @keyframes glyph-unsettle {
+    to {
+      opacity: 0.45;
+      transform: translate(
+          calc(var(--gx) * -0.55),
+          calc(var(--gy) * -0.7)
+        )
+        rotate(calc(var(--gr) * -0.45));
+    }
+  }
+
+  @keyframes ground-recede {
+    to {
+      opacity: 0;
     }
   }
 
