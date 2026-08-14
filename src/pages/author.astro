@@ -1,7 +1,8 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import PageHeader from '../components/PageHeader.astro';
 import BestsellerMark from '../components/BestsellerMark.astro';
+import portrait from '../assets/portrait.jpg';
 import author from '../data/author.json';
 import book from '../data/book.json';
 import { personNode, breadcrumbNode } from '../lib/schema';
@@ -20,11 +21,48 @@ const schema = [
   description={author.short}
   schema={schema}
 >
-  <PageHeader
-    figure="Figure 5 · The author"
-    title={author.fullName}
-    lede={author.short}
-  />
+  <!-- The portrait is this page's hero: the reader came to see who wrote the
+       book. Shown as it was supplied — a real photograph carries the trust; a
+       stylised grade would spend it. -->
+  <section class="surface relative overflow-hidden">
+    <div
+      class="shell grid gap-12 pb-20 pt-20 lg:grid-cols-[1fr_minmax(0,21rem)] lg:items-end lg:gap-20 lg:pb-24 lg:pt-24"
+    >
+      <div>
+        <p class="eyebrow">Figure 5 · The author</p>
+        <h1 class="hang mt-5 text-h1">{author.fullName}</h1>
+        <p class="label mt-4 text-muted">
+          {author.postNominals} &middot; {author.role}
+        </p>
+        <p class="mt-8 max-w-[52ch] text-lead text-muted">{author.short}</p>
+      </div>
+
+      <figure class="mx-auto w-full max-w-[17rem] lg:mx-0 lg:max-w-none">
+        <Image
+          src={portrait}
+          alt={`${author.fullName}, photographed in front of his framed qualifications`}
+          widths={[272, 400, 560, 672]}
+          sizes="(max-width: 1023px) 17rem, 21rem"
+          loading="eager"
+          fetchpriority="high"
+          class="author-portrait w-full"
+          style="view-transition-name: author-portrait"
+        />
+        <figcaption class="label mt-4 flex items-center gap-3 text-muted">
+          <span class="whitespace-nowrap text-metal">Plate III</span>
+          <span aria-hidden="true" class="h-px flex-1 bg-line"></span>
+          <span class="whitespace-nowrap">The author</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <style>
+    .author-portrait {
+      border: 1px solid var(--color-line);
+      box-shadow: var(--elevation);
+    }
+  </style>
 
   <section class="surface py-24 lg:py-32">
     <div class="shell grid gap-16 lg:grid-cols-[1fr_20rem] lg:gap-24">

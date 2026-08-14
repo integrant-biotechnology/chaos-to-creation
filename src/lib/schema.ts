@@ -28,6 +28,7 @@ export function personNode() {
     jobTitle: author.role,
     description: author.short,
     url: `${SITE}/author/`,
+    image: `${SITE}/portrait-gordon-slater-hero.jpg`,
     ...(bs.claimed ? { award: bs.authorLabel } : {}),
     sameAs: [...author.social.map((s) => s.url), author.practiceUrl],
     affiliation: {

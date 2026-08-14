@@ -1,8 +1,10 @@
 ---
+import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PageHeader from '../components/PageHeader.astro';
 import BestsellerMark from '../components/BestsellerMark.astro';
+import portrait from '../assets/portrait.jpg';
 import book from '../data/book.json';
 import author from '../data/author.json';
 import { personNode, bookNode, breadcrumbNode } from '../lib/schema';
@@ -127,6 +129,72 @@ const schema = [
       </div>
     </div>
   </section>
+
+  <!-- Photography: a press kit that makes journalists ask for the basics is
+       not a press kit. The portrait is downloadable at its supplied
+       resolution from a stable, meaningfully named URL. -->
+  <section class="surface border-t border-line py-24 lg:py-32">
+    <div class="shell grid gap-16 lg:grid-cols-[22rem_1fr] lg:gap-24">
+      <header>
+        <p class="label text-muted">Photography</p>
+        <h2 class="mt-5 text-h2 text-fg">Ready to run.</h2>
+        <p class="mt-6 text-muted">
+          Supplied for editorial use alongside coverage of the book or its
+          author.
+        </p>
+      </header>
+
+      <div class="flex flex-wrap items-start gap-10">
+        <Image
+          src={portrait}
+          alt={`${author.fullName}, photographed in front of his framed qualifications`}
+          widths={[224, 448]}
+          sizes="14rem"
+          loading="lazy"
+          decoding="async"
+          class="press-portrait w-56"
+          style="view-transition-name: author-portrait"
+        />
+        <dl class="min-w-[16rem] flex-1 space-y-3 text-sm">
+          <div class="flex justify-between gap-4 border-t border-line pt-3">
+            <dt class="label text-muted">Subject</dt>
+            <dd class="text-right text-fg">{author.fullName}</dd>
+          </div>
+          <div class="flex justify-between gap-4 border-t border-line pt-3">
+            <dt class="label text-muted">File</dt>
+            <dd class="label text-right text-fg">JPG &middot; 750 &times; 1000</dd>
+          </div>
+          <div class="flex justify-between gap-4 border-t border-line pt-3">
+            <dt class="label text-muted">Use</dt>
+            <dd class="text-right text-fg">Editorial, with coverage</dd>
+          </div>
+          <div class="pt-4">
+            <a
+              href="/portrait-gordon-slater-hero.jpg"
+              download="gordon-slater-portrait.jpg"
+              class="btn btn-ghost"
+            >
+              Download portrait
+            </a>
+          </div>
+          <p class="pt-2 text-muted">
+            Print-resolution photography and cover art are available <a
+              href="/contact/"
+              class="underline decoration-line underline-offset-4 transition-colors hover:text-fg"
+              >on request</a
+            >.
+          </p>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .press-portrait {
+      border: 1px solid var(--color-line);
+      box-shadow: var(--elevation);
+    }
+  </style>
 
   <!-- Coverage -->
   <section class="surface border-t border-line py-24 lg:py-32">

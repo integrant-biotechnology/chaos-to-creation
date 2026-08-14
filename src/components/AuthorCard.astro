@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import portrait from '../assets/portrait.jpg';
 import author from '../data/author.json';
 import book from '../data/book.json';
 import BestsellerMark from './BestsellerMark.astro';
@@ -6,10 +8,31 @@ import BestsellerMark from './BestsellerMark.astro';
 
 <section id="author" class="surface py-28 lg:py-36">
   <div class="shell grid gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24">
+    <!-- The portrait leads: a face beside the credentials is the strongest
+         trust pairing this section can make. -->
+    <figure class="mx-auto w-full max-w-[17rem] self-start lg:mx-0 lg:max-w-[21rem]">
+      <Image
+        src={portrait}
+        alt={`${author.fullName}, photographed in front of his framed qualifications`}
+        widths={[272, 400, 560, 672]}
+        sizes="(max-width: 1023px) 17rem, 21rem"
+        loading="lazy"
+        decoding="async"
+        class="author-portrait w-full"
+      />
+      <figcaption class="label mt-4 flex items-center gap-3 text-muted">
+        <span class="whitespace-nowrap text-metal">Plate III</span>
+        <span aria-hidden="true" class="h-px flex-1 bg-line"></span>
+        <span class="whitespace-nowrap">{author.name}</span>
+      </figcaption>
+    </figure>
+
     <div>
       <p class="label text-muted">Figure 2 &middot; The author</p>
       <h2 class="mt-5 text-h2 text-fg">{author.fullName}</h2>
-      <p class="label mt-4 text-muted">{author.role}</p>
+      <p class="label mt-4 text-muted">
+        {author.postNominals} &middot; {author.role}
+      </p>
 
       {
         book.bestseller.claimed && (
@@ -19,7 +42,10 @@ import BestsellerMark from './BestsellerMark.astro';
         )
       }
 
-      <dl class="mt-10 space-y-5">
+      <p class="mt-8 text-lead text-muted">{author.short}</p>
+      <p class="mt-6 max-w-measure text-muted">{author.long}</p>
+
+      <dl class="mt-10 grid gap-x-10 gap-y-5 sm:grid-cols-2">
         {
           author.credentials.map((c) => (
             <div class="border-t border-line pt-4">
@@ -29,22 +55,20 @@ import BestsellerMark from './BestsellerMark.astro';
           ))
         }
       </dl>
-    </div>
-
-    <div class="lg:pt-16">
-      <p class="text-lead text-muted">{author.short}</p>
-      <p class="mt-6 max-w-measure text-muted">{author.long}</p>
 
       <div class="mt-10 flex flex-wrap gap-3">
         <a href="/author/" class="btn btn-ghost">Full biography</a>
-        <a
-          href={author.practiceUrl}
-          rel="noopener"
-          class="btn btn-ghost"
-        >
+        <a href={author.practiceUrl} rel="noopener" class="btn btn-ghost">
           Surgical practice
         </a>
       </div>
     </div>
   </div>
 </section>
+
+<style>
+  .author-portrait {
+    border: 1px solid var(--color-line);
+    box-shadow: var(--elevation);
+  }
+</style>

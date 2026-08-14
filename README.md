@@ -67,7 +67,7 @@ commercial use; attribution is required where stated and is discharged here.
 |---|---|---|---|
 | `src/assets/micrograph.jpg` | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Bovine_Pulmonary_Artery_Endothelial_Cells_Fluorescent_Image_3.jpg) | **CC BY 4.0** | Erin Rod |
 | `src/assets/cover.png` | Client-supplied book cover | Client-owned | Prof. Gordon Slater |
-| `src/assets/portrait.webp` | orthopaedic-surgeon.com.au | Client-owned | Prof. Gordon Slater |
+| `src/assets/portrait.jpg` + `public/portrait-gordon-slater-hero.jpg` | Client-supplied author portrait | Client-owned | Prof. Gordon Slater |
 
 The micrograph is a triple-stain immunofluorescence image of bovine pulmonary
 artery endothelial cells — blue nuclei, green actin, red mitochondria. It was
@@ -116,8 +116,10 @@ registered practitioner sits squarely inside AHPRA advertising rules.
 6. **Staging is noindexed.** Every build emits `robots: noindex,nofollow` and a
    `Disallow: /` robots.txt unless `PUBLIC_SITE_LIVE=true`. Set that env var at DNS
    cutover; it also switches robots.txt to `Allow` with the sitemap reference.
-7. **Assets needed:** print-quality cover, current headshot. (Association logos were
-   considered and rejected — implied-endorsement risk under AHPRA advertising rules.)
+7. **Assets needed:** print-quality cover only — the author portrait was supplied
+   2026-08-14 and is live on /author/, the homepage, and the press kit (downloadable).
+   (Association logos were considered and rejected — implied-endorsement risk under
+   AHPRA advertising rules.)
 8. **Star ratings**: `book.rating` in `src/data/book.json` ships empty and renders
    nothing. Fill `stars`/`count`/`url` with the real Amazon numbers to show them.
 9. **MBBS**: the byline now renders `author.postNominals` ("MBBS, FRACS"), sourced
