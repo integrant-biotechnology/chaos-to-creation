@@ -54,20 +54,28 @@ const formats = (await getCollection('formats')).sort(
               {f.data.note}
             </p>
 
-            {f.data.isbn && (
-              <p class="label mt-6 text-faint">ISBN {f.data.isbn}</p>
-            )}
+            <div class="mt-6 space-y-1.5">
+              {f.data.delivery && (
+                <p class="label text-muted">{f.data.delivery}</p>
+              )}
+              {f.data.isbn && (
+                <p class="label text-faint">ISBN {f.data.isbn}</p>
+              )}
+            </div>
 
             <a
               href={f.data.url}
-              rel="noopener"
+              target="_blank" rel="noopener"
               class:list={[
                 'btn mt-6 w-full',
                 f.data.featured ? 'btn-primary' : 'btn-ghost',
               ]}
             >
               Order {f.data.name.toLowerCase()}
-              <span class="sr-only"> on Amazon Australia</span>
+              <span aria-hidden="true">&#8599;</span>
+              <span class="sr-only">
+                {' '}on Amazon Australia (opens in a new tab)
+              </span>
             </a>
           </li>
         ))
@@ -77,9 +85,9 @@ const formats = (await getCollection('formats')).sort(
     <p class="mt-10 text-sm text-muted">
       Also available through the <a
         href={book.amazonAuthorStore}
-        rel="noopener"
+        target="_blank" rel="noopener"
         class="underline decoration-line underline-offset-4 transition-colors hover:text-fg"
-        >author store</a
+        >author store<span class="sr-only"> (opens in a new tab)</span></a
       >. For bulk or institutional orders, <a
         href="/contact/"
         class="underline decoration-line underline-offset-4 transition-colors hover:text-fg"

@@ -149,6 +149,10 @@ export default config({
         currency: fields.text({ label: 'Currency', defaultValue: 'AUD' }),
         url: fields.url({ label: 'Amazon URL' }),
         note: fields.text({ label: 'Note', multiline: true }),
+        delivery: fields.text({
+          label: 'Delivery',
+          description: 'e.g. "Ships from Amazon AU" or "Delivered instantly".',
+        }),
         featured: fields.checkbox({
           label: 'Recommended edition',
           description:

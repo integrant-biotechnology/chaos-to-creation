@@ -87,10 +87,10 @@ export function websiteNode() {
   };
 }
 
-export async function faqNode() {
-  const faq = (await getCollection('faq')).sort(
-    (a, b) => a.data.order - b.data.order,
-  );
+export async function faqNode(slugs?: string[]) {
+  const faq = (await getCollection('faq'))
+    .filter((f) => !slugs || slugs.includes(f.id))
+    .sort((a, b) => a.data.order - b.data.order);
 
   return {
     '@type': 'FAQPage',

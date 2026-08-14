@@ -27,6 +27,8 @@ const formats = defineCollection({
     currency: z.string().default('AUD'),
     url: z.string().url(),
     note: z.string().optional(),
+    /** How the edition reaches the buyer, e.g. "Ships from Amazon AU". */
+    delivery: z.string().optional(),
     /** The site's own editorial recommendation — at most one edition. */
     featured: z.boolean().default(false),
   }),

@@ -116,7 +116,7 @@ const chaos = [
               Featured in{' '}
               <a
                 href={press.data.url}
-                rel="noopener"
+                target="_blank" rel="noopener"
                 class="press-cite text-fg transition-colors hover:text-accent"
               >
                 {press.data.outlet}
@@ -132,7 +132,7 @@ const chaos = [
               &#9733; {rating.stars} &middot; {rating.count} ratings &middot;{' '}
               <a
                 href={rating.url}
-                rel="noopener"
+                target="_blank" rel="noopener"
                 class="text-fg transition-colors hover:text-accent"
               >
                 on Amazon
@@ -159,13 +159,16 @@ const chaos = [
             <li>
               <a
                 href={f.data.url}
-                rel="noopener"
+                target="_blank" rel="noopener"
                 class="label hero-enter flex min-h-11 items-center text-fg transition-colors hover:text-accent"
                 style={`--ed:${1080 + i * 40}ms; --edur:400ms`}
               >
                 <span class="fmt">
                   {f.data.name}
                   <span class="ml-1.5 text-muted">{money(f.data.price)}</span>
+                </span>
+                <span class="sr-only">
+                  {' '}on Amazon Australia (opens in a new tab)
                 </span>
               </a>
             </li>

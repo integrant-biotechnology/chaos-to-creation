@@ -6,11 +6,22 @@ import BestsellerMark from '../components/BestsellerMark.astro';
 import BuySection from '../components/BuySection.astro';
 import launch from '../assets/launch.jpg';
 import book from '../data/book.json';
-import { bookNode, personNode, breadcrumbNode, bestsellerAward } from '../lib/schema';
+import { bookNode, personNode, breadcrumbNode, bestsellerAward, faqNode } from '../lib/schema';
+
+/** The three purchase-anxiety questions, reused from the FAQ collection. */
+const purchaseFaqSlugs = [
+  'which-edition-should-i-buy',
+  'do-you-ship-internationally',
+  'can-i-order-copies-in-bulk',
+];
+const purchaseFaq = (await getCollection('faq'))
+  .filter((f) => purchaseFaqSlugs.includes(f.id))
+  .sort((a, b) => a.data.order - b.data.order);
 
 const schema = [
   personNode(),
   await bookNode(),
+  await faqNode(purchaseFaqSlugs),
   breadcrumbNode([
     { name: 'Home', path: '/' },
     { name: 'Buy', path: '/buy/' },
@@ -56,7 +67,7 @@ const pressDate = press
                 Featured in{' '}
                 <a
                   href={press.data.url}
-                  rel="noopener"
+                  target="_blank" rel="noopener"
                   class="text-fg underline decoration-line underline-offset-4 transition-colors hover:text-accent"
                 >
                   {press.data.outlet}
@@ -88,6 +99,70 @@ const pressDate = press
   </section>
 
   <BuySection />
+
+  <!-- What happens after the click — named at the moment of maximum
+       hesitation. Row furniture, deliberately: not another card grid. -->
+  <section class="surface-sunken border-t border-line py-10">
+    <div class="shell">
+      <ul
+        class="flex flex-col gap-x-12 gap-y-3 sm:flex-row sm:flex-wrap sm:items-center"
+      >
+        <li class="label flex items-center gap-3 text-muted">
+          <span aria-hidden="true" class="inline-block size-1.5 rotate-45 bg-metal"
+          ></span>
+          Secure checkout on Amazon
+        </li>
+        <li class="label flex items-center gap-3 text-muted">
+          <span aria-hidden="true" class="inline-block size-1.5 rotate-45 bg-metal"
+          ></span>
+          Fulfilled and shipped by Amazon AU
+        </li>
+        <li class="label flex items-center gap-3 text-muted">
+          <span aria-hidden="true" class="inline-block size-1.5 rotate-45 bg-metal"
+          ></span>
+          Kindle edition delivers instantly
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Before you order: the three purchase questions, straight from the FAQ
+       collection — same answers as /the-book/, zero duplicated copy. -->
+  <section class="surface border-t border-line py-24 lg:py-28">
+    <div class="shell grid gap-16 lg:grid-cols-[22rem_1fr] lg:gap-24">
+      <header>
+        <p class="eyebrow">Before you order</p>
+        <h2 class="hang mt-5 text-h2 text-fg">Three quick answers.</h2>
+      </header>
+
+      <dl class="divide-y divide-line">
+        {
+          purchaseFaq.map((f) => (
+            <div class="py-6 first:pt-0 last:pb-0">
+              <dt class="text-h3 !text-[1.125rem] font-semibold text-fg">
+                {f.data.question}?
+              </dt>
+              <dd class="mt-2 max-w-measure text-muted">{f.data.answer}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- Institutional orders: a real audience, no longer a footnote. -->
+  <section class="surface-sunken border-t border-line py-16 lg:py-20">
+    <div class="shell flex flex-wrap items-center justify-between gap-x-12 gap-y-6">
+      <div>
+        <h2 class="text-h3 text-fg">Ordering for an institution?</h2>
+        <p class="mt-3 max-w-[52ch] text-muted">
+          Universities, hospitals, libraries and conferences order in bulk
+          directly &mdash; with invoicing, not a cart.
+        </p>
+      </div>
+      <a href="/contact/" class="btn btn-ghost">Start a bulk enquiry</a>
+    </div>
+  </section>
 </Base>
 
 <style>
