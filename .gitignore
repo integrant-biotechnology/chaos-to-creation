@@ -26,6 +26,6 @@ pnpm-debug.log*
 # vercel build output
 .vercel/
 
-# claude local config
+# local tool config
 .claude/
 .vercel
