@@ -16,7 +16,7 @@ const isCurrent = (href: string) => path === href;
   <div class="shell flex items-center justify-between gap-6 py-5">
     <a
       href="/"
-      class="site-logo label flex min-h-11 items-center text-fg transition-colors hover:text-accent"
+      class="masthead flex min-h-11 items-center text-fg transition-colors hover:text-accent"
       aria-label="Chaos to Creation — home"
     >
       Chaos&nbsp;to&nbsp;Creation
@@ -31,7 +31,7 @@ const isCurrent = (href: string) => path === href;
               <a
                 href={item.href}
                 aria-current={isCurrent(item.href) ? 'page' : undefined}
-                class="nav-link flex items-center py-2 text-muted transition-colors hover:text-accent aria-[current=page]:text-accent"
+                class="nav-link flex items-center py-2 text-fg"
               >
                 {item.label}
               </a>
@@ -46,7 +46,7 @@ const isCurrent = (href: string) => path === href;
     <div class="flex items-center gap-1.5 sm:gap-2">
       <ThemeToggle />
 
-      <a href="/buy/" class="order-cta btn btn-primary !px-4 text-[0.9375rem] sm:!px-6"
+      <a href="/buy/" class="btn btn-primary !px-4 text-[1rem] sm:!px-6"
         >Order</a
       >
 
@@ -184,10 +184,10 @@ const isCurrent = (href: string) => path === href;
     /* Generous rows: comfortably past the 44px floor. */
     min-height: 3.25rem;
     border-top: 1px solid color-mix(in oklab, var(--color-fg) 10%, transparent);
-    font-family: var(--font-mono);
-    font-size: 0.9375rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    font-family: var(--font-body);
+    font-size: 1.125rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
     color: var(--color-fg);
   }
 
@@ -195,40 +195,63 @@ const isCurrent = (href: string) => path === href;
     color: var(--color-accent);
   }
 
-  /* Nav type, sized for reading — the 11px .label metrics were a complaint
-     from the client, and fairly: navigation is wayfinding, not annotation.
-     Mono uppercase keeps the voice; the size does the work. */
-  .site-logo {
-    font-size: 0.9375rem;
-    letter-spacing: 0.18em;
+  /* -- Masthead voice -------------------------------------------------------
+     Rejected twice as "small and not great" while set in tracked mono caps —
+     the site's annotation voice, which reads as metadata at any size. Now the
+     publisher pattern: serif masthead, sentence-case sans navigation at
+     reading size and full contrast. */
+  .masthead {
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 12, 'WONK' 0, 'opsz' 40;
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
   }
 
   .nav-link {
-    font-family: var(--font-mono);
-    font-size: 0.9375rem;
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
     font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    /* The underline draws on hover — the index-entry gesture the format
+       list already speaks. */
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: left calc(100% - 0.35rem);
+    background-size: 0% 1px;
+    transition:
+      color 200ms ease,
+      background-size 220ms ease;
   }
 
-  /* Phones: the reading-size wordmark cannot share a 375px row with the
-     toggle/Order/menu trio. The logo steps down (nav links live in the
-     panel at these widths, where they stay at full size), and below 380px
-     the tracking gives way too. The controls never shrink. */
+  .nav-link:hover {
+    color: var(--color-accent);
+    background-size: 100% 1px;
+  }
+
+  .nav-link[aria-current='page'] {
+    color: var(--color-accent);
+    background-size: 100% 1px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-link {
+      transition: none;
+    }
+  }
+
+  /* Phones: the masthead shares the row with controls that never shrink,
+     so it steps down. Nav links live in the panel at these widths, where
+     they stay at full reading size. */
   @media (width < 40rem) {
-    .site-logo {
-      font-size: 0.8125rem;
+    .masthead {
+      font-size: 1.0625rem;
     }
   }
 
   @media (width < 23.75rem) {
-    .site-logo {
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
-    }
-
-    .order-cta {
-      font-size: 0.875rem;
+    .masthead {
+      font-size: 1rem;
     }
   }
 </style>
