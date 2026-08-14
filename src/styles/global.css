@@ -240,9 +240,23 @@ html:active-view-transition .caption-rule {
     transform: translateY(-3px);
   }
 
+  /* Card kicker: the brass datum in a card's top row (numeral, format,
+     route). Warms to the accent when the card is engaged — the same
+     annotation-lights-up gesture as the hero plate caption. */
+  .card-kicker {
+    color: var(--color-metal);
+    transition: color 200ms ease;
+  }
+
+  .panel-lift:hover .card-kicker,
+  .panel-lift:focus-within .card-kicker {
+    color: var(--color-accent);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .panel,
-    .panel-lift:hover {
+    .panel-lift:hover,
+    .card-kicker {
       transition: none;
       transform: none;
     }

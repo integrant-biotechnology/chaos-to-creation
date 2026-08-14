@@ -149,6 +149,12 @@ export default config({
         currency: fields.text({ label: 'Currency', defaultValue: 'AUD' }),
         url: fields.url({ label: 'Amazon URL' }),
         note: fields.text({ label: 'Note', multiline: true }),
+        featured: fields.checkbox({
+          label: 'Recommended edition',
+          description:
+            'Marks this edition as the site\'s recommendation. Use on one edition at most.',
+          defaultValue: false,
+        }),
       },
     }),
 

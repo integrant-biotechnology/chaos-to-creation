@@ -6,63 +6,72 @@ const hallmarks = (await getCollection('hallmarks')).sort(
 );
 
 /**
- * Deterministic scatter per card. Each arrives displaced and settles as it
+ * Deterministic scatter per card: each arrives displaced and settles as it
  * enters the viewport — nine disordered things resolving into a legible set,
- * which is the book's argument in one gesture.
+ * which is the book's argument in one gesture. Values are gentle because
+ * these are solid cards now: cards settle, they don't tumble.
  *
- * The numbering is honest here and nowhere else on the site: the hallmarks are
- * a canonical enumerated set from the literature, so the index is information.
- * They are a set rather than a sequence, so this is a grid, not a numbered
- * process list.
+ * The numbering is honest here and nowhere else on the site: the hallmarks
+ * are a canonical enumerated set from the literature, so the index is
+ * information. A set rather than a sequence — hence a grid, not a process.
  */
 const scatter = [
-  { x: '-1.4rem', y: '2.2rem', r: '-2.4deg' },
-  { x: '1.1rem', y: '3.4rem', r: '1.8deg' },
-  { x: '-0.7rem', y: '1.6rem', r: '2.6deg' },
-  { x: '1.6rem', y: '2.8rem', r: '-1.6deg' },
-  { x: '-1.2rem', y: '3.8rem', r: '2.1deg' },
-  { x: '0.9rem', y: '1.9rem', r: '-2.8deg' },
-  { x: '-1.5rem', y: '3.1rem', r: '1.4deg' },
-  { x: '1.3rem', y: '2.4rem', r: '-2.2deg' },
-  { x: '-0.9rem', y: '3.6rem', r: '2.9deg' },
+  { x: '-0.7rem', y: '1.2rem', r: '-1.2deg' },
+  { x: '0.55rem', y: '1.8rem', r: '0.9deg' },
+  { x: '-0.35rem', y: '0.9rem', r: '1.3deg' },
+  { x: '0.8rem', y: '1.5rem', r: '-0.8deg' },
+  { x: '-0.6rem', y: '1.9rem', r: '1.05deg' },
+  { x: '0.45rem', y: '1rem', r: '-1.4deg' },
+  { x: '-0.75rem', y: '1.6rem', r: '0.7deg' },
+  { x: '0.65rem', y: '1.3rem', r: '-1.1deg' },
+  { x: '-0.45rem', y: '1.8rem', r: '1.45deg' },
 ];
-
-/** Static vertical offsets give the grid a constellation cadence on desktop. */
-const lift = ['0', '3.5rem', '1.25rem'];
 ---
 
 <!-- overflow-x clip (not hidden) contains the scatter transforms without
-     creating a scroll container, which would break the sticky asides. -->
+     creating a scroll container. Sunken ground: raised cards need something
+     to be raised from. -->
 <section
   id="hallmarks"
-  class="surface relative [overflow-x:clip] py-28 lg:py-40"
+  class="surface-sunken relative [overflow-x:clip] py-28 lg:py-36"
 >
   <div class="shell">
-    <header class="max-w-[34rem]">
-      <p class="label text-accent">Figure 1 &middot; The nine hallmarks</p>
-      <h2 class="mt-5 text-h2">Aging is not one process. It is nine.</h2>
-      <p class="mt-6 text-lead text-muted">
-        Each is a distinct mechanism of decline, and each is now a target.
-        The book takes them one at a time, and asks what current science can
+    <!-- Split header: title left, lede right — no dead corner. -->
+    <header
+      class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,34rem)] lg:items-end lg:gap-20"
+    >
+      <div>
+        <p class="eyebrow">Figure 1 &middot; The nine hallmarks</p>
+        <h2 class="hang mt-5 max-w-[16ch] text-h2">
+          Aging is not one process. It is nine.
+        </h2>
+      </div>
+      <p class="text-lead text-muted lg:pb-1.5">
+        Each is a distinct mechanism of decline, and each is now a target. The
+        book takes them one at a time, and asks what current science can
         actually do about them.
       </p>
     </header>
 
-    <ol class="mt-20 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+    <ol class="mt-16 grid gap-5 sm:grid-cols-2 lg:mt-20 lg:grid-cols-3 lg:gap-6">
       {
         hallmarks.map((h, i) => (
           <li
-            class="resolve group relative lg:[margin-top:var(--lift)]"
-            style={`--resolve-x:${scatter[i].x}; --resolve-y:${scatter[i].y}; --resolve-rotate:${scatter[i].r}; --lift:${lift[i % 3]}`}
+            class="resolve panel panel-lift flex flex-col p-7 lg:p-8"
+            style={`--resolve-x:${scatter[i].x}; --resolve-y:${scatter[i].y}; --resolve-rotate:${scatter[i].r}`}
           >
             <div class="flex items-baseline gap-4">
-              <span class="label text-accent tabular-nums">
+              <span class="label card-kicker tabular-nums">
                 {String(h.data.order).padStart(2, '0')}
               </span>
               <span aria-hidden="true" class="h-px flex-1 bg-line" />
             </div>
-            <h3 class="mt-4 text-h3 text-fg">{h.data.name}</h3>
-            <p class="mt-3 text-muted">{h.data.summary}</p>
+            <h3 class="mt-5 text-h3 !text-[1.3125rem] text-fg">
+              {h.data.name}
+            </h3>
+            <p class="mt-3 flex-1 text-[0.9375rem] leading-relaxed text-muted">
+              {h.data.summary}
+            </p>
           </li>
         ))
       }
