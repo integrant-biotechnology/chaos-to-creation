@@ -2,11 +2,10 @@
 const nav = [
   { label: 'The book', href: '/the-book/' },
   { label: 'Author', href: '/author/' },
-  { label: 'Press', href: '/press/' },
+  { label: 'Research', href: '/research/' },
+  { label: 'Media', href: '/media/' },
   { label: 'Contact', href: '/contact/' },
 ];
-
-import ThemeToggle from './ThemeToggle.astro';
 
 const path = Astro.url.pathname;
 const isCurrent = (href: string) => path === href;
@@ -41,11 +40,7 @@ const isCurrent = (href: string) => path === href;
       </ul>
     </nav>
 
-    <!-- gap and button padding tighten below sm: with the theme toggle in the
-         cluster, the full-width trio overflowed a 375px viewport by 11px. -->
-    <div class="flex items-center gap-1.5 sm:gap-2">
-      <ThemeToggle />
-
+    <div class="flex items-center gap-2 sm:gap-3">
       <a href="/buy/" class="btn btn-primary !px-4 text-[1rem] sm:!px-6"
         >Order</a
       >

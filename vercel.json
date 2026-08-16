@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/press/",
+      "destination": "/media/",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/((?!keystatic|api).*)",

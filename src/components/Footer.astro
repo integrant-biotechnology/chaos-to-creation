@@ -14,8 +14,10 @@ const formats = (await getCollection('formats')).sort(
 
 const explore = [
   { label: 'The book', href: '/the-book/' },
+  { label: 'Read an excerpt', href: '/excerpt/' },
   { label: 'The author', href: '/author/' },
-  { label: 'Press kit', href: '/press/' },
+  { label: 'Research', href: '/research/' },
+  { label: 'Media kit', href: '/media/' },
   { label: 'Editions', href: '/buy/' },
   { label: 'Contact', href: '/contact/' },
 ];
@@ -55,7 +57,7 @@ const elsewhere = [...author.social].sort(
 
     <div class="flex flex-wrap items-center gap-3">
       <a href="/buy/" class="btn btn-primary">Order the book</a>
-      <a href="/press/" class="btn btn-ghost">Press kit</a>
+      <a href="/excerpt/" class="btn btn-ghost">Read an excerpt</a>
     </div>
   </div>
 </aside>

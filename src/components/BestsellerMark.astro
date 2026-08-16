@@ -5,8 +5,9 @@ interface Props {
   /**
    * `seal` is the full stamped credential for prominent placements.
    * `inline` is the single-line rule-and-label for tight spots.
+   * `chip` is the compact hairline capsule for proof rows.
    */
-  variant?: 'seal' | 'inline';
+  variant?: 'seal' | 'inline' | 'chip';
   /** Adds the author credential line beneath the book claim. */
   withAuthor?: boolean;
   class?: string;
@@ -35,7 +36,15 @@ const headline = precise
 
 {
   bs.claimed &&
-    (variant === 'inline' ? (
+    (variant === 'chip' ? (
+      <p class:list={['bestseller bestseller-chip', className]}>
+        <span aria-hidden="true" class="bestseller-diamond" />
+        <span class="bestseller-headline">
+          {precise && <span class="bestseller-source">Amazon</span>}
+          {headline}
+        </span>
+      </p>
+    ) : variant === 'inline' ? (
       <p class:list={['bestseller bestseller-inline label', className]}>
         <span aria-hidden="true" class="bestseller-rule" />
         <span>{precise ? `Amazon — ${headline}` : headline}</span>
@@ -118,6 +127,24 @@ const headline = precise
     letter-spacing: 0.12em;
     text-transform: uppercase;
     line-height: 1.4;
+  }
+
+  /* -- Chip ----------------------------------------------------------------
+     The seal's credibility at proof-row scale: same diamond, same measured
+     caps, one hairline capsule. Sized to sit beside neutral chips and read
+     as the emphasised one. */
+  .bestseller-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.55rem 0.9rem;
+    border: 1px solid color-mix(in oklab, currentColor 36%, transparent);
+    background: color-mix(in oklab, currentColor 7%, transparent);
+  }
+
+  .bestseller-chip .bestseller-headline {
+    font-size: 0.71875rem;
+    letter-spacing: 0.13em;
   }
 
   /* -- Inline -------------------------------------------------------------- */

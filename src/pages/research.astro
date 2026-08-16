@@ -1,0 +1,218 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import author from '../data/author.json';
+import book from '../data/book.json';
+import { personNode, breadcrumbNode } from '../lib/schema';
+
+/**
+ * The book's claim to be taken seriously rests on the research career behind
+ * it. This page is that career, stated as data: credentials, then the
+ * publication record, then the profiles where every claim can be checked.
+ */
+const publications = (await getCollection('publications')).sort(
+  (a, b) => b.data.year - a.data.year || a.data.order - b.data.order,
+);
+const years = [...new Set(publications.map((p) => p.data.year))];
+
+const scholar = author.social.find((s) => s.name === 'Google Scholar');
+const researchgate = author.social.find((s) => s.name === 'ResearchGate');
+
+const schema = [
+  personNode(),
+  breadcrumbNode([
+    { name: 'Home', path: '/' },
+    { name: 'Research', path: '/research/' },
+  ]),
+];
+---
+
+<Base
+  title={`Research — ${author.fullName}`}
+  description={`The research career behind ${book.title}: ${author.fullName}'s credentials, publication record and academic profiles.`}
+  schema={schema}
+>
+  <PageHeader
+    figure="Figure 7 · Research"
+    title="The research behind the book"
+    lede={author.short}
+  />
+
+  <!-- Credentials: the same four facts the author page keeps in its sidebar,
+       here promoted to the opening claim — this page is about standing. -->
+  <section class="surface py-20 lg:py-24">
+    <div class="shell">
+      <dl class="grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          author.credentials.map((c) => (
+            <div class="border-t border-line pt-5">
+              <dt class="text-h3 !text-[1.25rem] text-fg">{c.label}</dt>
+              <dd class="mt-2 text-sm text-muted">{c.detail}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- Publications. Grouped by year; the year is the datum, set in the
+       specimen voice. Entries are managed in /keystatic. -->
+  <section class="surface-sunken border-t border-line py-24 lg:py-32">
+    <div class="shell grid gap-16 lg:grid-cols-[22rem_1fr] lg:gap-24">
+      <header>
+        <p class="label text-muted">Publications</p>
+        <h2 class="mt-5 text-h2 text-fg">The record.</h2>
+        <p class="mt-6 max-w-[38ch] text-muted">
+          Over fifty peer-reviewed papers across orthopaedic surgery,
+          minimally invasive technique and regenerative medicine.
+        </p>
+      </header>
+
+      <div>
+        {
+          publications.length > 0 ? (
+            <div class="space-y-12">
+              {years.map((year) => (
+                <div class="grid gap-4 sm:grid-cols-[6rem_1fr]">
+                  <p class="label pt-6 text-metal">{year}</p>
+                  <ul>
+                    {publications
+                      .filter((p) => p.data.year === year)
+                      .map((p) => (
+                        <li class="border-t border-line py-6">
+                          <h3 class="max-w-measure text-h3 !text-[1.125rem] text-fg">
+                            {p.data.url ? (
+                              <a
+                                href={p.data.url}
+                                target="_blank" rel="noopener"
+                                class="transition-colors hover:text-accent"
+                              >
+                                {p.data.title}
+                                <span aria-hidden="true" class="ml-1.5 text-faint">&#8599;</span>
+                              </a>
+                            ) : (
+                              p.data.title
+                            )}
+                          </h3>
+                          {p.data.journal && (
+                            <p class="mt-2 text-sm text-muted">{p.data.journal}</p>
+                          )}
+                          {p.data.summary && (
+                            <p class="mt-3 max-w-measure text-sm text-muted">
+                              {p.data.summary}
+                            </p>
+                          )}
+                          {p.data.doi && (
+                            <p class="label mt-3 !text-[0.8125rem] text-faint">
+                              DOI {p.data.doi}
+                            </p>
+                          )}
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div class="border-t border-line pt-6">
+              <p class="max-w-measure text-muted">
+                The full, continuously updated publication record lives on the
+                indexes that track it. Selected papers will be listed here;
+                until then, both profiles below carry the complete list.
+              </p>
+              <div class="mt-8 flex flex-wrap gap-3">
+                {scholar && (
+                  <a
+                    href={scholar.url}
+                    target="_blank" rel="noopener me"
+                    class="btn btn-ghost"
+                  >
+                    Google Scholar
+                  </a>
+                )}
+                {researchgate && (
+                  <a
+                    href={researchgate.url}
+                    target="_blank" rel="noopener me"
+                    class="btn btn-ghost"
+                  >
+                    ResearchGate
+                  </a>
+                )}
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Where the record is kept: every claim on this page is checkable. -->
+  <section class="surface border-t border-line py-24 lg:py-28">
+    <div class="shell grid gap-16 lg:grid-cols-[22rem_1fr] lg:gap-24">
+      <header>
+        <p class="label text-muted">Profiles</p>
+        <h2 class="mt-5 text-h2 text-fg">Check the sources.</h2>
+      </header>
+
+      <ul class="self-end">
+        {
+          [
+            scholar && {
+              ...scholar,
+              detail: 'Citations, h-index and the indexed record.',
+            },
+            researchgate && {
+              ...researchgate,
+              detail: 'Full texts, preprints and research activity.',
+            },
+            {
+              name: 'Surgical practice',
+              url: author.practiceUrl,
+              detail: 'Clinical work in foot and ankle surgery.',
+            },
+          ]
+            .filter(Boolean)
+            .map((s) => (
+              <li class="border-t border-line">
+                <a
+                  href={s.url}
+                  target="_blank" rel="noopener"
+                  class="group flex min-h-16 items-center justify-between gap-6 py-4 transition-colors"
+                >
+                  <span>
+                    <span class="block text-[1.0625rem] font-medium text-fg transition-colors group-hover:text-accent">
+                      {s.name}
+                    </span>
+                    <span class="mt-0.5 block text-sm text-muted">
+                      {s.detail}
+                    </span>
+                  </span>
+                  <span aria-hidden="true" class="text-faint">&#8599;</span>
+                </a>
+              </li>
+            ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- The bridge back to the book: research is the evidence, the book is
+       the argument. -->
+  <section class="surface py-24 lg:py-28">
+    <div class="shell flex flex-wrap items-center justify-between gap-8">
+      <div>
+        <h2 class="text-h3 text-fg">The argument built on this work</h2>
+        <p class="mt-3 max-w-[46ch] text-muted">
+          {book.title} is where three decades of this research meets the
+          question of why we age.
+        </p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a href="/the-book/" class="btn btn-primary">About the book</a>
+        <a href="/excerpt/" class="btn btn-ghost">Read an excerpt</a>
+      </div>
+    </div>
+  </section>
+</Base>

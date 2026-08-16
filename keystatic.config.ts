@@ -26,9 +26,9 @@ export default config({
   ui: {
     brand: { name: 'Chaos to Creation' },
     navigation: {
-      Book: ['book', 'formats', 'hallmarks', 'faq'],
+      Book: ['book', 'excerpt', 'formats', 'hallmarks', 'faq'],
       Credibility: ['press', 'endorsements'],
-      Author: ['author'],
+      Author: ['author', 'publications'],
     },
   },
 
@@ -78,6 +78,20 @@ export default config({
           },
           { label: 'Best-seller mark' },
         ),
+      },
+    }),
+
+    excerpt: singleton({
+      label: 'Excerpt',
+      path: 'src/content/excerpt/excerpt',
+      format: { contentField: 'body' },
+      schema: {
+        kicker: fields.text({
+          label: 'Kicker',
+          description: 'Where the passage is from, e.g. "From the introduction".',
+        }),
+        title: fields.text({ label: 'Title' }),
+        body: fields.markdoc({ label: 'Excerpt text' }),
       },
     }),
 
@@ -162,8 +176,25 @@ export default config({
       },
     }),
 
+    publications: collection({
+      label: 'Publications',
+      slugField: 'title',
+      path: 'src/content/publications/*',
+      format: { data: 'yaml' },
+      columns: ['year', 'title'],
+      schema: {
+        order: fields.integer({ label: 'Order', defaultValue: 0 }),
+        title: fields.slug({ name: { label: 'Title' } }),
+        year: fields.integer({ label: 'Year' }),
+        journal: fields.text({ label: 'Journal or venue' }),
+        url: fields.url({ label: 'Link' }),
+        doi: fields.text({ label: 'DOI' }),
+        summary: fields.text({ label: 'Summary', multiline: true }),
+      },
+    }),
+
     press: collection({
-      label: 'Press coverage',
+      label: 'Media coverage',
       slugField: 'outlet',
       path: 'src/content/press/*',
       format: { data: 'yaml' },

@@ -1,16 +1,17 @@
 @import 'tailwindcss';
 
 /* ---------------------------------------------------------------------------
-   Chaos to Creation — ink & brass
+   Chaos to Creation — ink & brass, dark only
 
-   Two-tier tokens. Tier 1 (--s-*) holds raw values and swaps per theme.
-   Tier 2 (--color-*) names roles and is what components reference, so no
-   component ever knows which theme is active.
+   Two-tier tokens. Tier 1 (--s-*) holds raw values; tier 2 (--color-*) names
+   roles and is what components reference. The site committed to a single
+   cinematic dark register, so tier 1 no longer swaps — but the indirection
+   stays, because components speaking in roles is what kept every prior
+   palette change a five-line diff.
 
-   Every pair below is measured, not chosen by eye. No single accent clears
-   AA as text on both grounds — verdigris reads 4.57 on paper but 3.83 on
-   ink; brass reads 6.05 on ink but 2.89 on paper. Hence per-theme pairs.
-   Worst case across all three surfaces in either theme is 4.63:1.
+   Every pair below is measured, not chosen by eye, on all three surfaces:
+   fg 16.5 · muted 8.3 · faint 4.9 · accent 7.5 · metal 6.0 (each at its
+   worst surface, the raised panel). Worst case on the site is 4.9:1.
 --------------------------------------------------------------------------- */
 
 @theme {
@@ -60,55 +61,33 @@
   --container-measure: 68ch;
 }
 
-/* -- Dark is the default. No attribute needed, so the no-FOUC script only has
-      work to do for the minority who choose light. ------------------------ */
 :root {
-  --s-surface: #14120f;
-  --s-sunken: #0e0c0a;
-  --s-raised: #1c1916;
+  /* The #0B0B0B family, biased warm — a pure neutral would fight the brass
+     and cream. Surface is the page; sunken is the near-black section ground;
+     raised sits where the old surface did, so panel contrast is preserved. */
+  --s-surface: #0d0c0a;
+  --s-sunken: #080706;
+  --s-raised: #161411;
 
   --s-fg: #f0ebe3;
   --s-muted: #b5ada4;
   --s-faint: #8a827a;
 
-  --s-accent: #5fa99c;
-  --s-on-accent: #0e0c0a;
+  /* Verdigris, lifted a step for the darker ground. */
+  --s-accent: #63b3a4;
+  --s-on-accent: #080706;
   --s-metal: #b08d57;
 
   --s-line: rgb(240 235 227 / 0.11);
   --s-line-strong: rgb(240 235 227 / 0.22);
 
-  /* Elevation reads differently per theme: a drop shadow is invisible on
-     near-black, so dark lifts a panel with a hairline top highlight and a
-     lighter fill, while light uses a real shadow. */
-  --elevation: inset 0 1px 0 rgb(240 235 227 / 0.07);
-  --elevation-hover: inset 0 1px 0 rgb(240 235 227 / 0.13);
+  /* A drop shadow is invisible on near-black, so a panel lifts with a
+     hairline top highlight and a lighter fill instead. */
+  --elevation: inset 0 1px 0 rgb(240 235 227 / 0.08);
+  --elevation-hover: inset 0 1px 0 rgb(240 235 227 / 0.14);
   --grain-opacity: 0.16;
 
   color-scheme: dark;
-}
-
-:root[data-theme='light'] {
-  --s-surface: #faf7f2;
-  --s-sunken: #f6f2ec;
-  --s-raised: #ffffff;
-
-  --s-fg: #1a1714;
-  --s-muted: #5c554d;
-  --s-faint: #6a6258;
-
-  --s-accent: #2b7168;
-  --s-on-accent: #ffffff;
-  --s-metal: #7a5c2e;
-
-  --s-line: rgb(26 23 20 / 0.12);
-  --s-line-strong: rgb(26 23 20 / 0.24);
-
-  --elevation: 0 1px 2px rgb(26 23 20 / 0.05), 0 8px 24px -12px rgb(26 23 20 / 0.18);
-  --elevation-hover: 0 2px 4px rgb(26 23 20 / 0.06), 0 18px 40px -16px rgb(26 23 20 / 0.24);
-  --grain-opacity: 0.05;
-
-  color-scheme: light;
 }
 
 
@@ -169,15 +148,6 @@ html:active-view-transition .caption-rule {
     /* Notched devices: keep sticky chrome and footers clear of the inset. */
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
-    transition:
-      background-color 320ms ease,
-      color 320ms ease;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    body {
-      transition: none;
-    }
   }
 
   /* Fraunces carries real optical-size and wonk axes. WONK sits at 0: the
@@ -214,8 +184,8 @@ html:active-view-transition .caption-rule {
 
 @layer components {
   /* -- Surfaces ------------------------------------------------------------
-     Replaces the old register-dark / register-light pair. Sections alternate
-     surface and sunken, which keeps the page's rhythm in both themes. */
+     Sections alternate surface and sunken, which is what gives the page
+     its rhythm on a single dark ground. */
   .surface {
     background-color: var(--color-surface);
   }
@@ -379,8 +349,8 @@ html:active-view-transition .caption-rule {
   }
 
   /* -- Grain ---------------------------------------------------------------
-     A single tiled SVG noise layer. Paper tooth in light, film grain in dark;
-     the opacity token carries the difference. Costs one inline data URI. */
+     A single tiled SVG noise layer: film grain over the dark ground. Costs
+     one inline data URI. */
   .grain::after {
     content: '';
     position: absolute;
@@ -430,24 +400,6 @@ html:active-view-transition .caption-rule {
       opacity: 1;
       filter: blur(0);
       transform: translate3d(0, 0, 0) rotate(0deg);
-    }
-  }
-
-  /* -- Ambient drift -------------------------------------------------------
-     Very slow scale and pan on the hero micrograph. Long enough to read as
-     life rather than motion. */
-  @media (prefers-reduced-motion: no-preference) {
-    .drift {
-      animation: drift 48s ease-in-out infinite alternate;
-    }
-  }
-
-  @keyframes drift {
-    from {
-      transform: scale(1.06) translate3d(-1.2%, -0.8%, 0);
-    }
-    to {
-      transform: scale(1.14) translate3d(1.2%, 0.8%, 0);
     }
   }
 }

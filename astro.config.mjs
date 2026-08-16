@@ -19,6 +19,10 @@ export default defineConfig({
 
   integrations: [react(), markdoc(), keystatic(), sitemap()],
 
+  // The press kit became the media kit when Research joined the navigation.
+  // Emitted as a platform-level redirect by the Vercel adapter.
+  redirects: { '/press/': '/media/' },
+
   vite: {
     plugins: [tailwindcss()],
   },
