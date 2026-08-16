@@ -56,6 +56,33 @@ const endorsements = defineCollection({
   }),
 });
 
+/**
+ * Peer-reviewed publications for /research/. The page renders an intentional
+ * empty state until entries are added via /keystatic, so nothing here is
+ * fabricated on the author's behalf.
+ */
+const publications = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/publications' }),
+  schema: z.object({
+    order: z.number().int().default(0),
+    title: z.string(),
+    year: z.number().int(),
+    journal: z.string().optional(),
+    url: z.string().url().optional(),
+    doi: z.string().optional(),
+    summary: z.string().optional(),
+  }),
+});
+
+/** The published extract — one Markdoc document, edited whole in Keystatic. */
+const excerpt = defineCollection({
+  loader: glob({ pattern: '**/*.mdoc', base: './src/content/excerpt' }),
+  schema: z.object({
+    kicker: z.string(),
+    title: z.string(),
+  }),
+});
+
 const faq = defineCollection({
   loader: glob({ pattern: '**/*.yaml', base: './src/content/faq' }),
   schema: z.object({
@@ -65,4 +92,12 @@ const faq = defineCollection({
   }),
 });
 
-export const collections = { hallmarks, formats, press, endorsements, faq };
+export const collections = {
+  hallmarks,
+  formats,
+  press,
+  endorsements,
+  faq,
+  publications,
+  excerpt,
+};

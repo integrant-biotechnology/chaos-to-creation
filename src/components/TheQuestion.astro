@@ -1,0 +1,101 @@
+---
+import { Image } from 'astro:assets';
+import micrograph from '../assets/micrograph.jpg';
+
+/**
+ * The narrative hinge between the hero's claim and the evidence below it:
+ * why a surgeon, of all people, ends up writing about aging. The micrograph
+ * appears here first as a specimen in a frame — Plate II — before the
+ * thesis section enlarges it to full bleed.
+ */
+---
+
+<section id="question" class="surface border-t border-line py-28 lg:py-36">
+  <div class="shell">
+    <div class="grid gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-24">
+      <div class="max-w-[58ch]">
+        <p class="eyebrow">Figure 1 &middot; The question</p>
+        <h2 class="hang mt-5 text-h2 text-fg">
+          The question that started everything.
+        </h2>
+
+        <div class="mt-9 space-y-6 text-lead text-muted">
+          <p class="resolve" style="--resolve-y: 1rem">
+            Three decades of operating gives you a particular view of the
+            body. You see, directly and repeatedly, what tissue does when it
+            is damaged &mdash; and what it does when it repairs. The machinery
+            is extraordinary, and for most of a life it simply works.
+          </p>
+          <p class="resolve" style="--resolve-y: 1rem">
+            Then, in the same patient, it begins to falter. The question that
+            follows a surgeon home is the one this book was written to answer:
+            if the body can rebuild itself, why does it stop &mdash; and is
+            that stopping negotiable?
+          </p>
+          <p class="resolve" style="--resolve-y: 1rem">
+            <em>On the Origin of Species</em> asked how life began. This book
+            takes up the question from the other end: not how life began, but
+            where it is going, and whether its duration is fixed.
+          </p>
+        </div>
+
+        <a
+          href="/the-book/"
+          class="group mt-10 inline-flex min-h-11 items-center gap-2 text-fg transition-colors hover:text-accent"
+        >
+          <span class="question-link">Read the full argument</span>
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+
+      <figure class="resolve self-center" style="--resolve-y: 2rem">
+        <div class="question-plate panel p-3">
+          <Image
+            src={micrograph}
+            alt="Triple-stain immunofluorescence micrograph of endothelial cells: blue nuclei, green actin filaments, red mitochondria"
+            widths={[480, 720, 1000]}
+            sizes="(max-width: 1023px) 92vw, 36rem"
+            loading="lazy"
+            decoding="async"
+            class="w-full"
+          />
+        </div>
+        <figcaption class="label mt-4 flex items-center gap-3 text-muted">
+          <span class="whitespace-nowrap text-metal">Plate II</span>
+          <span aria-hidden="true" class="h-px flex-1 bg-line"></span>
+          <span class="whitespace-nowrap"
+            >Endothelial cells &middot; the machinery in question</span
+          >
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<style>
+  .question-link {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    background-size: 0% 1px;
+    padding-bottom: 2px;
+    transition: background-size 220ms ease;
+  }
+
+  a:hover .question-link,
+  a:focus-visible .question-link {
+    background-size: 100% 1px;
+  }
+
+  /* The specimen is presented, not decorated: one hairline frame, and the
+     stain colours doing the work. */
+  .question-plate :global(img) {
+    filter: saturate(112%) contrast(104%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .question-link {
+      transition: none;
+    }
+  }
+</style>

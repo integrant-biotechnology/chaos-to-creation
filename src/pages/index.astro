@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
+import TheQuestion from '../components/TheQuestion.astro';
 import Hallmarks from '../components/Hallmarks.astro';
 import Thesis from '../components/Thesis.astro';
 import AuthorCard from '../components/AuthorCard.astro';
@@ -28,6 +29,7 @@ const description = book.bestseller.claimed
   schema={schema}
 >
   <Hero />
+  <TheQuestion />
   <Hallmarks />
   <Thesis />
   <AuthorCard />

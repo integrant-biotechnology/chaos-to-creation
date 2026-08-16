@@ -2,7 +2,6 @@
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import cover from '../assets/cover.png';
-import micrograph from '../assets/micrograph.jpg';
 import book from '../data/book.json';
 import author from '../data/author.json';
 import BestsellerMark from './BestsellerMark.astro';
@@ -14,15 +13,15 @@ const formats = (await getCollection('formats')).sort(
 const fromPrice = Math.min(...formats.map((f) => f.data.price));
 const hardcover = formats.find((f) => f.data.name === 'Hardcover');
 
-/** Newest press item anchors the seal to a checkable third-party source. */
+/** Newest press item anchors the proof row to a checkable third-party source. */
 const press = (await getCollection('press')).sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime(),
 )[0];
-const pressDate = press
-  ? new Intl.DateTimeFormat('en-AU', { month: 'long', year: 'numeric' }).format(
-      press.data.date,
-    )
-  : null;
+
+/** The research claim, from the same data the author page states it from. */
+const publications = author.credentials.find((c) =>
+  c.label.includes('publications'),
+);
 
 /** Renders nothing until real numbers are supplied — no ghost stars, ever. */
 const rating = book.rating?.stars ? book.rating : null;
@@ -41,25 +40,39 @@ const chaos = [
   { ch: 'O', x: 0.07, y: -0.12, r: -6 },
   { ch: 'S', x: -0.04, y: 0.08, r: 4 },
 ];
+
+/**
+ * The particle field over the plate: fixed positions and phases, like the
+ * glyph scatter, so the field is identical on every build. Coordinates are
+ * percentages of the plate column; sizes in px; durations and delays in s.
+ */
+const motes = [
+  { x: 6, y: 16, s: 2, d: 16, del: 0 },
+  { x: 16, y: 62, s: 3, d: 21, del: 2 },
+  { x: 24, y: 30, s: 2, d: 18, del: 5 },
+  { x: 33, y: 78, s: 2, d: 23, del: 1 },
+  { x: 44, y: 8, s: 2, d: 17, del: 3 },
+  { x: 55, y: 68, s: 3, d: 25, del: 6 },
+  { x: 63, y: 24, s: 2, d: 19, del: 2 },
+  { x: 72, y: 56, s: 2, d: 22, del: 4 },
+  { x: 81, y: 12, s: 2, d: 16, del: 7 },
+  { x: 88, y: 42, s: 3, d: 24, del: 3 },
+  { x: 38, y: 46, s: 2, d: 27, del: 8 },
+  { x: 70, y: 84, s: 2, d: 26, del: 5 },
+];
 ---
 
 <section class="surface relative overflow-hidden">
-  <!-- Dark-field ground: a real immunofluorescence micrograph rather than a
-       CSS gradient pretending to be one. Heavily blurred, so served small —
-       resolution is wasted on an image nobody sees sharply. Decorative. -->
-  <div aria-hidden="true" class="hero-ground pointer-events-none absolute inset-0">
-    <Image
-      src={micrograph}
-      alt=""
-      widths={[560, 720]}
-      sizes="100vw"
-      loading="eager"
-      class="drift h-full w-full object-cover"
-    />
-  </div>
-  <!-- The scrim is contrast infrastructure: it exists at frame 0 and never
-       animates. Grain rides on it, under the content. -->
-  <div aria-hidden="true" class="hero-scrim grain"></div>
+  <!-- Atmosphere. Three light sources, no image: a cool spotlight behind the
+       book, a faint warm floor glow off the brass, and one near-invisible
+       beam crossing the field. All of it is background; none of it competes
+       with type. Decorative. -->
+  <div aria-hidden="true" class="hero-atmos pointer-events-none absolute inset-0"></div>
+  <!-- Cellular field: large, faint circles in the accent — the microscope
+       slide the argument sits on. Masked toward the plate so the text column
+       stays clean. -->
+  <div aria-hidden="true" class="hero-cells pointer-events-none absolute inset-0"></div>
+  <div aria-hidden="true" class="grain pointer-events-none absolute inset-0"></div>
 
   <div class="hero-grid shell relative">
     <!-- Head: byline, title, lede -->
@@ -98,107 +111,123 @@ const chaos = [
       </h1>
 
       <p
-        class="hero-enter mt-8 max-w-[46ch] text-lead text-muted"
+        class="hero-enter mt-8 max-w-[44ch] text-lead text-muted"
         style="--ed:700ms; --edur:550ms"
       >
         {book.summary}
       </p>
     </div>
 
-    <!-- Act: seal, citation, CTAs, formats — the conversion block. Fitting
-         this above the fold is the whole point of the height-aware grid. -->
+    <!-- Act: proof, then the three doors — order, read, meet. The conversion
+         block; fitting it above the fold is the point of the height-aware
+         grid. -->
     <div class="hero-act">
-      <div class="hero-seal">
-        <BestsellerMark variant="seal" />
+      <div class="hero-seal flex flex-wrap items-center gap-2.5">
+        <BestsellerMark variant="chip" />
         {
           press && (
-            <p class="label mt-3 !text-[0.8125rem] text-muted">
-              Featured in{' '}
-              <a
-                href={press.data.url}
-                target="_blank" rel="noopener"
-                class="press-cite text-fg transition-colors hover:text-accent"
-              >
-                {press.data.outlet}
-              </a>{' '}
-              &middot; {pressDate}
+            <a
+              href={press.data.url}
+              target="_blank" rel="noopener"
+              class="chip chip-link"
+            >
+              Featured in {press.data.outlet}
               <span aria-hidden="true" class="text-faint">&#8599;</span>
-            </p>
+            </a>
+          )
+        }
+        {
+          publications && (
+            <a href="/research/" class="chip chip-link">
+              {publications.label}, peer-reviewed
+            </a>
           )
         }
         {
           rating && (
-            <p class="label mt-3 !text-[0.8125rem] text-muted">
-              &#9733; {rating.stars} &middot; {rating.count} ratings &middot;{' '}
-              <a
-                href={rating.url}
-                target="_blank" rel="noopener"
-                class="text-fg transition-colors hover:text-accent"
-              >
-                on Amazon
-              </a>
-            </p>
+            <a
+              href={rating.url}
+              target="_blank" rel="noopener"
+              class="chip chip-link"
+            >
+              &#9733; {rating.stars} &middot; {rating.count} ratings
+            </a>
           )
         }
       </div>
 
       <div
-        class="hero-enter mt-6 flex flex-wrap items-center gap-3"
+        class="hero-enter mt-7 flex flex-wrap items-center gap-x-3 gap-y-4"
         style="--ed:1000ms; --edur:450ms"
       >
         <a href="/buy/" class="btn btn-primary">
           Order the book
           <span class="btn-note">from {money(fromPrice)}</span>
         </a>
-        <a href="/the-book/" class="btn btn-ghost">About the book</a>
+        <a href="/excerpt/" class="btn btn-ghost">Read an excerpt</a>
+        <a href="/author/" class="hero-meet label !text-[0.8125rem] text-fg">
+          <span class="fmt">Meet the author</span>
+          <span aria-hidden="true">&rarr;</span>
+        </a>
       </div>
-
-      <ul class="mt-4 flex flex-wrap items-center gap-x-7">
-        {
-          formats.map((f, i) => (
-            <li>
-              <a
-                href={f.data.url}
-                target="_blank" rel="noopener"
-                class="label hero-enter flex min-h-11 items-center !text-[0.8125rem] text-fg transition-colors hover:text-accent"
-                style={`--ed:${1080 + i * 40}ms; --edur:400ms`}
-              >
-                <span class="fmt">
-                  {f.data.name}
-                  <span class="ml-1.5 text-muted">{money(f.data.price)}</span>
-                </span>
-                <span class="sr-only">
-                  {' '}on Amazon Australia (opens in a new tab)
-                </span>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
     </div>
 
-    <!-- Plate. A specimen placed beside the argument — and the door to it:
-         the plate links to the book page, where the view transition carries
-         the cover across. -->
+    <!-- Plate. The specimen, now with a body: a hardcover standing in its
+         own light, and the door to the book page — the view transition
+         carries the cover across. -->
     <figure
-      class="hero-plate hero-enter relative mx-auto w-full max-w-[17rem] lg:mx-0 lg:ml-auto lg:max-w-[19rem]"
+      class="hero-plate hero-enter relative mx-auto w-full max-w-[17.5rem] lg:mx-0 lg:ml-auto lg:max-w-[21rem]"
       style="--ed:320ms; --edur:900ms; --eo:0.01"
     >
-      <a
-        href="/the-book/"
-        class="hero-cover-link block"
-        style="view-transition-name: book-cover"
-      >
-        <Image
-          src={cover}
-          alt={`Cover of ${book.title}: ${book.subtitle}, by ${author.fullName}`}
-          widths={[272, 340, 480]}
-          sizes="(max-width: 1023px) 17rem, 19rem"
-          loading="eager"
-          fetchpriority="high"
-          class="w-full"
-        />
-      </a>
+      <div class="book-stage relative">
+        <!-- Spotlight, behind everything in the stage. -->
+        <span aria-hidden="true" class="book-glow"></span>
+
+        <!-- The particle field rises through the light. -->
+        <div aria-hidden="true" class="hero-motes hidden lg:block">
+          {
+            motes.map((m) => (
+              <span
+                class="mote"
+                style={`left:${m.x}%; top:${m.y}%; --ms:${m.s}px; --md:${m.d}s; --mdel:${m.del}s`}
+              />
+            ))
+          }
+        </div>
+
+        <div class="book-scene">
+          <a href="/the-book/" class="book-3d block">
+            <Image
+              src={cover}
+              alt={`Cover of ${book.title}: ${book.subtitle}, by ${author.fullName}`}
+              widths={[280, 340, 480, 560]}
+              sizes="(max-width: 1023px) 17.5rem, 21rem"
+              loading="eager"
+              fetchpriority="high"
+              class="book-cover w-full"
+              style="view-transition-name: book-cover"
+            />
+            <!-- Fore-edge: the page block, visible along the turned edge. -->
+            <span aria-hidden="true" class="book-pages"></span>
+            <!-- Reflection on the floor. Inside the rotated frame so it
+                 shares the book's perspective. -->
+            <span aria-hidden="true" class="book-reflect hidden lg:block">
+              <Image
+                src={cover}
+                alt=""
+                widths={[280, 340]}
+                sizes="21rem"
+                loading="lazy"
+                decoding="async"
+                class="w-full"
+              />
+            </span>
+          </a>
+        </div>
+
+        <span aria-hidden="true" class="book-shadow"></span>
+      </div>
+
       <figcaption class="label mt-6 text-muted">
         <span class="flex items-center gap-3">
           <span class="plate-label whitespace-nowrap text-metal">Plate I</span>
@@ -224,48 +253,45 @@ const chaos = [
   <!-- Index-line scroll cue, not a chevron. Desktop only; lowest priority in
        the entrance, first thing to be ignored — exactly as it should be. -->
   <a
-    href="#hallmarks"
+    href="#question"
     class="hero-cue label hero-enter"
     style="--ed:1400ms; --edur:500ms"
   >
     <span aria-hidden="true" class="hero-cue-rule"></span>
-    01 &middot; The hallmarks
+    01 &middot; The question
   </a>
 </section>
 
 <style>
-  /* The micrograph is atmosphere, not subject: blurred past legibility, held
-     under a wash of the surface colour so type contrast is never at its mercy.
-     --breath-lo bounds the ambient swell AT the audited opacity maximum, so
-     the animation only ever reduces ground competition. Light theme sets it to
-     the authored value — a ±0.03 swing on 0.16 reads as flicker, not breath. */
-  .hero-ground {
-    filter: blur(46px) saturate(135%);
-    opacity: 0.34;
-    transform: scale(1.18);
-    --breath-lo: 0.31;
-  }
-
-  :root[data-theme='light'] .hero-ground {
-    opacity: 0.16;
-    filter: blur(46px) saturate(115%);
-    --breath-lo: 0.16;
-  }
-
-  .hero-scrim {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
+  /* -- Atmosphere -----------------------------------------------------------
+     Everything is held far below legibility interference: the strongest
+     layer is 13% accent, and the beam is 4%. The composition keys light to
+     the plate column — the book is the lit object, the text reads by it. */
+  .hero-atmos {
     background:
-      linear-gradient(to right,
-        var(--color-surface) 0%,
-        color-mix(in oklab, var(--color-surface) 82%, transparent) 46%,
-        color-mix(in oklab, var(--color-surface) 40%, transparent) 100%),
-      linear-gradient(to bottom,
-        var(--color-surface) 0%,
-        transparent 22%,
-        transparent 74%,
-        var(--color-surface) 100%);
+      radial-gradient(
+        52rem 52rem at 76% 30%,
+        color-mix(in oklab, var(--color-accent) 13%, transparent),
+        transparent 62%
+      ),
+      radial-gradient(
+        46rem 40rem at 4% 92%,
+        color-mix(in oklab, var(--color-metal) 8%, transparent),
+        transparent 62%
+      ),
+      linear-gradient(
+        112deg,
+        transparent 42%,
+        color-mix(in oklab, var(--color-accent) 4%, transparent) 52%,
+        transparent 61%
+      );
+  }
+
+  .hero-cells {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='520'%3E%3Cg fill='none' stroke='%2363b3a4' stroke-opacity='0.5'%3E%3Ccircle cx='112' cy='138' r='84'/%3E%3Ccircle cx='384' cy='86' r='55'/%3E%3Ccircle cx='302' cy='378' r='118'/%3E%3Ccircle cx='78' cy='424' r='46'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 33rem;
+    opacity: 0.055;
+    mask-image: linear-gradient(100deg, transparent 30%, black 72%);
   }
 
   /* -- Viewport fit ---------------------------------------------------------
@@ -275,8 +301,8 @@ const chaos = [
      13" laptops (wide, short) were cutting the CTA row at the fold. svh is
      the stable small-viewport unit on mobile; the vh line is the fallback.
 
-     Areas: head (byline/title/lede), plate (cover), act (seal/CTAs/formats).
-     On phones the plate sits between head and act, so the product is not
+     Areas: head (byline/title/lede), plate (book), act (proof/CTAs). On
+     phones the plate sits between head and act, so the product is not
      buried under the whole conversion stack. */
   .hero-grid {
     display: grid;
@@ -306,9 +332,9 @@ const chaos = [
       grid-template-areas:
         'head plate'
         'act plate';
-      grid-template-columns: 1.28fr 0.72fr;
+      grid-template-columns: 1.18fr 0.82fr;
       grid-template-rows: auto auto;
-      column-gap: clamp(2.5rem, 4vw, 4rem);
+      column-gap: clamp(2.5rem, 4.5vw, 4.5rem);
     }
 
     .hero-plate {
@@ -330,6 +356,20 @@ const chaos = [
   .hero-creation {
     display: block;
     color: var(--color-fg);
+  }
+
+  /* Very short screens (small laptops, landscape tablets): the title gives
+     ground first, then the grid's breathing room — the act block never
+     leaves the first screen. */
+  @media (height < 42rem) {
+    .hero-title {
+      font-size: min(var(--text-mega), 12svh);
+    }
+
+    .hero-grid {
+      row-gap: clamp(0.875rem, 2.5svh, 2rem);
+      padding-top: 1rem;
+    }
   }
 
   .hero-glyph {
@@ -386,22 +426,67 @@ const chaos = [
     }
   }
 
-  /* -- Trust furniture ---------------------------------------------------- */
+  /* -- Proof row ------------------------------------------------------------
+     Three claims, three registries: market (Amazon), media (the press),
+     science (the publication record). The bestseller chip carries the
+     accent; the rest stay neutral so the row reads as evidence, not
+     ornament. */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.9rem;
+    border: 1px solid var(--color-line-strong);
+    font-family: var(--font-mono);
+    font-size: 0.71875rem;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    line-height: 1.3;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .chip-link {
+    position: relative;
+    transition:
+      color 200ms ease,
+      border-color 200ms ease;
+  }
+
+  /* The capsule stays at annotation scale; the touch target does not. An
+     invisible inset extension carries the link to the 44px platform floor. */
+  .chip-link::after {
+    content: '';
+    position: absolute;
+    inset: -5px 0;
+  }
+
+  .chip-link:hover,
+  .chip-link:focus-visible {
+    color: var(--color-fg);
+    border-color: var(--color-fg);
+  }
 
   .btn-note {
     font-size: 0.8125rem;
     font-weight: 400;
   }
 
-  .press-cite {
-    text-decoration: underline;
-    text-decoration-color: var(--color-line-strong);
-    text-underline-offset: 3px;
+  .hero-meet {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding-inline: 0.75rem;
+    transition: color 200ms ease;
   }
 
-  /* Format entries: the underline draws like a line being marked in an
-     index. Applied to the inner span so it hugs the text, not the 44px
-     touch box. */
+  .hero-meet:hover,
+  .hero-meet:focus-visible {
+    color: var(--color-accent);
+  }
+
+  /* The underline draws like a line being marked in an index. */
   .fmt {
     background-image: linear-gradient(currentColor, currentColor);
     background-repeat: no-repeat;
@@ -416,34 +501,133 @@ const chaos = [
     background-size: 100% 1px;
   }
 
-  /* -- The plate as a door ------------------------------------------------ */
-
-  .hero-cover-link {
-    filter: drop-shadow(0 36px 70px rgb(0 0 0 / 0.72));
-    transition:
-      transform 300ms ease,
-      filter 300ms ease;
+  /* -- The book, in the round ----------------------------------------------
+     One CSS scene, no render: the flat cover turned a few degrees in real
+     perspective, a page block on the fore-edge, its reflection in the
+     floor, and the spotlight behind it. The cover image itself stays flat
+     inside the rotated frame, so the view transition to /the-book/ morphs
+     from an honest snapshot. */
+  .book-stage {
+    /* Reserve the reflection's landing so the caption keeps clear. */
+    margin-bottom: clamp(0.5rem, 6%, 1.5rem);
   }
 
-  .hero-cover-link:hover,
-  .hero-cover-link:focus-visible {
-    transform: translateY(-3px);
-    filter: drop-shadow(0 26px 52px rgb(0 0 0 / 0.8));
+  @media (width >= 64rem) {
+    .book-stage {
+      margin-bottom: clamp(2rem, 20%, 5rem);
+    }
   }
 
-  :root[data-theme='light'] .hero-cover-link {
-    filter: drop-shadow(0 24px 48px rgb(26 23 20 / 0.28));
+  .book-glow {
+    position: absolute;
+    left: 50%;
+    top: 42%;
+    width: 150%;
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    background: radial-gradient(
+      circle,
+      color-mix(in oklab, var(--color-accent) 20%, transparent),
+      transparent 64%
+    );
+    filter: blur(48px);
   }
 
-  :root[data-theme='light'] .hero-cover-link:hover,
-  :root[data-theme='light'] .hero-cover-link:focus-visible {
-    filter: drop-shadow(0 18px 38px rgb(26 23 20 / 0.34));
+  .book-scene {
+    position: relative;
+    perspective: 1200px;
+  }
+
+  .book-3d {
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateY(-10deg) rotateX(2deg);
+    transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @media (width >= 64rem) {
+    .book-3d {
+      transform: rotateY(-15deg) rotateX(3deg);
+    }
+
+    /* Picking it up: the book squares toward the reader and lifts. */
+    .book-3d:hover,
+    .book-3d:focus-visible {
+      transform: rotateY(-7deg) rotateX(1.5deg) translateY(-0.4rem);
+    }
+  }
+
+  .book-cover {
+    display: block;
+    /* The cast shadow travels with the book, not the floor. */
+    filter: drop-shadow(0 30px 60px rgb(0 0 0 / 0.65));
+  }
+
+  /* The page block: a sliver of stacked paper along the turned edge. */
+  .book-pages {
+    position: absolute;
+    top: 0.4%;
+    bottom: 0.4%;
+    left: 100%;
+    width: 2.4rem;
+    transform-origin: left center;
+    transform: rotateY(90deg);
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgb(0 0 0 / 0.14) 0 1px,
+        transparent 1px 3px
+      ),
+      linear-gradient(to right, #d8d2c4, #efe9dc 30%, #e4ddce);
+  }
+
+  .book-reflect {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 0.5rem;
+    transform: scaleY(-1);
+    mask-image: linear-gradient(to top, rgb(0 0 0 / 0.28), transparent 36%);
+    -webkit-mask-image: linear-gradient(to top, rgb(0 0 0 / 0.28), transparent 36%);
+    pointer-events: none;
+  }
+
+  .book-shadow {
+    position: absolute;
+    left: 6%;
+    right: 6%;
+    bottom: -1.75rem;
+    height: 2.25rem;
+    background: radial-gradient(
+      ellipse at center,
+      rgb(0 0 0 / 0.5),
+      transparent 68%
+    );
+    filter: blur(10px);
   }
 
   /* The annotation lights up when the plate is inspected. */
-  figure:has(.hero-cover-link:hover) .plate-label,
-  figure:has(.hero-cover-link:focus-visible) .plate-label {
+  figure:has(.book-3d:hover) .plate-label,
+  figure:has(.book-3d:focus-visible) .plate-label {
     color: var(--color-accent);
+  }
+
+  /* -- Particle field -------------------------------------------------------
+     Dust in the spotlight. Deterministic, sparse, slow — and absent
+     entirely without motion, where static dots would read as dirt. */
+  .hero-motes {
+    position: absolute;
+    inset: -12% -8%;
+  }
+
+  .mote {
+    position: absolute;
+    width: var(--ms);
+    height: var(--ms);
+    border-radius: 50%;
+    background: color-mix(in oklab, var(--color-accent) 70%, var(--color-fg));
+    opacity: 0;
   }
 
   /* -- Scroll cue ---------------------------------------------------------- */
@@ -481,10 +665,10 @@ const chaos = [
 
   /* -- Entrance: one gesture, not a parade ---------------------------------
      The glyph scatter is the event. Everything secondary arrives by opacity
-     only; the two rules draw; the seal stamps. Every keyframe below omits its
-     `to` frame, so elements animate toward their authored settled state — the
-     settled layout stays the single source of truth, and outside this motion-
-     safe block no animation exists at all. */
+     only; the rules draw; the proof row stamps. Every keyframe below omits
+     its `to` frame, so elements animate toward their authored settled state —
+     the settled layout stays the single source of truth, and outside this
+     motion-safe block only the hover transitions exist. */
   @media (prefers-reduced-motion: no-preference) {
     .hero-enter {
       animation: enter-fade var(--edur, 500ms) ease-out both;
@@ -508,23 +692,33 @@ const chaos = [
       animation-delay: 1050ms;
     }
 
-    .hero-ground {
-      animation:
-        enter-fade 1600ms ease-out both,
-        ground-breath 48s ease-in-out 2400ms infinite alternate;
-    }
-
     .hero-glyph {
       animation: glyph-settle 1100ms cubic-bezier(0.16, 1, 0.3, 1) both;
       animation-delay: var(--gd);
     }
 
+    /* The float: long enough to read as suspension, not bobbing. */
+    .book-scene {
+      animation: book-float 7.5s ease-in-out 2s infinite;
+    }
+
+    .book-glow {
+      animation: glow-breath 9s ease-in-out 2s infinite alternate;
+    }
+
+    .mote {
+      animation:
+        mote-rise var(--md) linear var(--mdel) infinite,
+        mote-glow var(--md) ease-in-out var(--mdel) infinite;
+    }
+
     /* -- Scroll exit: entropy resumes ------------------------------------
        As the hero leaves, CHAOS quietly comes apart again — continuing past
-       settled in the opposite direction, not rewinding — while the hallmarks
-       below run their .resolve settle. The missing `from` frames compose
-       over whatever the load-time animations left behind. No support for
-       view(): no exit animation, settled state stands. */
+       settled in the opposite direction, not rewinding — and the plate
+       drifts up slightly faster than the page: the parallax. The missing
+       `from` frames compose over whatever the load-time animations left
+       behind. No support for view(): no exit animation, settled state
+       stands. */
     @supports (animation-timeline: view()) {
       .hero-glyph {
         animation:
@@ -535,19 +729,21 @@ const chaos = [
         animation-range: normal, exit 10% exit 85%;
       }
 
-      .hero-ground {
+      .hero-plate {
         animation:
-          enter-fade 1600ms ease-out both,
-          ground-breath 48s ease-in-out 2400ms infinite alternate,
-          ground-recede linear both;
-        animation-timeline: auto, auto, view();
-        animation-range: normal, normal, exit 0% exit 70%;
+          enter-fade var(--edur, 500ms) ease-out both,
+          plate-lift linear both;
+        animation-delay: var(--ed, 0ms), 0s;
+        animation-timeline: auto, view();
+        animation-range: normal, exit 0% exit 100%;
       }
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero-cover-link,
+    .book-3d,
+    .chip-link,
+    .hero-meet,
     .fmt,
     .hero-cue {
       transition: none;
@@ -556,8 +752,8 @@ const chaos = [
 
   @keyframes enter-fade {
     from {
-      /* The cover figure overrides --eo to 0.01: elements at opacity 0 are
-         excluded from LCP until visible, and the plate is the likely LCP
+      /* The plate overrides --eo to 0.01: elements at opacity 0 are
+         excluded from LCP until visible, and the cover is the likely LCP
          element. 0.01 registers for LCP and is visually indistinguishable. */
       opacity: var(--eo, 0);
     }
@@ -573,12 +769,6 @@ const chaos = [
     from {
       opacity: 0;
       transform: scale(1.015);
-    }
-  }
-
-  @keyframes ground-breath {
-    from {
-      opacity: var(--breath-lo);
     }
   }
 
@@ -602,12 +792,6 @@ const chaos = [
     }
   }
 
-  @keyframes ground-recede {
-    to {
-      opacity: 0;
-    }
-  }
-
   @keyframes glyph-settle {
     from {
       opacity: 0;
@@ -618,6 +802,51 @@ const chaos = [
       opacity: 1;
       filter: blur(0);
       transform: translate(0, 0) rotate(0) scale(1);
+    }
+  }
+
+  @keyframes book-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-0.55rem);
+    }
+  }
+
+  @keyframes glow-breath {
+    from {
+      opacity: 0.75;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes plate-lift {
+    to {
+      transform: translateY(-2.5rem);
+    }
+  }
+
+  @keyframes mote-rise {
+    from {
+      transform: translateY(1.25rem);
+    }
+    to {
+      transform: translateY(-2.25rem);
+    }
+  }
+
+  @keyframes mote-glow {
+    0%,
+    100% {
+      opacity: 0;
+    }
+    18%,
+    72% {
+      opacity: 0.55;
     }
   }
 </style>

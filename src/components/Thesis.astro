@@ -38,7 +38,8 @@ import micrograph from '../assets/micrograph.jpg';
         </p>
       </blockquote>
       <figcaption class="label mt-10 text-muted">
-        Plate II &middot; Endothelial cells &mdash; nuclei, actin, mitochondria
+        Plate II, enlarged &middot; Endothelial cells &mdash; nuclei, actin,
+        mitochondria
       </figcaption>
     </figure>
   </div>
@@ -55,21 +56,6 @@ import micrograph from '../assets/micrograph.jpg';
       color-mix(in oklab, var(--color-sunken) 88%, transparent) 0%,
       color-mix(in oklab, var(--color-sunken) 76%, transparent) 55%,
       color-mix(in oklab, var(--color-sunken) 88%, transparent) 100%
-    );
-  }
-
-  /* Dark ink over a bright image is the harder case, so light suppresses the
-     micrograph considerably further than dark does. */
-  :root[data-theme='light'] .thesis-image {
-    filter: saturate(80%) contrast(92%);
-  }
-
-  :root[data-theme='light'] .thesis-scrim {
-    background: radial-gradient(
-      ellipse at center,
-      color-mix(in oklab, var(--color-sunken) 95%, transparent) 0%,
-      color-mix(in oklab, var(--color-sunken) 89%, transparent) 55%,
-      color-mix(in oklab, var(--color-sunken) 95%, transparent) 100%
     );
   }
 

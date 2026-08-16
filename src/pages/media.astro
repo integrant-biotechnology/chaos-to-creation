@@ -32,19 +32,19 @@ const schema = [
   await bookNode(),
   breadcrumbNode([
     { name: 'Home', path: '/' },
-    { name: 'Press', path: '/press/' },
+    { name: 'Media', path: '/media/' },
   ]),
 ];
 ---
 
 <Base
-  title={`Press kit — ${book.title}`}
+  title={`Media kit — ${book.title}`}
   description={`Media resources for ${book.title} by ${author.fullName}: fact sheet, biography, cover art and coverage.`}
   schema={schema}
 >
   <PageHeader
-    figure="Figure 6 · Press"
-    title="Press kit"
+    figure="Figure 8 · Media"
+    title="Media kit"
     lede="Everything needed to cover the book, in one place. For interviews, review copies or high-resolution assets, get in touch."
   />
 

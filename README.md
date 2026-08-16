@@ -32,15 +32,18 @@ HTML. Only the Keystatic admin route opts out via `prerender = false`. The 2.6MB
 React bundle is admin-only — the public homepage loads **2,490 bytes** of JS (Astro's
 prefetch module) and nothing else.
 
-**The design direction is "dark field."** The palette is drawn from immunofluorescence
-microscopy — the actual visual artifact of regenerative-medicine research. The emissive
-cyan (`--color-lumen`) descends from the practice brand teal `#3AA6B9`, keeping the
-identity connected to Prof. Slater's clinical work.
+**The design direction is "dark luxury, ink & brass."** A single cinematic dark register
+(`#0d0c0a` family) with warm off-white type, a verdigris accent descended from the
+practice brand teal, and brass for the specimen apparatus. The palette is drawn from
+immunofluorescence microscopy — the actual visual artifact of regenerative-medicine
+research. There is no light theme: the site committed to the dark register, and the
+two-tier token architecture (`--s-*` raw → `--color-*` roles) is what keeps that a
+five-line decision rather than a rewrite.
 
-**The signature is the light progression.** The page opens dark (hero, the nine hallmarks)
-and dissolves into a clinical light register (author, editions) — chaos to creation
-expressed as the page's own brightening. It costs **zero JavaScript**: cards resolve via
-CSS `animation-timeline: view()`, and because the settled state is the default, browsers
+**The signature is the hero.** CHAOS resolves from scatter, and the book stands in its
+own spotlight as a CSS-only 3D object — perspective, fore-edge, floor reflection,
+particle field — with no render and no canvas. It costs **near-zero JavaScript**: motion
+runs on CSS `animation-timeline`, and because the settled state is the default, browsers
 without support and users with `prefers-reduced-motion` get the finished layout rather
 than a broken one.
 
@@ -56,6 +59,9 @@ Editable at `/keystatic`. Collections live in `src/content/`, singletons in `src
 - `hallmarks` — the nine hallmarks of aging
 - `formats` — hardcover / paperback / Kindle, with ASIN, ISBN, price, Amazon URL
 - `press`, `endorsements`, `faq`
+- `publications` — the peer-reviewed record behind `/research/` (empty until seeded;
+  the page renders an intentional empty state pointing at Google Scholar)
+- `excerpt` — the `/excerpt/` reading page, one Markdoc document
 - `book`, `author` — singletons
 
 ## Image credits

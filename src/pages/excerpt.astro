@@ -1,0 +1,111 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import book from '../data/book.json';
+import author from '../data/author.json';
+import { bookNode, personNode, breadcrumbNode } from '../lib/schema';
+
+/**
+ * A reading page, not a marketing page. One measured column, the site's
+ * serif at book scale, and almost nothing moving — the excerpt has to make
+ * its own case. The text lives in src/content/excerpt/ and is edited whole
+ * in /keystatic.
+ */
+const excerpt = (await getCollection('excerpt'))[0];
+if (!excerpt) {
+  throw new Error(
+    'No excerpt document found in src/content/excerpt/ — the page needs one.',
+  );
+}
+const { Content } = await render(excerpt);
+
+const schema = [
+  personNode(),
+  await bookNode(),
+  breadcrumbNode([
+    { name: 'Home', path: '/' },
+    { name: 'Excerpt', path: '/excerpt/' },
+  ]),
+];
+---
+
+<Base
+  title={`Excerpt — ${book.title}`}
+  description={`Read an excerpt from ${book.title} by ${author.fullName}.`}
+  schema={schema}
+>
+  <article class="surface relative overflow-hidden">
+    <!-- The page header's ambient glow, kept — an excerpt still belongs to
+         the book's atmosphere. -->
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0">
+      <div
+        class="absolute left-1/2 top-[-24rem] h-[40rem] w-[40rem] -translate-x-1/2 rounded-full opacity-[0.1] blur-[120px]"
+        style="background: radial-gradient(circle, var(--color-accent) 0%, transparent 68%)"
+      >
+      </div>
+    </div>
+
+    <div class="shell relative">
+      <header class="mx-auto max-w-[44rem] pt-24 lg:pt-32">
+        <p class="label resolve text-metal" style="--resolve-y: 0.75rem">
+          {excerpt.data.kicker}
+        </p>
+        <h1 class="hang mt-6 text-h1 !text-[clamp(2.5rem,1.6rem+4vw,4.5rem)]">
+          {excerpt.data.title}
+        </h1>
+        <p class="mt-6 text-muted">
+          {book.title} &middot; {author.fullName}
+        </p>
+        <hr class="rule mt-12" />
+      </header>
+
+      <div class="excerpt-body mx-auto max-w-[44rem] pb-8 pt-12">
+        <Content />
+      </div>
+
+      <footer class="mx-auto max-w-[44rem] pb-24 lg:pb-32">
+        <hr class="rule" />
+        <p class="mt-8 text-muted">The rest is in the book.</p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href="/buy/" class="btn btn-primary">Order the book</a>
+          <a href="/the-book/" class="btn btn-ghost">About the book</a>
+        </div>
+      </footer>
+    </div>
+  </article>
+</Base>
+
+<style>
+  /* Book typography: the serif carries the text, the measure stays narrow,
+     and the first letter is set as a drop cap in brass — the one piece of
+     ornament the page allows itself. */
+  .excerpt-body :global(p) {
+    font-family: var(--font-display);
+    font-variation-settings:
+      'SOFT' 12,
+      'WONK' 0,
+      'opsz' 18;
+    font-size: clamp(1.1875rem, 1.1rem + 0.4vw, 1.375rem);
+    line-height: 1.65;
+    letter-spacing: 0;
+    color: var(--color-fg);
+  }
+
+  .excerpt-body :global(p + p) {
+    margin-top: 1.4em;
+  }
+
+  .excerpt-body :global(p:first-child)::first-letter {
+    float: left;
+    font-size: 4.4em;
+    line-height: 0.82;
+    padding-right: 0.12em;
+    padding-top: 0.06em;
+    font-weight: 500;
+    color: var(--color-metal);
+  }
+
+  .excerpt-body :global(em) {
+    font-style: italic;
+  }
+</style>
