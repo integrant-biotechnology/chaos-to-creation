@@ -43,13 +43,38 @@ const schema = [
   schema={schema}
 >
   <PageHeader
+    compact
     figure="Media"
     title="Media kit"
     lede="Everything needed to cover the book, in one place. For interviews, review copies or high-resolution assets, get in touch."
-  />
+  >
+    <!-- The kit's table of contents. A working page opens with its index,
+         not with empty air below the masthead. -->
+    <nav aria-label="Media kit contents" class="mt-8 border-t border-line pt-5">
+      <ul class="flex flex-wrap gap-x-10 gap-y-3">
+        {
+          [
+            ['Fact sheet', '#fact-sheet'],
+            ['Biography', '#biography'],
+            ['Photography', '#photography'],
+            ['Coverage', '#coverage'],
+          ].map(([label, href]) => (
+            <li>
+              <a
+                href={href}
+                class="label flex min-h-11 items-center text-muted transition-colors hover:text-fg"
+              >
+                {label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </PageHeader>
 
   <!-- Fact sheet -->
-  <section class="surface py-24 lg:py-32">
+  <section id="fact-sheet" class="surface scroll-mt-24 py-16 lg:py-20">
     <div class="shell">
       <div class="grid gap-16 lg:grid-cols-[22rem_1fr] lg:gap-24">
         <header>
@@ -98,7 +123,7 @@ const schema = [
   </section>
 
   <!-- Biography, copy-paste ready -->
-  <section class="surface border-t border-line py-24 lg:py-32">
+  <section id="biography" class="surface scroll-mt-24 border-t border-line py-20 lg:py-24">
     <div class="shell grid gap-16 lg:grid-cols-[22rem_1fr] lg:gap-24">
       <header>
         <p class="label text-muted">Biography</p>
@@ -127,7 +152,7 @@ const schema = [
   <!-- Photography: a press kit that makes journalists ask for the basics is
        not a press kit. The portrait is downloadable at its supplied
        resolution from a stable, meaningfully named URL. -->
-  <section class="surface border-t border-line py-24 lg:py-32">
+  <section id="photography" class="surface scroll-mt-24 border-t border-line py-20 lg:py-24">
     <div class="shell grid gap-16 lg:grid-cols-[22rem_1fr] lg:gap-24">
       <header>
         <p class="label text-muted">Photography</p>
@@ -205,7 +230,7 @@ const schema = [
   </style>
 
   <!-- Coverage -->
-  <section class="surface border-t border-line py-24 lg:py-32">
+  <section id="coverage" class="surface scroll-mt-24 border-t border-line py-20 lg:py-24">
     <div class="shell grid gap-16 lg:grid-cols-[22rem_1fr] lg:gap-24">
       <header>
         <p class="label text-muted">Coverage</p>
@@ -272,7 +297,7 @@ const schema = [
   </section>
 
   <!-- Enquiries -->
-  <section class="surface py-24 lg:py-28">
+  <section class="surface py-20 lg:py-24">
     <div class="shell flex flex-wrap items-center justify-between gap-8">
       <div>
         <h2 class="text-h3 text-fg">Need assets or an interview?</h2>
