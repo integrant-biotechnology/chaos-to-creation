@@ -96,12 +96,9 @@ const motes = [
               ))
             }
           </span>
-          <span class="hero-hinge">
-            <span class="hero-hinge-rule"></span>
-            <span class="hero-enter hero-hinge-word" style="--ed:780ms; --edur:350ms"
-              >to</span
-            >
-          </span>
+          <span class="hero-enter hero-hinge-word" style="--ed:780ms; --edur:350ms"
+            >to</span
+          >
         </span>
         <span
           class="hero-creation hero-enter"
@@ -387,40 +384,9 @@ const motes = [
     flex: none;
   }
 
-  .hero-hinge {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    gap: clamp(0.6rem, 1.4vw, 1.1rem);
-    min-width: 0;
-  }
-
-  .hero-hinge-rule {
-    height: 1px;
-    flex: 1;
-    min-width: 1.5rem;
-    transform-origin: left center;
-    background: color-mix(in oklab, var(--color-accent) 55%, transparent);
-  }
-
   /* "to" speaks with the same voice as CHAOS and CREATION — the title's own
-     serif, size and colour, inherited straight from the h1. Only the rule
-     between the words remains in the accent. */
-  .hero-hinge-word {
-    padding-right: 0.1em;
-  }
-
-  @media (width < 48rem) {
-    .hero-hinge {
-      flex: none;
-    }
-
-    .hero-hinge-rule {
-      flex: none;
-      width: 2.25rem;
-      min-width: 0;
-    }
-  }
+     serif, size and colour, inherited straight from the h1, set beside CHAOS
+     with a plain word space, as on the cover. */
 
   /* -- Proof row ------------------------------------------------------------
      Three claims, three registries: market (Amazon), media (the press),
@@ -676,13 +642,6 @@ const motes = [
       animation-delay: 880ms;
     }
 
-    .hero-hinge-rule {
-      animation:
-        enter-draw 550ms cubic-bezier(0.22, 1, 0.36, 1) both,
-        hinge-breath 12s ease-in-out 2s infinite alternate;
-      animation-delay: 480ms, 2s;
-    }
-
     .caption-rule {
       animation: enter-draw 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
       animation-delay: 1050ms;
@@ -765,15 +724,6 @@ const motes = [
     from {
       opacity: 0;
       transform: scale(1.015);
-    }
-  }
-
-  @keyframes hinge-breath {
-    from {
-      background: color-mix(in oklab, var(--color-accent) 55%, transparent);
-    }
-    to {
-      background: color-mix(in oklab, var(--color-accent) 68%, transparent);
     }
   }
 
