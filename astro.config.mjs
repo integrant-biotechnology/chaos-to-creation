@@ -52,6 +52,17 @@ export default defineConfig({
       fallbacks: ['system-ui', 'sans-serif'],
     },
     {
+      // The wordmark. The jacket sets the title in a heavy condensed grotesque;
+      // Anton is the closest match, so the on-site title reads as the cover does.
+      provider: fontProviders.google(),
+      name: 'Anton',
+      cssVariable: '--ff-cover',
+      weights: ['400'],
+      styles: ['normal'],
+      subsets: ['latin'],
+      fallbacks: ['Arial Narrow', 'Impact', 'sans-serif'],
+    },
+    {
       // Specimen labels, figure numbers, ISBN/format data. Reads as instrumentation.
       provider: fontProviders.google(),
       name: 'Geist Mono',
