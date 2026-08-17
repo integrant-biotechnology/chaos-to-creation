@@ -6,6 +6,16 @@ Replaces the old WordPress site. Built with Astro, hosted on Vercel.
 
 ## Run it locally
 
+First time on a new Mac? Install pnpm and Node 22 (one-off):
+
+```bash
+curl -fsSL https://get.pnpm.io/install.sh | sh -
+# reopen Terminal, then:
+pnpm env use --global 22
+```
+
+Then, in the repo folder:
+
 ```bash
 pnpm install
 pnpm dev
