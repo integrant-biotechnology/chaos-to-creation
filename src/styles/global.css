@@ -34,8 +34,6 @@
   --font-display: var(--ff-display);
   --font-body: var(--ff-body);
   --font-mono: var(--ff-mono);
-  /* The cover face — the title wordmark only (hero, masthead, footer). */
-  --font-cover: var(--ff-cover);
 
   /* Fluid type scale */
   --text-label: 0.6875rem;
