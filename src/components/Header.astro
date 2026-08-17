@@ -94,7 +94,10 @@ const isCurrent = (href: string) => path === href;
   @supports (animation-timeline: scroll()) {
     .site-header {
       animation: header-settle linear both;
-      animation-timeline: scroll();
+      /* Bound to the document scroll explicitly — scroll() picks the nearest
+         scroll container, which can silently leave the header transparent
+         over content when an ancestor becomes scrollable. */
+      animation-timeline: scroll(root);
       animation-range: 0 5rem;
     }
 

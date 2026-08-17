@@ -8,9 +8,14 @@ interface Props {
   figure: string;
   title: string;
   lede?: string;
+  /**
+   * Utility pages step the masthead down a size and pull the first section
+   * into the opening viewport — the buy-page pattern, shared here.
+   */
+  compact?: boolean;
 }
 
-const { figure, title, lede } = Astro.props;
+const { figure, title, lede, compact = false } = Astro.props;
 ---
 
 <section class="surface relative overflow-hidden">
@@ -22,13 +27,33 @@ const { figure, title, lede } = Astro.props;
     </div>
   </div>
 
-  <div class="shell relative pb-24 pt-24 lg:pb-28 lg:pt-32">
+  <div
+    class:list={[
+      'shell relative',
+      compact ? 'pb-10 pt-10 lg:pb-12 lg:pt-12' : 'pb-24 pt-24 lg:pb-28 lg:pt-32',
+    ]}
+  >
     <p class="eyebrow">{figure}</p>
-    <h1 class="hang mt-5 max-w-[20ch] text-h1">{title}</h1>
+    <h1
+      class:list={[
+        'hang max-w-[20ch]',
+        compact ? 'mt-4 text-h2' : 'mt-5 text-h1',
+      ]}
+    >
+      {title}
+    </h1>
     {
       lede && (
-        <p class="mt-8 max-w-[52ch] text-lead text-muted">{lede}</p>
+        <p
+          class:list={[
+            'max-w-[52ch] text-lead text-muted',
+            compact ? 'mt-4' : 'mt-8',
+          ]}
+        >
+          {lede}
+        </p>
       )
     }
+    <slot />
   </div>
 </section>
