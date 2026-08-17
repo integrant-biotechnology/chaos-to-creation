@@ -346,16 +346,11 @@ const motes = [
     /* Width clamp, then a height cap: two lines at 14svh each stay ≈24% of
        the viewport, which is what guarantees the act block a place above
        the fold on short screens. */
-    /* Set in the cover face so the on-site title matches the jacket. Anton
-       ships a single 400 weight that renders black; its condensed metal is
-       already tight, so tracking opens slightly rather than closing. */
-    font-family: var(--font-cover);
-    font-variation-settings: normal;
     font-size: min(var(--text-mega), 14svh);
     line-height: var(--text-mega--line-height);
-    letter-spacing: 0.015em;
+    letter-spacing: -0.03em;
     text-transform: uppercase;
-    font-weight: 400;
+    font-weight: 500;
   }
 
   .hero-creation {
@@ -413,7 +408,7 @@ const motes = [
     font-family: var(--font-mono);
     font-size: clamp(0.8125rem, 0.7rem + 0.4vw, 1.0625rem);
     letter-spacing: 0.3em;
-    text-transform: uppercase;
+    text-transform: lowercase;
     font-weight: 400;
     color: var(--color-accent);
     padding-right: 0.3em;

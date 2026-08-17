@@ -191,15 +191,16 @@ const isCurrent = (href: string) => path === href;
   }
 
   /* -- Masthead voice -------------------------------------------------------
-     The wordmark is set in the cover face, so the masthead reads as the
-     jacket does — one title treatment everywhere. Navigation stays
-     sentence-case sans at reading size and full contrast. */
+     Rejected twice as "small and not great" while set in tracked mono caps —
+     the site's annotation voice, which reads as metadata at any size. Now the
+     publisher pattern: serif masthead, sentence-case sans navigation at
+     reading size and full contrast. */
   .masthead {
-    font-family: var(--font-cover);
-    font-size: 1.1875rem;
-    font-weight: 400;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 12, 'WONK' 0, 'opsz' 40;
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
   }
 
   .nav-link {
