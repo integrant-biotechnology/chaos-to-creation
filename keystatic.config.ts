@@ -20,7 +20,12 @@ const useGitHub = Boolean(process.env.KEYSTATIC_GITHUB_CLIENT_ID);
 
 export default config({
   storage: useGitHub
-    ? { kind: 'github', repo: { owner: 'skalaliya', name: 'chaos-to-creation' } }
+    ? {
+        kind: 'github',
+        // The repo lives under the org — the Keystatic GitHub App must be
+        // installed on integrant-biotechnology, not a personal account.
+        repo: { owner: 'integrant-biotechnology', name: 'chaos-to-creation' },
+      }
     : { kind: 'local' },
 
   ui: {
