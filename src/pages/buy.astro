@@ -59,19 +59,19 @@ const reassurance = [
   <!-- One continuous flow: intro, cards, handoff reassurance. A utility page
        gets one headline, not a manifesto and then a second headline. -->
   <section class="surface">
-    <div class="shell pb-20 pt-16 lg:pb-24 lg:pt-20">
+    <div class="shell pb-16 pt-10 lg:pb-20 lg:pt-12">
       <div
-        class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,19rem)] lg:items-center lg:gap-24"
+        class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,15rem)] lg:items-center lg:gap-16"
       >
         <div>
           <p class="eyebrow">Editions</p>
-          <h1 class="hang mt-5 text-h2">Order the book</h1>
-          <p class="mt-6 max-w-[46ch] text-lead text-muted">
+          <h1 class="hang mt-4 text-h2">Order the book</h1>
+          <p class="mt-4 max-w-[46ch] text-lead text-muted">
             {book.title} has been an Amazon Best Seller. Three editions, all
             fulfilled by Amazon Australia.
           </p>
 
-          <div class="mt-8">
+          <div class="mt-6">
             <BestsellerMark variant="seal" withAuthor />
             {
               press && (
@@ -93,12 +93,12 @@ const reassurance = [
           </div>
         </div>
 
-        <figure class="mx-auto w-full max-w-[17rem] lg:mx-0 lg:max-w-none">
+        <figure class="mx-auto w-full max-w-[15rem] lg:mx-0 lg:max-w-none">
           <Image
             src={launch}
             alt={`The hardcover edition of ${book.title} standing on a table, beneath the words "Now available on Amazon"`}
             widths={[272, 400, 560]}
-            sizes="(max-width: 1023px) 17rem, 19rem"
+            sizes="15rem"
             loading="eager"
             fetchpriority="high"
             class="launch-plate w-full"
@@ -111,14 +111,14 @@ const reassurance = [
         </figure>
       </div>
 
-      <div class="mt-16 lg:mt-20">
+      <div class="mt-10 lg:mt-12">
         <EditionCards />
       </div>
 
       <!-- What happens after the click, named at the moment of maximum
            hesitation — a quiet row inside the same section, not another band. -->
       <ul
-        class="mt-14 flex flex-col gap-x-12 gap-y-3 border-t border-line pt-8 sm:flex-row sm:flex-wrap sm:items-center"
+        class="mt-10 flex flex-col gap-x-12 gap-y-3 border-t border-line pt-8 sm:flex-row sm:flex-wrap sm:items-center"
       >
         {
           reassurance.map((item) => (
