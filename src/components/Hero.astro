@@ -393,7 +393,6 @@ const motes = [
     align-items: center;
     gap: clamp(0.6rem, 1.4vw, 1.1rem);
     min-width: 0;
-    transform: translateY(0.12em);
   }
 
   .hero-hinge-rule {
@@ -404,14 +403,11 @@ const motes = [
     background: color-mix(in oklab, var(--color-accent) 55%, transparent);
   }
 
+  /* "to" speaks with the same voice as CHAOS and CREATION — the title's own
+     serif, size and colour, inherited straight from the h1. Only the rule
+     between the words remains in the accent. */
   .hero-hinge-word {
-    font-family: var(--font-mono);
-    font-size: clamp(0.8125rem, 0.7rem + 0.4vw, 1.0625rem);
-    letter-spacing: 0.3em;
-    text-transform: lowercase;
-    font-weight: 400;
-    color: var(--color-accent);
-    padding-right: 0.3em;
+    padding-right: 0.1em;
   }
 
   @media (width < 48rem) {
