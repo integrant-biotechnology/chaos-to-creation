@@ -51,11 +51,26 @@ Two things to know before changing the design:
 
 ## Deploying
 
-Push to `main` → Vercel builds and deploys production automatically. Any other
-branch gets a preview URL. Nothing manual.
+GitHub Actions deploys the site — not Vercel's git integration. (The Vercel
+team is on the Hobby plan, which can't auto-deploy from a private organization
+repo, and blocks deployments attributed to a commit author other than the
+team's own account. The workflows build here and upload the finished output,
+which is allowed.)
 
-Staging builds are noindexed until `PUBLIC_SITE_LIVE=true` is set on Vercel —
-that flips at DNS cutover.
+- **Push to `main`** → `.github/workflows/deploy.yml` builds with
+  `PUBLIC_SITE_LIVE=true` and promotes to production. Watch it in the Actions
+  tab or with `gh run watch`.
+- **Open a PR against `main`** → `.github/workflows/preview.yml` deploys a
+  noindexed preview and comments the URL on the PR.
+- **Manual escape hatch** — run "Deploy production" from the Actions tab
+  (workflow_dispatch, main only).
+- **Rollback** — `git revert` the bad commit and push, or promote a previous
+  deployment from the Vercel dashboard.
+
+The workflows need three repo secrets: `VERCEL_TOKEN` (team-scoped token for
+integrant-au), `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`. If the token is ever
+rotated, update the secret:
+`gh secret set VERCEL_TOKEN --repo integrant-biotechnology/chaos-to-creation`.
 
 ## TODO before launch
 
