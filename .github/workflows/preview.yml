@@ -1,0 +1,72 @@
+# Preview deploys for pull requests. Same pipeline as deploy.yml minus
+# --prod, and PUBLIC_SITE_LIVE stays unset so previews are noindexed.
+name: Deploy preview
+
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: vercel-preview-${{ github.ref }}
+  cancel-in-progress: true # cancelling a superseded preview is harmless
+
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  ASTRO_TELEMETRY_DISABLED: '1'
+
+jobs:
+  preview:
+    # Fork PRs don't receive secrets; skip cleanly instead of failing red
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Link build output to the Vercel project
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          mkdir -p .vercel
+          printf '{"projectId":"%s","orgId":"%s","projectName":"chaos-to-creation"}' \
+            "$VERCEL_PROJECT_ID" "$VERCEL_ORG_ID" > .vercel/project.json
+
+      - name: Deploy preview
+        id: deploy
+        env:
+          CI_COMMIT: ${{ github.event.pull_request.head.sha }}
+          CI_REF: ${{ github.head_ref }}
+          CI_RUN: ${{ github.run_id }}
+        run: |
+          rm -rf .git
+          url=$(pnpm exec vercel deploy --prebuilt --yes --no-color \
+            -m "ciCommit=$CI_COMMIT" -m "ciRef=$CI_REF" -m "ciRun=$CI_RUN" \
+            --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Comment preview URL on PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          URL: ${{ steps.deploy.outputs.url }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --repo "$GITHUB_REPOSITORY" --edit-last --create-if-none \
+            --body "Vercel preview: $URL (commit ${SHA:0:7})"
