@@ -99,6 +99,18 @@ const schema = [
             <dd class="mt-2 text-fg">{author.fullName}</dd>
           </div>
           <div class="border-t border-line pt-4">
+            <dt class="label text-muted">Author website</dt>
+            <dd class="mt-2 text-fg">
+              <a
+                href={author.personalUrl}
+                target="_blank" rel="noopener"
+                class="underline decoration-line underline-offset-4 transition-colors hover:text-muted"
+              >
+                profgordonslater.com.au
+              </a>
+            </dd>
+          </div>
+          <div class="border-t border-line pt-4">
             <dt class="label text-muted">Published</dt>
             <dd class="mt-2 text-fg">{book.published}</dd>
           </div>

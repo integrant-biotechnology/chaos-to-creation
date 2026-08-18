@@ -120,8 +120,8 @@ export default config({
             itemLabel: (props) => props.fields.label.value,
           },
         ),
+        personalUrl: fields.url({ label: 'Personal website' }),
         practiceUrl: fields.url({ label: 'Practice website' }),
-        profileUrl: fields.url({ label: 'Practice profile page' }),
         social: fields.array(
           fields.object({
             name: fields.text({ label: 'Network' }),

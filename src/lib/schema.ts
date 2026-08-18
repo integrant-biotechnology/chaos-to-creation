@@ -30,7 +30,11 @@ export function personNode() {
     url: `${SITE}/author/`,
     image: `${SITE}/portrait-gordon-slater-hero.jpg`,
     ...(bs.claimed ? { award: bs.authorLabel } : {}),
-    sameAs: [...author.social.map((s) => s.url), author.practiceUrl],
+    sameAs: [
+      ...author.social.map((s) => s.url),
+      author.personalUrl,
+      author.practiceUrl,
+    ],
     affiliation: {
       '@type': 'CollegeOrUniversity',
       name: 'University of Technology Sydney',

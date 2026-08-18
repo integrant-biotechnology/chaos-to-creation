@@ -131,6 +131,16 @@ const schema = [
           }
           <li class="border-t border-line">
             <a
+              href={author.personalUrl}
+              target="_blank" rel="noopener me"
+              class="flex min-h-11 items-center justify-between gap-3 text-sm text-fg transition-colors hover:text-muted"
+            >
+              <span>Personal website</span>
+              <span aria-hidden="true" class="text-muted">&rarr;</span>
+            </a>
+          </li>
+          <li class="border-t border-line">
+            <a
               href={author.practiceUrl}
               target="_blank" rel="noopener"
               class="flex min-h-11 items-center justify-between gap-3 text-sm text-fg transition-colors hover:text-muted"
