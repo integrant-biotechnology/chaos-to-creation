@@ -6,6 +6,7 @@ import PageHeader from '../components/PageHeader.astro';
 import BestsellerMark from '../components/BestsellerMark.astro';
 import portrait from '../assets/portrait.jpg';
 import launch from '../assets/launch.jpg';
+import cover from '../assets/cover.png';
 import book from '../data/book.json';
 import author from '../data/author.json';
 import { personNode, bookNode, breadcrumbNode } from '../lib/schema';
@@ -176,6 +177,28 @@ const schema = [
 
       <div>
         <div class="grid gap-10 sm:grid-cols-2">
+          <figure>
+            <Image
+              src={cover}
+              alt={`The cover of ${book.title}: a human eye against pale regenerative imagery, beneath the subtitle "${book.subtitle}"`}
+              widths={[288, 448, 576]}
+              sizes="(max-width: 639px) 90vw, 18rem"
+              loading="lazy"
+              decoding="async"
+              class="press-asset w-full max-w-[18rem]"
+            />
+            <figcaption class="label mt-4 text-muted">
+              Cover art &middot; PNG &middot; 1600 &times; 2158
+            </figcaption>
+            <a
+              href="/cover-chaos-to-creation.png"
+              download="chaos-to-creation-cover.png"
+              class="btn btn-ghost mt-4"
+            >
+              Download cover art
+            </a>
+          </figure>
+
           <figure>
             <Image
               src={portrait}
