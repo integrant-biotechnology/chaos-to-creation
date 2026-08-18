@@ -78,8 +78,9 @@ rotated, update the secret:
       `category` / `rank` / `verifiedOn` in the Book details (via `/keystatic`).
 - [ ] **Enquiry email** — currently the practice admin inbox
       (`admin@drgordonslater.com.au`). Confirm or change (one field in Book details).
-- [ ] **CMS in production** — visit `/keystatic` on the deployed URL, follow the
-      GitHub App setup, add the three env vars it returns to Vercel.
+- [x] **CMS in production** — done: GitHub App `chaos-to-creation-keystatic`
+      is installed on the repo and the three `KEYSTATIC_*` env vars are set on
+      Vercel. Edit at `/keystatic` (sign in with GitHub).
 - [ ] **Star ratings** — `book.rating` is empty and hidden; fill with real
       Amazon numbers when we have them.
 - [ ] **Post-nominals** — byline shows "MBBS, FRACS" from the cover art. Confirm
