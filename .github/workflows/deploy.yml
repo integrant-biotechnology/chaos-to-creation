@@ -49,6 +49,12 @@ jobs:
           PUBLIC_SITE_LIVE: 'true' # baked into HTML/robots.txt at build time
         run: pnpm build
 
+      # `--prebuilt` deploys ignore vercel.json, so its redirect and security
+      # headers must be merged into the build output here (the job `vercel
+      # build` normally does, unavailable to the team-scoped token).
+      - name: Merge vercel.json routes into build output
+        run: node scripts/merge-vercel-config.mjs
+
       - name: Link build output to the Vercel project
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -84,3 +90,8 @@ jobs:
           curl -sSfL -o /dev/null https://chaostocreation.com.au/media/
           # PUBLIC_SITE_LIVE must have been baked in: robots.txt may not disallow the site root
           ! curl -sSfL https://chaostocreation.com.au/robots.txt | grep -q '^Disallow: /$'
+          # vercel.json rules must have survived the prebuilt deploy
+          code=$(curl -s -o /dev/null -w '%{http_code}' https://www.chaostocreation.com.au/press/)
+          [ "$code" = "308" ] || { echo "/press/ returned $code, expected 308"; exit 1; }
+          curl -sSI https://www.chaostocreation.com.au/ | grep -qi '^content-security-policy:' \
+            || { echo "security headers missing from production"; exit 1; }

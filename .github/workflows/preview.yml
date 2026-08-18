@@ -39,6 +39,9 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Merge vercel.json routes into build output
+        run: node scripts/merge-vercel-config.mjs
+
       - name: Link build output to the Vercel project
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
