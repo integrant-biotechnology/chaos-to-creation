@@ -73,14 +73,14 @@ const routes = [
     lede="Choose the line that fits and your message arrives already sorted. Everything reaches the same desk."
   />
 
-  <section class="surface py-24 lg:py-32">
+  <section class="surface pb-16 pt-24 lg:pb-20 lg:pt-32">
     <div class="shell grid gap-16 lg:grid-cols-[1fr_19rem] lg:gap-24">
       <ul class="grid gap-5 sm:grid-cols-2">
         {
           routes.map((r) => (
             <li class="panel panel-lift flex flex-col p-7">
               <div class="flex items-baseline gap-4">
-                <span class="label card-kicker">{r.kicker}</span>
+                <span class="eyebrow card-kicker">{r.kicker}</span>
                 <span aria-hidden="true" class="h-px flex-1 bg-line" />
               </div>
               <h2 class="mt-5 text-h3 !text-[1.25rem] text-fg">{r.label}</h2>
@@ -111,7 +111,7 @@ const routes = [
       </ul>
 
       <aside class="lg:sticky lg:top-12 lg:self-start">
-        <p class="label text-muted">Direct</p>
+        <p class="eyebrow text-muted">Direct</p>
         <p class="mt-4 border-t border-line pt-4">
           <a
             href={`mailto:${to}`}
@@ -121,7 +121,7 @@ const routes = [
           </a>
         </p>
 
-        <p class="label mt-10 text-muted">Also useful</p>
+        <p class="eyebrow mt-10 text-muted">Also useful</p>
         <ul class="mt-4">
           <li class="border-t border-line">
             <a

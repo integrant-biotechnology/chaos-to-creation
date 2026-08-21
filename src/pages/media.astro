@@ -63,7 +63,7 @@ const schema = [
             <li>
               <a
                 href={href}
-                class="label flex min-h-11 items-center text-muted transition-colors hover:text-fg"
+                class="eyebrow flex min-h-11 items-center text-muted transition-colors hover:text-fg"
               >
                 {label}
               </a>
@@ -79,7 +79,7 @@ const schema = [
     <div class="shell">
       <div class="grid gap-16 lg:grid-cols-[22rem_1fr] lg:gap-24">
         <header>
-          <p class="label text-muted">Fact sheet</p>
+          <p class="eyebrow text-muted">Fact sheet</p>
           <h2 class="mt-5 text-h2 text-fg">Publication details.</h2>
           <div class="mt-8">
             <BestsellerMark variant="seal" withAuthor />
@@ -88,19 +88,19 @@ const schema = [
 
         <dl class="grid gap-x-12 gap-y-6 sm:grid-cols-2">
           <div class="border-t border-line pt-4">
-            <dt class="label text-muted">Title</dt>
+            <dt class="eyebrow text-muted">Title</dt>
             <dd class="mt-2 text-fg">{book.title}</dd>
           </div>
           <div class="border-t border-line pt-4">
-            <dt class="label text-muted">Subtitle</dt>
+            <dt class="eyebrow text-muted">Subtitle</dt>
             <dd class="mt-2 text-fg">{book.subtitle}</dd>
           </div>
           <div class="border-t border-line pt-4">
-            <dt class="label text-muted">Author</dt>
+            <dt class="eyebrow text-muted">Author</dt>
             <dd class="mt-2 text-fg">{author.fullName}</dd>
           </div>
           <div class="border-t border-line pt-4">
-            <dt class="label text-muted">Author website</dt>
+            <dt class="eyebrow text-muted">Author website</dt>
             <dd class="mt-2 text-fg">
               <a
                 href={author.personalUrl}
@@ -112,13 +112,13 @@ const schema = [
             </dd>
           </div>
           <div class="border-t border-line pt-4">
-            <dt class="label text-muted">Published</dt>
+            <dt class="eyebrow text-muted">Published</dt>
             <dd class="mt-2 text-fg">{book.published}</dd>
           </div>
           {
             formats.map((f) => (
               <div class="border-t border-line pt-4">
-                <dt class="label text-muted">{f.data.name}</dt>
+                <dt class="eyebrow text-muted">{f.data.name}</dt>
                 <dd class="mt-2 text-fg tabular-nums">
                   {money(f.data.price, f.data.currency)}
                   {f.data.isbn && (
@@ -139,7 +139,7 @@ const schema = [
   <section id="biography" class="surface scroll-mt-24 border-t border-line py-20 lg:py-24">
     <div class="shell grid gap-16 lg:grid-cols-[22rem_1fr] lg:gap-24">
       <header>
-        <p class="label text-muted">Biography</p>
+        <p class="eyebrow text-muted">Biography</p>
         <h2 class="mt-5 text-h2 text-fg">Author biography.</h2>
         <p class="mt-6 text-muted">
           Approved for publication as written.
@@ -153,7 +153,7 @@ const schema = [
           </blockquote>
         </div>
         <div>
-          <p class="label text-muted">Book description</p>
+          <p class="eyebrow text-muted">Book description</p>
           <blockquote class="mt-4 border-l-2 border-line pl-6">
             <p class="text-muted">{book.description}</p>
           </blockquote>
@@ -168,7 +168,7 @@ const schema = [
   <section id="photography" class="surface scroll-mt-24 border-t border-line py-20 lg:py-24">
     <div class="shell grid gap-16 lg:grid-cols-[22rem_1fr] lg:gap-24">
       <header>
-        <p class="label text-muted">Photography</p>
+        <p class="eyebrow text-muted">Photography</p>
         <h2 class="mt-5 text-h2 text-fg">Press photography.</h2>
         <p class="mt-6 text-muted">
           Downloadable images for print and online coverage.
@@ -187,7 +187,7 @@ const schema = [
               decoding="async"
               class="press-asset w-full max-w-[18rem]"
             />
-            <figcaption class="label mt-4 text-muted">
+            <figcaption class="eyebrow mt-4 text-muted">
               Cover art &middot; PNG &middot; 1600 &times; 2158
             </figcaption>
             <a
@@ -210,7 +210,7 @@ const schema = [
               class="press-asset w-full max-w-[18rem]"
               style="view-transition-name: author-portrait"
             />
-            <figcaption class="label mt-4 text-muted">
+            <figcaption class="eyebrow mt-4 text-muted">
               The author &middot; JPG &middot; 750 &times; 1000
             </figcaption>
             <a
@@ -232,7 +232,7 @@ const schema = [
               decoding="async"
               class="press-asset w-full max-w-[18rem]"
             />
-            <figcaption class="label mt-4 text-muted">
+            <figcaption class="eyebrow mt-4 text-muted">
               Launch shot &middot; JPG &middot; 1600 &times; 2000
             </figcaption>
             <a
@@ -268,7 +268,7 @@ const schema = [
   <section id="coverage" class="surface scroll-mt-24 border-t border-line py-20 lg:py-24">
     <div class="shell grid gap-16 lg:grid-cols-[22rem_1fr] lg:gap-24">
       <header>
-        <p class="label text-muted">Coverage</p>
+        <p class="eyebrow text-muted">Coverage</p>
         <h2 class="mt-5 text-h2 text-fg">In the press.</h2>
       </header>
 
@@ -282,7 +282,7 @@ const schema = [
                     <h3 class="text-h3 !text-[1.125rem] font-semibold text-fg">
                       {p.data.outlet}
                     </h3>
-                    <p class="label text-muted">
+                    <p class="eyebrow text-muted">
                       {dateFmt.format(p.data.date)}
                     </p>
                   </div>
@@ -295,7 +295,7 @@ const schema = [
                     <a
                       href={p.data.url}
                       target="_blank" rel="noopener"
-                      class="label mt-1 inline-flex min-h-11 items-center !text-[0.8125rem] text-fg underline decoration-line underline-offset-4 transition-colors hover:text-muted"
+                      class="eyebrow mt-1 inline-flex min-h-11 items-center !text-[0.8125rem] underline decoration-line underline-offset-4 transition-colors hover:text-fg"
                     >
                       Read the piece
                     </a>
@@ -311,13 +311,13 @@ const schema = [
         {
           endorsements.length > 0 && (
             <div class="mt-16">
-              <p class="label text-muted">Endorsements</p>
+              <p class="eyebrow text-muted">Endorsements</p>
               <ul class="mt-6 space-y-8">
                 {endorsements.map((e) => (
                   <li>
                     <blockquote class="border-l-2 border-line pl-6">
                       <p class="text-lead text-muted">{e.data.quote}</p>
-                      <footer class="label mt-3 text-muted">
+                      <footer class="eyebrow mt-3 text-muted">
                         {e.data.name} &mdash; {e.data.title}
                       </footer>
                     </blockquote>
@@ -332,7 +332,7 @@ const schema = [
   </section>
 
   <!-- Enquiries -->
-  <section class="surface py-20 lg:py-24">
+  <section class="surface border-t border-line pb-16 pt-16 lg:pb-20 lg:pt-20">
     <div class="shell flex flex-wrap items-center justify-between gap-8">
       <div>
         <h2 class="text-h3 text-fg">Need assets or an interview?</h2>
