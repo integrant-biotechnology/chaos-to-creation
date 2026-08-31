@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
+import cover from '../assets/cover.png';
 import book from '../data/book.json';
 import { money } from '../lib/format';
 
@@ -30,13 +32,31 @@ const scatter = [
         ]}
         style={`--resolve-x:${scatter[i].x}; --resolve-y:${scatter[i].y}; --resolve-rotate:${scatter[i].r}`}
       >
-        <div class="flex items-baseline gap-4">
-          <span class="label card-kicker">{f.data.name}</span>
-          <span aria-hidden="true" class="h-px flex-1 bg-line" />
-          {f.data.featured && <span class="label text-accent">Recommended</span>}
+        <div class="flex items-center gap-4">
+          <Image
+            src={cover}
+            alt=""
+            aria-hidden="true"
+            widths={[64, 128]}
+            sizes="2.75rem"
+            loading="lazy"
+            class="w-11 shrink-0 shadow-[var(--elevation)]"
+          />
+          <div class="flex flex-1 items-baseline gap-4">
+            <span class="eyebrow card-kicker">{f.data.name}</span>
+            <span aria-hidden="true" class="h-px flex-1 bg-line" />
+            {f.data.featured && <span class="eyebrow !text-accent">Recommended</span>}
+          </div>
         </div>
 
-        <p class="mt-6 font-display text-[2rem] leading-none text-fg tabular-nums lg:text-[2.375rem]">
+        <p
+          class:list={[
+            'mt-6 font-display leading-none tabular-nums',
+            f.data.featured
+              ? 'text-[2.25rem] text-fg lg:text-[2.75rem]'
+              : 'text-[1.75rem] text-muted lg:text-[2rem]',
+          ]}
+        >
           {money(f.data.price, f.data.currency)}
         </p>
 
@@ -47,7 +67,7 @@ const scatter = [
         {/* Two meta rows on every card — ISBN for print, ASIN for Kindle —
             so the clusters and the CTAs sit on identical baselines. */}
         <div class="mt-6 space-y-1.5">
-          {f.data.delivery && <p class="label text-muted">{f.data.delivery}</p>}
+          {f.data.delivery && <p class="eyebrow">{f.data.delivery}</p>}
           <p class="label text-faint">
             {f.data.isbn ? `ISBN ${f.data.isbn}` : `ASIN ${f.data.asin}`}
           </p>

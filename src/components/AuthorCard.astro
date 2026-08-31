@@ -28,9 +28,9 @@ import BestsellerMark from './BestsellerMark.astro';
     </figure>
 
     <div>
-      <p class="label text-muted">The author</p>
+      <p class="eyebrow text-muted">The author</p>
       <h2 class="mt-5 text-h2 text-fg">{author.fullName}</h2>
-      <p class="label mt-4 text-muted">
+      <p class="eyebrow mt-4 text-muted">
         {author.postNominals} &middot; {author.role}
       </p>
 
@@ -49,7 +49,7 @@ import BestsellerMark from './BestsellerMark.astro';
         {
           author.credentials.map((c) => (
             <div class="border-t border-line pt-4">
-              <dt class="label text-fg">{c.label}</dt>
+              <dt class="eyebrow">{c.label}</dt>
               <dd class="mt-1.5 text-sm text-muted">{c.detail}</dd>
             </div>
           ))

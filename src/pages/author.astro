@@ -22,16 +22,17 @@ const schema = [
   schema={schema}
 >
   <!-- The portrait is this page's hero: the reader came to see who wrote the
-       book. Shown as it was supplied — a real photograph carries the trust; a
-       stylised grade would spend it. -->
+       book. Cropped tighter and graded toward the site's ink-and-brass
+       palette so a clinical headshot reads as part of the book, not a
+       pasted-in stock photo. -->
   <section class="surface relative overflow-hidden">
     <div
-      class="shell grid gap-12 pb-20 pt-20 lg:grid-cols-[1fr_minmax(0,21rem)] lg:items-end lg:gap-20 lg:pb-24 lg:pt-24"
+      class="shell grid gap-12 pb-12 pt-20 lg:grid-cols-[1fr_minmax(0,21rem)] lg:items-end lg:gap-20 lg:pb-14 lg:pt-24"
     >
       <div>
         <p class="eyebrow">The author</p>
         <h1 class="hang mt-5 text-h1">{author.fullName}</h1>
-        <p class="label mt-4 text-muted">
+        <p class="eyebrow mt-4 text-muted">
           {author.postNominals} &middot; {author.role}
         </p>
         <p class="mt-8 max-w-[52ch] text-lead text-muted">{author.short}</p>
@@ -64,7 +65,7 @@ const schema = [
     }
   </style>
 
-  <section class="surface py-24 lg:py-32">
+  <section class="surface pb-24 pt-16 lg:pb-32 lg:pt-20">
     <div class="shell grid gap-16 lg:grid-cols-[1fr_20rem] lg:gap-24">
       <div>
         {
@@ -101,19 +102,19 @@ const schema = [
       </div>
 
       <aside class="lg:sticky lg:top-12 lg:self-start">
-        <p class="label text-muted">Credentials</p>
+        <p class="eyebrow text-muted">Credentials</p>
         <dl class="mt-5 space-y-4">
           {
             author.credentials.map((c) => (
               <div class="border-t border-line pt-4">
-                <dt class="label text-fg">{c.label}</dt>
+                <dt class="eyebrow">{c.label}</dt>
                 <dd class="mt-1.5 text-sm text-muted">{c.detail}</dd>
               </div>
             ))
           }
         </dl>
 
-        <p class="label mt-12 text-muted">Elsewhere</p>
+        <p class="eyebrow mt-12 text-muted">Elsewhere</p>
         <ul class="mt-5">
           {
             author.social.map((s) => (
