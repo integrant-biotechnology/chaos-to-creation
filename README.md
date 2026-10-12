@@ -1,107 +1,91 @@
 # Chaos to Creation
 
-Website for the book *Chaos to Creation: Longevity & Regeneration Frontiers* by
-Prof. Gordon Slater — [chaostocreation.com.au](https://chaostocreation.com.au).
-Replaces the old WordPress site. Built with Astro, hosted on Vercel.
+Website for the book *Chaos to Creation: Longevity & Regeneration Frontiers* by Prof. Gordon Slater.
 
-## Run it locally
+**Live site:** [chaostocreation.com.au](https://chaostocreation.com.au)
 
-First time on a new Mac? Install pnpm and Node 22 (one-off):
+## Overview
 
-```bash
-curl -fsSL https://get.pnpm.io/install.sh | sh -
-# reopen Terminal, then:
-pnpm env use --global 22
-```
+A static, dark-only book site: the book and its editions, an excerpt, the author, research background, a media kit and purchase links. Purchases are completed on Amazon AU; the site holds no cart, payment or customer data.
 
-Then, in the repo folder:
+## Stack
+
+| | |
+|---|---|
+| Framework | [Astro 7](https://astro.build) — static output with the Vercel adapter |
+| Styling | Tailwind CSS 4 — design tokens in `src/styles/` |
+| Content | [Keystatic](https://keystatic.com) — git-based CMS, admin at `/keystatic` |
+| Hosting | Vercel, deployed by GitHub Actions |
+
+Every public page ships as static HTML. Only the `/keystatic` admin is server-rendered.
+
+## Getting started
+
+Requires Node.js 22.12 or later and [pnpm](https://pnpm.io) 10.
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-Site runs at http://localhost:4321. No env vars or other setup needed.
+The site runs at `http://localhost:4321`. No environment variables are needed for local development.
 
-## Editing content (no code needed)
-
-All the words on the site — book details, editions, FAQs, press quotes,
-endorsements, author bio — are edited through the CMS at **`/keystatic`**
-(http://localhost:4321/keystatic when running locally).
-
-Changes save as plain files in `src/content/` and `src/data/`, so everything
-stays in git. You can also edit those files directly if you prefer.
-
-## Stack
-
-| | |
+| Command | Purpose |
 |---|---|
-| Framework | Astro 7 (static output, Vercel adapter) |
-| Styling | Tailwind CSS 4 — design tokens in `src/styles/` |
-| CMS | Keystatic (git-based, admin at `/keystatic`) |
-| Buying | Amazon AU links only — no cart or payments on our side |
+| `pnpm dev` | Start the development server |
+| `pnpm build` | Production build |
+| `pnpm preview` | Preview the production build locally |
 
-Pages are in `src/pages/`, components in `src/components/`. Every public page
-ships as static HTML; only the `/keystatic` admin is server-rendered.
+## Editing content
 
-Two things to know before changing the design:
-- The site is **dark-only** by design — don't add a light theme.
-- Icons and the OG share card are committed files. If you change them,
-  regenerate locally with `node scripts/icons.mjs` / `node scripts/og.mjs`.
+Book details, editions, FAQs, press quotes, endorsements and the author biography are edited through the CMS at `/keystatic` (`http://localhost:4321/keystatic` when running locally). In production, sign in with GitHub.
 
-## Deploying
+Changes are saved as plain files in `src/content/` and `src/data/`, so all content is versioned in git and can also be edited directly.
 
-GitHub Actions deploys the site — not Vercel's git integration. (The Vercel
-team is on the Hobby plan, which can't auto-deploy from a private organization
-repo, and blocks deployments attributed to a commit author other than the
-team's own account. The workflows build here and upload the finished output,
-which is allowed.)
+## Project structure
 
-- **Push to `main`** → `.github/workflows/deploy.yml` builds with
-  `PUBLIC_SITE_LIVE=true` and promotes to production. Watch it in the Actions
-  tab or with `gh run watch`.
-- **Open a PR against `main`** → `.github/workflows/preview.yml` deploys a
-  noindexed preview and comments the URL on the PR.
-- **Manual escape hatch** — run "Deploy production" from the Actions tab
-  (workflow_dispatch, main only).
-- **Rollback** — `git revert` the bad commit and push, or promote a previous
-  deployment from the Vercel dashboard.
+```text
+src/
+  pages/        Routes: home, the book, excerpt, author, research, media, buy, contact
+  components/   Page sections and UI components
+  layouts/      Shared page shell
+  content/      CMS-managed content collections
+  data/         CMS-managed structured data
+  styles/       Design tokens and global styles
+  assets/       Images processed at build time
+public/         Static files served as-is
+scripts/        Icon and share-card generators, deploy helpers
+```
 
-The workflows need three repo secrets: `VERCEL_TOKEN` (team-scoped token for
-integrant-au), `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`. If the token is ever
-rotated, update the secret:
-`gh secret set VERCEL_TOKEN --repo integrant-biotechnology/chaos-to-creation`.
+Design notes:
 
-## TODO before launch
+- The site is dark-only by design; there is no light theme.
+- Icons and the Open Graph share card are committed files. Regenerate them with `node scripts/icons.mjs` and `node scripts/og.mjs` after changing the source artwork.
 
-- [ ] **Best-seller claim** — needs a dated Amazon screenshot, then fill
-      `category` / `rank` / `verifiedOn` in the Book details (via `/keystatic`).
-- [ ] **Enquiry email** — currently the practice admin inbox
-      (`admin@drgordonslater.com.au`). Confirm or change (one field in Book details).
-- [x] **CMS in production** — done: GitHub App `chaos-to-creation-keystatic`
-      is installed on the repo and the three `KEYSTATIC_*` env vars are set on
-      Vercel. Edit at `/keystatic` (sign in with GitHub).
-- [ ] **Star ratings** — `book.rating` is empty and hidden; fill with real
-      Amazon numbers when we have them.
-- [ ] **Post-nominals** — byline shows "MBBS, FRACS" from the cover art. Confirm
-      with Adelaide.
-- [ ] **Extract** — hero CTA says "About the book" until the client supplies an
-      extract for `/the-book/`.
-- [ ] **Old URLs** — before DNS cutover, redirect the old WordPress paths
-      (e.g. `/checkout-2/` → `/buy/`).
-- [ ] **Compliance glance** — Prof. Slater is AHPRA-registered; sanity-check the
-      site against AHPRA/TGA advertising rules before launch.
+## Deployment
+
+Deployments run through GitHub Actions rather than Vercel's git integration.
+
+- **Push to `main`** — `.github/workflows/deploy.yml` builds the site and promotes it to production.
+- **Pull request against `main`** — `.github/workflows/preview.yml` deploys a non-indexed preview and comments its URL on the pull request.
+- **Manual deploy** — run the "Deploy production" workflow from the Actions tab (`main` only).
+- **Rollback** — revert the offending commit and push, or promote an earlier deployment from the Vercel dashboard.
+
+The workflows read three repository secrets: `VERCEL_TOKEN`, `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID`.
+
+## Advertising compliance
+
+Prof. Slater is an AHPRA-registered practitioner, so site content is reviewed against the AHPRA guidelines for advertising a regulated health service and the TGA Therapeutic Goods Advertising Code. No stock photography of people presented as patients is used.
 
 ## Image credits
 
-All images are cleared for commercial use; attribution given where required.
-
 | File | Source | Licence |
 |---|---|---|
-| `src/assets/micrograph.jpg` | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Bovine_Pulmonary_Artery_Endothelial_Cells_Fluorescent_Image_3.jpg), by Erin Rod | **CC BY 4.0** — attribution required |
-| `src/assets/cover.png` | Client-supplied book cover | Client-owned |
-| `src/assets/portrait.jpg`, `public/portrait-gordon-slater-hero.jpg` | Client-supplied portrait | Client-owned |
-| `src/assets/launch.jpg`, `public/launch-chaos-to-creation.jpg` | Client marketing art | Client-owned |
+| `src/assets/micrograph.jpg` | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Bovine_Pulmonary_Artery_Endothelial_Cells_Fluorescent_Image_3.jpg), by Erin Rod | CC BY 4.0 — attribution required |
+| `src/assets/cover.png` | Book cover, supplied by the author | All rights reserved |
+| `src/assets/portrait.jpg`, `public/portrait-gordon-slater-hero.jpg` | Author portrait, supplied by the author | All rights reserved |
+| `src/assets/launch.jpg`, `public/launch-chaos-to-creation.jpg` | Launch artwork, supplied by the author | All rights reserved |
 
-No stock photos of people presented as patients — that runs into AHPRA
-advertising rules on a registered practitioner's site.
+## Licence
+
+No open-source licence is granted. All rights are reserved by the respective owners.
