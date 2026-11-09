@@ -33,6 +33,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # sitemap <lastmod> comes from each page's git history
 
       - uses: pnpm/action-setup@v4 # version read from package.json "packageManager"
 
@@ -86,12 +88,26 @@ jobs:
       - name: Smoke-test production
         run: |
           sleep 10
-          curl -sSfL -o /dev/null https://chaostocreation.com.au/
-          curl -sSfL -o /dev/null https://chaostocreation.com.au/media/
+          A=https://chaostocreation.com.au
+          code() { curl -s -o /dev/null -w '%{http_code}' "$1"; }
+          loc() { curl -s -o /dev/null -w '%{redirect_url}' "$1"; }
+          expect() { [ "$2" = "$3" ] || { echo "$1: got '$2', expected '$3'"; exit 1; }; }
+          # Canonical host serves directly; www and legacy paths redirect once, permanently
+          expect "apex /" "$(code $A/)" 200
+          expect "apex /media/" "$(code $A/media/)" 200
+          expect "www /" "$(code https://www.chaostocreation.com.au/)" 308
+          expect "www / target" "$(loc https://www.chaostocreation.com.au/)" "$A/"
+          expect "/press" "$(code $A/press)" 308
+          expect "/press/ target" "$(loc $A/press/)" "$A/media/"
+          expect "/the-book target" "$(loc $A/the-book)" "$A/the-book/"
+          expect "/sitemap.xml target" "$(loc $A/sitemap.xml)" "$A/sitemap-index.xml"
+          expect "unknown URL" "$(code $A/no-such-page-$RANDOM)" 404
           # PUBLIC_SITE_LIVE must have been baked in: robots.txt may not disallow the site root
-          ! curl -sSfL https://chaostocreation.com.au/robots.txt | grep -q '^Disallow: /$'
-          # vercel.json rules must have survived the prebuilt deploy
-          code=$(curl -s -o /dev/null -w '%{http_code}' https://www.chaostocreation.com.au/press/)
-          [ "$code" = "308" ] || { echo "/press/ returned $code, expected 308"; exit 1; }
-          curl -sSI https://www.chaostocreation.com.au/ | grep -qi '^content-security-policy:' \
+          # (`! cmd` would not trip `bash -e`, so test explicitly)
+          robots=$(curl -sSf $A/robots.txt)
+          if printf '%s\n' "$robots" | grep -q '^Disallow: /$'; then echo "robots.txt disallows the site"; exit 1; fi
+          printf '%s\n' "$robots" | grep -q "^Sitemap: $A/sitemap-index.xml$" \
+            || { echo "robots.txt Sitemap line wrong"; exit 1; }
+          # vercel.json headers must have survived the prebuilt deploy
+          curl -sSI $A/ | grep -qi '^content-security-policy:' \
             || { echo "security headers missing from production"; exit 1; }

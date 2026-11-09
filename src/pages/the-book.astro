@@ -2,17 +2,12 @@
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import { faqNode } from '../lib/schema';
 import PageHeader from '../components/PageHeader.astro';
 import BuySection from '../components/BuySection.astro';
 import cover from '../assets/cover.png';
 import book from '../data/book.json';
 import author from '../data/author.json';
-import {
-  bookNode,
-  personNode,
-  faqNode,
-  breadcrumbNode,
-} from '../lib/schema';
 
 const hallmarks = (await getCollection('hallmarks')).sort(
   (a, b) => a.data.order - b.data.order,
@@ -21,25 +16,12 @@ const faq = (await getCollection('faq')).sort(
   (a, b) => a.data.order - b.data.order,
 );
 
-const schema = [
-  personNode(),
-  await bookNode(),
-  await faqNode(),
-  breadcrumbNode([
-    { name: 'Home', path: '/' },
-    { name: 'The book', path: '/the-book/' },
-  ]),
-];
 ---
 
-<Base
-  title={`The book — ${book.title}: ${book.subtitle}`}
-  description={book.summary}
-  schema={schema}
->
+<Base path="/the-book/" extraSchema={[await faqNode()]}>
   <PageHeader
     figure="The book"
-    title={book.subtitle}
+    title={`${book.title}: ${book.subtitle}`}
     lede={book.tagline}
   />
 

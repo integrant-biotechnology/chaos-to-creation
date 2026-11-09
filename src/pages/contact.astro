@@ -3,15 +3,7 @@ import Base from '../layouts/Base.astro';
 import PageHeader from '../components/PageHeader.astro';
 import book from '../data/book.json';
 import author from '../data/author.json';
-import { breadcrumbNode, personNode } from '../lib/schema';
 
-const schema = [
-  personNode(),
-  breadcrumbNode([
-    { name: 'Home', path: '/' },
-    { name: 'Contact', path: '/contact/' },
-  ]),
-];
 
 /**
  * Enquiries route by pre-addressed mail links rather than a posted form.
@@ -62,14 +54,10 @@ const routes = [
 ];
 ---
 
-<Base
-  title={`Contact — ${book.title}`}
-  description="Media, speaking, bulk order and rights enquiries for Chaos to Creation."
-  schema={schema}
->
+<Base path="/contact/">
   <PageHeader
     figure="Contact"
-    title="Get in touch"
+    title="Contact Prof Gordon Slater"
     lede="Choose the line that fits and your message arrives already sorted. Everything reaches the same desk."
   />
 

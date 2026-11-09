@@ -1,0 +1,83 @@
+{
+  "site": "https://chaostocreation.com.au",
+  "defaultOgImage": "/og/default.png",
+  "defaultOgImageAlt": "Chaos to Creation: Longevity & Regeneration Frontiers by Professor Gordon Slater",
+  "pages": [
+    {
+      "path": "/",
+      "title": "Chaos to Creation — Longevity & Regeneration | Gordon Slater",
+      "description": "A book by Prof Gordon Slater on why we age and whether the body's own repair systems can be persuaded to hold the line.",
+      "ogType": "website",
+      "breadcrumb": "Home",
+      "sources": ["src/pages/index.astro", "src/components/Hero.astro", "src/components/TheQuestion.astro", "src/components/Hallmarks.astro", "src/components/Thesis.astro", "src/components/AuthorCard.astro", "src/components/BuySection.astro", "src/data/book.json", "src/content/hallmarks"],
+      "images": ["/cover-chaos-to-creation.png"]
+    },
+    {
+      "path": "/the-book/",
+      "title": "About the Book — Longevity and Regeneration Frontiers",
+      "description": "What Chaos to Creation covers: the hallmarks of aging, stem cells, gene editing and the evidence behind regenerative medicine, by Prof Gordon Slater.",
+      "ogType": "book",
+      "breadcrumb": "The book",
+      "sources": ["src/pages/the-book.astro", "src/data/book.json", "src/content/hallmarks", "src/content/faq"],
+      "images": ["/cover-chaos-to-creation.png"]
+    },
+    {
+      "path": "/author/",
+      "title": "Prof Gordon Slater — Surgeon, Researcher, Author",
+      "description": "Prof Gordon Slater is a Sydney orthopaedic surgeon, FRACS, Professor at UTS and author of Chaos to Creation, a book on longevity and regeneration.",
+      "ogType": "profile",
+      "breadcrumb": "Author",
+      "sources": ["src/pages/author.astro", "src/data/author.json"],
+      "images": ["/portrait-gordon-slater-hero.jpg"]
+    },
+    {
+      "path": "/buy/",
+      "title": "Buy Chaos to Creation — Hardcover, Paperback, Kindle",
+      "description": "Order Chaos to Creation by Prof Gordon Slater in hardcover, paperback or Kindle from Amazon Australia. Compare editions and delivery options.",
+      "ogType": "website",
+      "breadcrumb": "Buy",
+      "sources": ["src/pages/buy.astro", "src/components/EditionCards.astro", "src/content/formats", "src/content/faq"],
+      "images": ["/cover-chaos-to-creation.png"]
+    },
+    {
+      "path": "/excerpt/",
+      "title": "Read an Excerpt — Chaos to Creation by Gordon Slater",
+      "description": "Read an extract from Chaos to Creation: Longevity & Regeneration Frontiers, Prof Gordon Slater's book on the science of aging and repair.",
+      "ogType": "website",
+      "breadcrumb": "Excerpt",
+      "sources": ["src/pages/excerpt.astro", "src/content/excerpt"],
+      "images": []
+    },
+    {
+      "path": "/media/",
+      "title": "Media Kit — Chaos to Creation by Prof Gordon Slater",
+      "description": "Media kit for Chaos to Creation by Prof Gordon Slater: fact sheet, author biography, downloadable cover art and photography, and press coverage.",
+      "ogType": "website",
+      "breadcrumb": "Media kit",
+      "sources": ["src/pages/media.astro", "src/data/book.json", "src/data/author.json", "src/content/press", "src/content/formats"],
+      "images": ["/cover-chaos-to-creation.png", "/portrait-gordon-slater-hero.jpg"]
+    },
+    {
+      "path": "/research/",
+      "title": "Research Behind Chaos to Creation — Prof Gordon Slater",
+      "description": "The research career behind Chaos to Creation: Prof Gordon Slater's credentials, peer-reviewed publication record and academic profiles.",
+      "ogType": "website",
+      "breadcrumb": "Research",
+      "sources": ["src/pages/research.astro", "src/data/author.json", "src/content/publications"],
+      "images": []
+    },
+    {
+      "path": "/contact/",
+      "title": "Contact — Media, Speaking & Rights | Chaos to Creation",
+      "description": "Contact the Chaos to Creation team about media interviews, speaking engagements, bulk and institutional orders, or rights and translation.",
+      "ogType": "website",
+      "breadcrumb": "Contact",
+      "sources": ["src/pages/contact.astro"],
+      "images": []
+    }
+  ],
+  "notFound": {
+    "title": "Page not found — Chaos to Creation",
+    "description": "That page does not exist. The book, the author and the media kit are one step away."
+  }
+}

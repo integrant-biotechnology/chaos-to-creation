@@ -25,6 +25,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # sitemap <lastmod> comes from each page's git history
 
       - uses: pnpm/action-setup@v4
 

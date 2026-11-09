@@ -9,7 +9,6 @@ import launch from '../assets/launch.jpg';
 import cover from '../assets/cover.png';
 import book from '../data/book.json';
 import author from '../data/author.json';
-import { personNode, bookNode, breadcrumbNode } from '../lib/schema';
 import { money } from '../lib/format';
 
 const press = (await getCollection('press')).sort(
@@ -28,25 +27,13 @@ const dateFmt = new Intl.DateTimeFormat('en-AU', {
   year: 'numeric',
 });
 
-const schema = [
-  personNode(),
-  await bookNode(),
-  breadcrumbNode([
-    { name: 'Home', path: '/' },
-    { name: 'Media', path: '/media/' },
-  ]),
-];
 ---
 
-<Base
-  title={`Media kit — ${book.title}`}
-  description={`Media resources for ${book.title} by ${author.fullName}: fact sheet, biography, cover art and coverage.`}
-  schema={schema}
->
+<Base path="/media/">
   <PageHeader
     compact
     figure="Media"
-    title="Media kit"
+    title="Chaos to Creation media kit"
     lede="Everything needed to cover the book, in one place. For interviews, review copies or high-resolution assets, get in touch."
   >
     <!-- The kit's table of contents. A working page opens with its index,
