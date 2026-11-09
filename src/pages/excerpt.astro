@@ -3,7 +3,6 @@ import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import book from '../data/book.json';
 import author from '../data/author.json';
-import { bookNode, personNode, breadcrumbNode } from '../lib/schema';
 
 /**
  * A reading page, not a marketing page. One measured column, the site's
@@ -19,21 +18,9 @@ if (!excerpt) {
 }
 const { Content } = await render(excerpt);
 
-const schema = [
-  personNode(),
-  await bookNode(),
-  breadcrumbNode([
-    { name: 'Home', path: '/' },
-    { name: 'Excerpt', path: '/excerpt/' },
-  ]),
-];
 ---
 
-<Base
-  title={`Excerpt — ${book.title}`}
-  description={`Read an excerpt from ${book.title} by ${author.fullName}.`}
-  schema={schema}
->
+<Base path="/excerpt/">
   <article class="surface relative overflow-hidden">
     <!-- The page header's ambient glow, kept — an excerpt still belongs to
          the book's atmosphere. -->

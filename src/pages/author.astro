@@ -5,22 +5,10 @@ import BestsellerMark from '../components/BestsellerMark.astro';
 import portrait from '../assets/portrait.jpg';
 import author from '../data/author.json';
 import book from '../data/book.json';
-import { personNode, breadcrumbNode } from '../lib/schema';
 
-const schema = [
-  personNode(),
-  breadcrumbNode([
-    { name: 'Home', path: '/' },
-    { name: 'Author', path: '/author/' },
-  ]),
-];
 ---
 
-<Base
-  title={`${author.fullName} — ${book.title}`}
-  description={author.short}
-  schema={schema}
->
+<Base path="/author/">
   <!-- The portrait is this page's hero: the reader came to see who wrote the
        book. Shown as it was supplied — a real photograph carries the trust; a
        stylised grade would spend it. -->

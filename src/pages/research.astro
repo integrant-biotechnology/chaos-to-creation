@@ -4,7 +4,6 @@ import Base from '../layouts/Base.astro';
 import PageHeader from '../components/PageHeader.astro';
 import author from '../data/author.json';
 import book from '../data/book.json';
-import { personNode, breadcrumbNode } from '../lib/schema';
 
 /**
  * The book's claim to be taken seriously rests on the research career behind
@@ -19,23 +18,12 @@ const years = [...new Set(publications.map((p) => p.data.year))];
 const scholar = author.social.find((s) => s.name === 'Google Scholar');
 const researchgate = author.social.find((s) => s.name === 'ResearchGate');
 
-const schema = [
-  personNode(),
-  breadcrumbNode([
-    { name: 'Home', path: '/' },
-    { name: 'Research', path: '/research/' },
-  ]),
-];
 ---
 
-<Base
-  title={`Research — ${author.fullName}`}
-  description={`The research career behind ${book.title}: ${author.fullName}'s credentials, publication record and academic profiles.`}
-  schema={schema}
->
+<Base path="/research/">
   <PageHeader
     figure="Research"
-    title="The research behind the book"
+    title="The research behind Chaos to Creation"
     lede={author.short}
   />
 

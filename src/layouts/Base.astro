@@ -3,38 +3,60 @@ import { Font } from 'astro:assets';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import {
+  NOT_FOUND,
+  DEFAULT_OG_IMAGE,
+  DEFAULT_OG_IMAGE_ALT,
+  abs,
+  pageFor,
+} from '../lib/seo';
+import { pageGraph, serializeGraph } from '../lib/schema';
 
 interface Props {
-  title: string;
-  description: string;
-  /** Path to the OG image, relative to the site root. */
-  ogImage?: string;
-  /** JSON-LD graph nodes to emit for this page. */
-  schema?: unknown[];
+  /**
+   * The page's canonical path ('/', '/the-book/' …) or 'not-found' for the
+   * 404 page. Title, description, canonical, robots, Open Graph and the
+   * JSON-LD graph all come from src/data/pages.json for that path.
+   */
+  path: string;
+  /** Page-specific JSON-LD nodes appended to the shared graph (e.g. FAQPage). */
+  extraSchema?: Record<string, unknown>[];
 }
 
-const {
-  title,
-  description,
-  ogImage = '/og/default.png',
-  schema = [],
-} = Astro.props;
+const { path, extraSchema = [] } = Astro.props;
+const isNotFound = path === 'not-found';
 
-const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const ogImageUrl = new URL(ogImage, Astro.site).href;
+const page = isNotFound ? null : pageFor(path);
+
+// Guard against a page passing another page's path: the canonical would then
+// silently point somewhere else.
+const renderedPath = Astro.url.pathname.replace(/\/?$/, '/');
+if (page && renderedPath !== path) {
+  throw new Error(
+    `Base was given path "${path}" but is rendering ${Astro.url.pathname}.`,
+  );
+}
+
+const title = page?.title ?? NOT_FOUND.title;
+const description = page?.description ?? NOT_FOUND.description;
+const canonical = page ? abs(page.path) : null;
+const ogImageUrl = abs(page?.ogImage ?? DEFAULT_OG_IMAGE);
+const ogImageAlt = page?.ogImageAlt ?? DEFAULT_OG_IMAGE_ALT;
+const ogType = page?.ogType ?? 'website';
 
 /**
  * Safe by default: every build is noindex unless explicitly told it is the
- * live site. Staging carries unreleased copy and a best-seller claim that is
- * not yet substantiated, and a preview competing with the real domain in the
- * index is a genuine SEO problem. Set PUBLIC_SITE_LIVE=true at DNS cutover.
+ * live site, so a preview can never compete with the real domain in the
+ * index. CI sets PUBLIC_SITE_LIVE=true for production builds only.
  */
 const isLive = import.meta.env.PUBLIC_SITE_LIVE === 'true';
+const robots = !isLive
+  ? 'noindex, nofollow'
+  : !page || page.noindex
+    ? 'noindex,follow'
+    : 'index,follow';
 
-const jsonLd =
-  schema.length > 0
-    ? JSON.stringify({ '@context': 'https://schema.org', '@graph': schema })
-    : null;
+const jsonLd = page ? serializeGraph(await pageGraph(page.path, extraSchema)) : null;
 ---
 
 <!doctype html>
@@ -47,24 +69,26 @@ const jsonLd =
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="canonical" href={canonical} />
-    {!isLive && <meta name="robots" content="noindex, nofollow" />}
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta name="robots" content={robots} />
 
     <title>{title}</title>
     <meta name="description" content={description} />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content="Chaos to Creation" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
+    {canonical && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:alt" content={ogImageAlt} />
     <meta property="og:locale" content="en_AU" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
 
     <Font cssVariable="--ff-display" preload />
     <Font cssVariable="--ff-body" preload />

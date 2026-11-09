@@ -3,7 +3,6 @@ import { defineConfig, fontProviders } from 'astro/config';
 
 import react from '@astrojs/react';
 import markdoc from '@astrojs/markdoc';
-import sitemap from '@astrojs/sitemap';
 import keystatic from '@keystatic/astro';
 import vercel from '@astrojs/vercel';
 import tailwindcss from '@tailwindcss/vite';
@@ -17,11 +16,12 @@ export default defineConfig({
   output: 'static',
   adapter: vercel({ webAnalytics: { enabled: true } }),
 
-  integrations: [react(), markdoc(), keystatic(), sitemap()],
+  integrations: [react(), markdoc(), keystatic()],
 
-  // The press kit became the media kit when Research joined the navigation.
-  // Emitted as a platform-level redirect by the Vercel adapter.
-  redirects: { '/press/': '/media/' },
+  // Redirects (/press → /media/, /sitemap.xml, no-slash → slash) and the
+  // sitemap are NOT configured here: redirects live in vercel.json and are
+  // compiled by scripts/merge-vercel-config.mjs; the sitemap is generated
+  // from src/data/pages.json by src/pages/sitemap-*.xml.ts.
 
   vite: {
     plugins: [tailwindcss()],
